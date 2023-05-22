@@ -12,38 +12,46 @@ function AboutPage() {
         <h2>About EZEats:</h2>
         
         <p>
-          EZEats is a recipe application designed to simplify your meal planning
-          and accommodate dietary restrictions such as food allergies and celiac
-          disease. Upon signing up, users can easily add new recipes to their
-          profile and organize them into categories, such as entrees or desserts.
-        </p>
-        
-        <p>
-          Once you have recipes added, you will be greeted with an initial view of
-          different categories which expand to display the recipes within each
-          category. You will also see your most cooked recipes, these are recipes
-          that you have completed the most often (top 5).
-        </p>
-        
-        <p>
-          When you view an individual recipe, you will be able to add it to the
-          weekly shopping list. There will be a shopping list view where you can
-          see all the meals that have been added to the list, and specifically all
-          the ingredients from ALL those meals added together into one list. For
-          example,  if one recipe required ½ of an onion, and another calls for 2
-          full onions, you would see something like 2 ½ onions. Users can also
-          easily remove a meal from their list, which automatically updates the
-          shopping list. In the example above, if the recipe requiring 2 whole
-          onions was removed, the list will adjust to show only  ½ onion.
-        </p>
-        
-        <p>
-          EZEats streamlines the process of planning meals, organizing recipes,
-          and generating comprehensive shopping lists. Whether you have specific
-          dietary needs or simply want a more efficient approach to meal prep,
-          EZEats is your go-to recipe app.
-        </p>
-        
+          Cupcake ipsum dolor sit amet. Icing croissant gummies chocolate marzipan
+          cookie shortbread jujubes tart. Croissant cake chupa chups chocolate pudding
+          lollipop carrot cake jelly. Caramels icing macaroon cheesecake cotton candy
+          jelly wafer bear claw. Chocolate cake chocolate bar ice cream cake macaroon
+          pastry shortbread lollipop. Dessert tootsie roll jujubes gummi bears cupcake
+          lemon drops tiramisu muffin dragée. Jelly beans pastry dragée sweet roll
+          cupcake shortbread cotton candy danish sesame snaps. Chocolate bar fruitcake
+          chocolate bar tiramisu shortbread muffin. Ice cream carrot cake tiramisu
+          chocolate marzipan. Danish wafer candy canes jelly biscuit dragée. Cookie sweet
+          carrot cake pudding marshmallow jelly beans tootsie roll chocolate cake. Pastry
+          chocolate cake croissant toffee pastry powder soufflé oat cake tart.
+          </p>
+
+          <p>
+          Brownie tiramisu sweet roll halvah sweet roll. Oat cake dessert gingerbread
+          cookie pie. Bonbon tart dessert cake fruitcake oat cake lemon drops. Candy
+          muffin jujubes jujubes cupcake apple pie candy donut tootsie roll. Sesame
+          snaps bear claw wafer wafer powder. Jujubes pie apple pie chocolate bar jelly
+          beans. Sugar plum toffee cookie sweet roll biscuit bear claw dragée cake.
+          Soufflé jelly beans cake dessert gummies gummies cake. Jelly beans bonbon
+          chocolate bar tiramisu liquorice liquorice marzipan sesame snaps lollipop.
+          Chocolate cake carrot cake danish macaroon apple pie wafer sesame snaps cupcake.
+          Tiramisu bonbon bonbon biscuit chocolate bar jujubes. Chocolate sugar plum chupa
+          chups halvah bear claw candy icing chocolate bar.
+          </p>
+
+          <p>
+          Tiramisu cheesecake chocolate jelly cake ice cream muffin. Carrot cake cupcake
+          cookie dessert gingerbread chupa chups tiramisu. Danish wafer sweet roll cake
+          gingerbread gummi bears. Wafer cheesecake croissant sesame snaps macaroon
+          shortbread toffee marshmallow. Topping lemon drops cheesecake candy canes
+          chocolate. Apple pie liquorice sweet roll wafer chocolate bar chocolate. Chupa
+          chups liquorice cupcake gummi bears ice cream sugar plum sugar plum. Gingerbread
+          marzipan soufflé brownie muffin brownie. Chocolate bar pastry candy canes jujubes
+          sesame snaps candy jelly-o chupa chups. Croissant cake tootsie roll sesame snaps
+          sugar plum. Apple pie cake biscuit jelly-o cake tart chocolate jelly beans
+          shortbread. Sesame snaps powder halvah sugar plum liquorice gummi bears liquorice.
+          Sweet tart sugar plum lemon drops halvah. Sesame snaps cotton candy cheesecake
+          sugar plum sesame snaps chocolate bar.
+          </p>
       </div>
     </div>
   );
