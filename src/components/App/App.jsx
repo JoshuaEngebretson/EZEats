@@ -13,12 +13,12 @@ import Footer from '../Footer/Footer';
 
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 
-import AboutPage from '../AboutPage/AboutPage';
-import UserPage from '../UserPage/UserPage';
-import InfoPage from '../InfoPage/InfoPage';
-import LandingPage from '../LandingPage/LandingPage';
-import LoginPage from '../LoginAndRegister/Login/LoginPage/LoginPage';
-import RegisterPage from '../LoginAndRegister/Register/RegisterPage/RegisterPage';
+import AboutPage from '../PageComponents/AboutPage/AboutPage';
+import UserPage from '../PageComponents/UserPage/UserPage';
+import InfoPage from '../PageComponents/InfoPage/InfoPage';
+import LandingPage from '../PageComponents/LandingPage/LandingPage';
+import LoginPage from '../PageComponents/LoginAndRegisterPages/LoginPage/LoginPage';
+import RegisterPage from '../PageComponents/LoginAndRegisterPages/RegisterPage/RegisterPage';
 
 import './App.css';
 
