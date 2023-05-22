@@ -19,6 +19,10 @@ function LoginForm() {
           password: password,
         },
       });
+      // If there was an error noted, clear it out.
+      dispatch({
+        type: 'CLEAR_LOGIN_ERROR'
+      })
     } else {
       dispatch({ type: 'LOGIN_INPUT_ERROR' });
     }
@@ -38,7 +42,7 @@ function LoginForm() {
           <input
             type="text"
             name="username"
-            required
+            // required
             value={username}
             onChange={(event) => setUsername(event.target.value)}
           />
@@ -50,7 +54,7 @@ function LoginForm() {
           <input
             type="password"
             name="password"
-            required
+            // required
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />

@@ -10,13 +10,23 @@ function RegisterForm() {
   const registerUser = (event) => {
     event.preventDefault();
 
-    dispatch({
-      type: 'REGISTER',
-      payload: {
-        username: username,
-        password: password,
-      },
-    });
+    if (username && password) {
+      dispatch({
+        type: 'REGISTER',
+        payload: {
+          username: username,
+          password: password,
+        },
+      });
+      // If there was an error noted, clear it out.
+      dispatch({
+        type: 'CLEAR_REGISTRATION_ERROR'
+      })
+    } else {
+      dispatch({
+        type: 'REGISTRATION_INPUT_ERROR'
+      })
+    }
   }; // end registerUser
 
   return (
@@ -34,7 +44,7 @@ function RegisterForm() {
             type="text"
             name="username"
             value={username}
-            required
+            // required
             onChange={(event) => setUsername(event.target.value)}
           />
         </label>
@@ -46,7 +56,7 @@ function RegisterForm() {
             type="password"
             name="password"
             value={password}
-            required
+            // required
             onChange={(event) => setPassword(event.target.value)}
           />
         </label>
