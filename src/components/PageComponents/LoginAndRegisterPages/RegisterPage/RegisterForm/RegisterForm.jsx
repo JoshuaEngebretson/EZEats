@@ -10,13 +10,19 @@ function RegisterForm() {
   const registerUser = (event) => {
     event.preventDefault();
 
-    dispatch({
-      type: 'REGISTER',
-      payload: {
-        username: username,
-        password: password,
-      },
-    });
+    if (username && password) {
+      dispatch({
+        type: 'REGISTER',
+        payload: {
+          username: username,
+          password: password,
+        },
+      });
+    } else {
+      dispatch({
+        type: 'REGISTRATION_INPUT_ERROR'
+      })
+    }
   }; // end registerUser
 
   return (
