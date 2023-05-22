@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import './LandingPage.css';
 
 // CUSTOM COMPONENTS
-import RegisterForm from '../RegisterForm/RegisterForm';
+import RegisterForm from '../Register/RegisterForm/RegisterForm';
 
 function LandingPage() {
   const [heading, setHeading] = useState('Welcome');
@@ -20,35 +20,45 @@ function LandingPage() {
       <div className="grid">
         <div className="grid-col grid-col_8">
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-            id felis metus. Vestibulum et pulvinar tortor. Morbi pharetra lacus
-            ut ex molestie blandit. Etiam et turpis sit amet risus mollis
-            interdum. Suspendisse et justo vitae metus bibendum fringilla sed
-            sed justo. Aliquam sollicitudin dapibus lectus, vitae consequat odio
-            elementum eget. Praesent efficitur eros vitae nunc interdum, eu
-            interdum justo facilisis. Sed pulvinar nulla ac dignissim efficitur.
-            Quisque eget eros metus. Vestibulum bibendum fringilla nibh a
-            luctus. Duis a sapien metus.
+          Cupcake ipsum dolor sit amet. Icing croissant gummies chocolate marzipan
+          cookie shortbread jujubes tart. Croissant cake chupa chups chocolate pudding
+          lollipop carrot cake jelly. Caramels icing macaroon cheesecake cotton candy
+          jelly wafer bear claw. Chocolate cake chocolate bar ice cream cake macaroon
+          pastry shortbread lollipop. Dessert tootsie roll jujubes gummi bears cupcake
+          lemon drops tiramisu muffin dragée. Jelly beans pastry dragée sweet roll
+          cupcake shortbread cotton candy danish sesame snaps. Chocolate bar fruitcake
+          chocolate bar tiramisu shortbread muffin. Ice cream carrot cake tiramisu
+          chocolate marzipan. Danish wafer candy canes jelly biscuit dragée. Cookie sweet
+          carrot cake pudding marshmallow jelly beans tootsie roll chocolate cake. Pastry
+          chocolate cake croissant toffee pastry powder soufflé oat cake tart.
           </p>
 
           <p>
-            Praesent consectetur orci dui, id elementum eros facilisis id. Sed
-            id dolor in augue porttitor faucibus eget sit amet ante. Nunc
-            consectetur placerat pharetra. Aenean gravida ex ut erat commodo, ut
-            finibus metus facilisis. Nullam eget lectus non urna rhoncus
-            accumsan quis id massa. Curabitur sit amet dolor nisl. Proin
-            euismod, augue at condimentum rhoncus, massa lorem semper lacus, sed
-            lobortis augue mi vel felis. Duis ultrices sapien at est convallis
-            congue.
+          Brownie tiramisu sweet roll halvah sweet roll. Oat cake dessert gingerbread
+          cookie pie. Bonbon tart dessert cake fruitcake oat cake lemon drops. Candy
+          muffin jujubes jujubes cupcake apple pie candy donut tootsie roll. Sesame
+          snaps bear claw wafer wafer powder. Jujubes pie apple pie chocolate bar jelly
+          beans. Sugar plum toffee cookie sweet roll biscuit bear claw dragée cake.
+          Soufflé jelly beans cake dessert gummies gummies cake. Jelly beans bonbon
+          chocolate bar tiramisu liquorice liquorice marzipan sesame snaps lollipop.
+          Chocolate cake carrot cake danish macaroon apple pie wafer sesame snaps cupcake.
+          Tiramisu bonbon bonbon biscuit chocolate bar jujubes. Chocolate sugar plum chupa
+          chups halvah bear claw candy icing chocolate bar.
           </p>
 
           <p>
-            Fusce porta diam ac tortor elementum, ut imperdiet metus volutpat.
-            Suspendisse posuere dapibus maximus. Aliquam vitae felis libero. In
-            vehicula sapien at semper ultrices. Vivamus sed feugiat libero. Sed
-            sagittis neque id diam euismod, ut egestas felis ultricies. Nullam
-            non fermentum mauris. Sed in enim ac turpis faucibus pretium in sit
-            amet nisi.
+          Tiramisu cheesecake chocolate jelly cake ice cream muffin. Carrot cake cupcake
+          cookie dessert gingerbread chupa chups tiramisu. Danish wafer sweet roll cake
+          gingerbread gummi bears. Wafer cheesecake croissant sesame snaps macaroon
+          shortbread toffee marshmallow. Topping lemon drops cheesecake candy canes
+          chocolate. Apple pie liquorice sweet roll wafer chocolate bar chocolate. Chupa
+          chups liquorice cupcake gummi bears ice cream sugar plum sugar plum. Gingerbread
+          marzipan soufflé brownie muffin brownie. Chocolate bar pastry candy canes jujubes
+          sesame snaps candy jelly-o chupa chups. Croissant cake tootsie roll sesame snaps
+          sugar plum. Apple pie cake biscuit jelly-o cake tart chocolate jelly beans
+          shortbread. Sesame snaps powder halvah sugar plum liquorice gummi bears liquorice.
+          Sweet tart sugar plum lemon drops halvah. Sesame snaps cotton candy cheesecake
+          sugar plum sesame snaps chocolate bar.
           </p>
         </div>
         <div className="grid-col grid-col_4">
