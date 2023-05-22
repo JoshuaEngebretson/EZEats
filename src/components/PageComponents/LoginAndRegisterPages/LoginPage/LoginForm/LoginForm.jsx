@@ -38,7 +38,7 @@ function LoginForm() {
           <input
             type="text"
             name="username"
-            required
+            // required
             value={username}
             onChange={(event) => setUsername(event.target.value)}
           />
@@ -50,7 +50,7 @@ function LoginForm() {
           <input
             type="password"
             name="password"
-            required
+            // required
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />

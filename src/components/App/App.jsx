@@ -19,6 +19,10 @@ import InfoPage from '../PageComponents/InfoPage/InfoPage';
 import LandingPage from '../PageComponents/LandingPage/LandingPage';
 import LoginPage from '../PageComponents/LoginAndRegisterPages/LoginPage/LoginPage';
 import RegisterPage from '../PageComponents/LoginAndRegisterPages/RegisterPage/RegisterPage';
+import EditOrAddRecipePage from '../PageComponents/EditOrAddRecipePage/EditOrAddRecipePage';
+import ShoppingListPage from '../PageComponents/ShoppingListPage/ShoppingListPage';
+import ViewRecipePage from '../PageComponents/ViewRecipePage/ViewRecipePage';
+import HomePage from '../PageComponents/HomePage/HomePage';
 
 import './App.css';
 
@@ -75,7 +79,7 @@ function App() {
             {user.id ?
               // If the user is already logged in, 
               // redirect to the /user page
-              <Redirect to="/user" />
+              <Redirect to="/home" />
               :
               // Otherwise, show the login page
               <LoginPage />
@@ -89,7 +93,7 @@ function App() {
             {user.id ?
               // If the user is already logged in, 
               // redirect them to the /user page
-              <Redirect to="/user" />
+              <Redirect to="/home" />
               :
               // Otherwise, show the registration page
               <RegisterPage />
@@ -103,7 +107,21 @@ function App() {
             {user.id ?
               // If the user is already logged in, 
               // redirect them to the /user page
-              <Redirect to="/user" />
+              <HomePage />
+              :
+              // Otherwise, show the Landing page
+              <LandingPage />
+            }
+          </Route>
+
+          <Route
+            exact
+            path="/recipe/:recipe-category/:recipe-name"
+          >
+            {user.id ?
+              // If the user is already logged in, 
+              // redirect them to the /user page
+              <ViewRecipePage />
               :
               // Otherwise, show the Landing page
               <LandingPage />
