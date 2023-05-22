@@ -18,6 +18,10 @@ function RegisterForm() {
           password: password,
         },
       });
+      // If there was an error noted, clear it out.
+      dispatch({
+        type: 'CLEAR_REGISTRATION_ERROR'
+      })
     } else {
       dispatch({
         type: 'REGISTRATION_INPUT_ERROR'

@@ -19,6 +19,10 @@ function LoginForm() {
           password: password,
         },
       });
+      // If there was an error noted, clear it out.
+      dispatch({
+        type: 'CLEAR_LOGIN_ERROR'
+      })
     } else {
       dispatch({ type: 'LOGIN_INPUT_ERROR' });
     }
