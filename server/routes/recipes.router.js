@@ -6,16 +6,68 @@ const router = express.Router();
 // GET all recipes route
 router.get('/', rejectUnauthenticated, (req, res) => {
   const userId = req.user.id
+  console.log('inside GET recipes for userID =', userId);
 
+  // Show all recipes for the current user
   const sqlText = `
-  
+    SELECT 
+      recipes.recipe_name AS recipe,
+      recipes.image_of_recipe,
+      recipes.recipe_text,
+      JSON_AGG(recipe_ingredients.quantity) AS quantities,
+      JSON_AGG(recipe_ingredients.unit) AS units,
+      JSON_AGG(ingredients.ingredient_name) AS ingredients,
+      JSON_AGG(recipe_ingredients.method) AS methods,
+      category.name AS category,
+      JSON_AGG(food_categories.food_category_name) AS food_categories,
+      JSON_AGG(recipe_ingredients.for_which_part) AS for_which_parts
+    FROM recipes
+    JOIN "user" ON recipes.user_id="user".id
+    JOIN recipe_ingredients ON recipe_ingredients.recipe_id=recipes.id
+    JOIN ingredients ON ingredients.id=recipe_ingredients.ingredients_id
+    JOIN category ON category.id=recipes.category_id
+    JOIN food_categories on food_categories.id = ingredients.food_category_id
+      WHERE "user".id = $1
+    GROUP BY
+      recipes.recipe_name, recipes.image_of_recipe,
+      recipes.recipe_text, category.name;
   `;
 
   pool
-    .query(sqlText, sqlValues)
-    .then(() => {
-      const recipes = req.rows
-      res.send(recipes)
+    .query(sqlText, [userId])
+    .then(result => {
+      const recipes = result.rows
+      // Format the recipes
+      let formattedRecipes = []
+      recipes.map(recipe => {
+        // Format the ingredients within the recipes
+        let ingredients = []
+        for (let i = 0; i < recipe.quantities.length; i++) {
+          let currentIngredient = {
+            quantity: recipe.quantities[i],
+            unit: recipe.units[i],
+            ingredient: recipe.ingredients[i],
+            method: recipe.methods[i],
+            foodCategory: recipe.food_categories[i],
+            forWhichPart: recipe.for_which_parts[i]
+          }
+          // Once formatted, add to the ingredient to the
+          //  ingredients array
+          ingredients.push(currentIngredient)
+        }
+        let formattedRecipe = {
+          name:recipe.recipe,
+          image: recipe.image_of_recipe,
+          recipeText: recipe.recipe_text,
+          ingredients: ingredients,
+          category: recipe.category
+        }
+        // Once the recipe has been formatted, add to the
+        //  formattedRecipes array
+        formattedRecipes.push(formattedRecipe)
+      })
+      // Send the formattedRecipes array
+      res.send(formattedRecipes)
     })
     .catch(dbErr => {
       // If unable to process request,
