@@ -128,6 +128,20 @@ function App() {
             }
           </Route>
 
+          <Route
+            exact
+            path="/add-or-edit-recipe/:id?"
+          >
+            {user.id ?
+              // If the user is already logged in, 
+              // redirect them to the /user page
+              <EditOrAddRecipePage />
+              :
+              // Otherwise, show the Landing page
+              <LandingPage />
+            }
+          </Route>
+
           {/* If none of the other routes matched, we will show a 404. */}
           <Route>
             <h1>404</h1>
