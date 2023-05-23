@@ -6,9 +6,31 @@ const router = express.Router();
 // GET all recipes route
 router.get('/', rejectUnauthenticated, (req, res) => {
   const userId = req.user.id
-  console.log('inside GET recipes for userID =', userId);
-
-  // Show all recipes for the current user
+  /*
+    Show all recipes for the current user
+    These have been formatted to be an array of objects that have 
+    the following formatting
+    [
+      {
+        id: number,
+        name: string,
+        image: string,
+        recipe_text: string,
+        ingredients: array of objects [
+          {
+            recipeIngredientId: number,
+            quantity: number,
+            unit: string,
+            ingredient: string,
+            method: string,
+            foodCategory: string,
+            forWhichPart: string
+          }
+        ],
+        category: string
+      }
+    ]
+  */
   const sqlText = `
     SELECT 
       recipes.id AS id,
@@ -39,40 +61,6 @@ router.get('/', rejectUnauthenticated, (req, res) => {
     .query(sqlText, [userId])
     .then(result => {
       const recipes = result.rows
-      console.log('unformatted recipes:', recipes);
-      // // Format the recipes
-      // let formattedRecipes = []
-      // recipes.map(recipe => {
-      //   // Format the ingredients within the recipes
-      //   let ingredients = []
-      //   for (let i = 0; i < recipe.quantities.length; i++) {
-      //     let currentIngredient = {
-      //       ingredientId: recipe.recipe_ingredients_ids[i],
-      //       quantity: recipe.quantities[i],
-      //       unit: recipe.units[i],
-      //       ingredient: recipe.ingredients[i],
-      //       method: recipe.methods[i],
-      //       foodCategory: recipe.food_categories[i],
-      //       forWhichPart: recipe.for_which_parts[i]
-      //     }
-      //     // Once formatted, add to the ingredient to the
-      //     //  ingredients array
-      //     ingredients.push(currentIngredient)
-      //   }
-      //   let formattedRecipe = {
-      //     id: recipe.recipe_id,
-      //     name:recipe.recipe,
-      //     image: recipe.image_of_recipe,
-      //     recipeText: recipe.recipe_text,
-      //     ingredients: ingredients,
-      //     category: recipe.category
-      //   }
-      //   // Once the recipe has been formatted, add to the
-      //   //  formattedRecipes array
-      //   formattedRecipes.push(formattedRecipe)
-      // })
-      // // Send the formattedRecipes array
-      // // console.log('formattedRecipes:', formattedRecipes);
       res.send(recipes)
     })
     .catch(dbErr => {
@@ -82,6 +70,22 @@ router.get('/', rejectUnauthenticated, (req, res) => {
       console.log('Error in GET all route:', dbErr);
     })
 }); // End GET all recipes route
+
+// GET recipeCategories route
+router.get('/recipe_categories', rejectUnauthenticated, (req, res) => {
+  const userId = req.user.id
+  const sqlQuery = `SELECT * FROM category;`
+  pool
+    .query(sqlQuery)
+    .then(result => {
+      let recipeCategories = result.rows
+      res.send(recipeCategories)
+    })
+    .catch(dbErr => {
+      console.log('Error inside GET /recipe_categories:', dbErr);
+      res.sendStatus(500)
+    })
+})
 
 // POST new recipe route
 router.post('/new-recipe', rejectUnauthenticated, (req, res) => {
@@ -110,9 +114,11 @@ router.post('/new-recipe', rejectUnauthenticated, (req, res) => {
     .then(result => {
       const createdRecipeId = result.rows[0].id
       
-      // Now loop through the ingredients array and add an ingredient
-      //  to the recipe_ingredients table for each item of the array
-      //  all while referencing the createdRecipeId
+      /* 
+        Now loop through the ingredients array and add an ingredient
+        to the recipe_ingredients table for each item of the array
+        all while referencing the createdRecipeId
+      */
       ingredients.map(ingredient => {
         let newRecipeIngredientQuery;
         if (ingredient.for_which_part) {
