@@ -13,8 +13,35 @@ export default function HomePage() {
   const recipes = useSelector(store => store.recipes)
   const mostCooked = useSelector(store => store.mostCooked)
   
-
   return (
-    <h1>Inside the logged in Home Page view</h1>
+    <>
+      <h1>Inside the logged in Home Page view</h1>
+      {
+        recipes.map(recipe => {
+          return (
+            <div key={recipe.id}>
+              <h1>{recipe.name}</h1>
+              <img 
+                src={recipe.image}
+                alt ={`An image of ${recipe.name}`}
+              />
+              <h3>Ingredients</h3>
+              <ul>
+              {
+                recipe.ingredients.map(ingredient => {
+                  return (
+                    <li key={ingredient.recipeIngredientId}>
+                      {ingredient.quantity} {ingredient.unit} {ingredient.ingredient} {ingredient.method}
+                    </li>
+                  )
+                })
+              }
+              </ul>
+                
+            </div>
+          )
+        })
+      }
+    </>
   )
 }

@@ -11,25 +11,27 @@ router.get('/', rejectUnauthenticated, (req, res) => {
   // Show all recipes for the current user
   const sqlText = `
     SELECT 
-      recipes.recipe_name AS recipe,
-      recipes.image_of_recipe,
+      recipes.id AS id,
+      recipes.recipe_name AS name,
+      recipes.image_of_recipe AS image,
       recipes.recipe_text,
-      JSON_AGG(recipe_ingredients.quantity) AS quantities,
-      JSON_AGG(recipe_ingredients.unit) AS units,
-      JSON_AGG(ingredients.ingredient_name) AS ingredients,
-      JSON_AGG(recipe_ingredients.method) AS methods,
-      category.name AS category,
-      JSON_AGG(food_categories.food_category_name) AS food_categories,
-      JSON_AGG(recipe_ingredients.for_which_part) AS for_which_parts
+      JSON_AGG(
+        JSON_BUILD_OBJECT(
+          'recipeIngredientId', recipe_ingredients.id, 'quantity', recipe_ingredients.quantity, 'unit', recipe_ingredients.unit,
+          'ingredient', ingredients.ingredient_name, 'method', recipe_ingredients.method,
+          'foodCategory', food_categories.food_category_name, 'forWhichPart', recipe_ingredients.for_which_part
+        )
+      ) AS ingredients,
+      category.name AS category
     FROM recipes
     JOIN "user" ON recipes.user_id="user".id
     JOIN recipe_ingredients ON recipe_ingredients.recipe_id=recipes.id
     JOIN ingredients ON ingredients.id=recipe_ingredients.ingredients_id
     JOIN category ON category.id=recipes.category_id
-    JOIN food_categories on food_categories.id = ingredients.food_category_id
-      WHERE "user".id = $1
+    JOIN food_categories ON food_categories.id = ingredients.food_category_id
+      WHERE "user".id = $1 -- some number
     GROUP BY
-      recipes.recipe_name, recipes.image_of_recipe,
+    recipes.id, recipes.recipe_name, recipes.image_of_recipe,
       recipes.recipe_text, category.name;
   `;
 
@@ -37,37 +39,41 @@ router.get('/', rejectUnauthenticated, (req, res) => {
     .query(sqlText, [userId])
     .then(result => {
       const recipes = result.rows
-      // Format the recipes
-      let formattedRecipes = []
-      recipes.map(recipe => {
-        // Format the ingredients within the recipes
-        let ingredients = []
-        for (let i = 0; i < recipe.quantities.length; i++) {
-          let currentIngredient = {
-            quantity: recipe.quantities[i],
-            unit: recipe.units[i],
-            ingredient: recipe.ingredients[i],
-            method: recipe.methods[i],
-            foodCategory: recipe.food_categories[i],
-            forWhichPart: recipe.for_which_parts[i]
-          }
-          // Once formatted, add to the ingredient to the
-          //  ingredients array
-          ingredients.push(currentIngredient)
-        }
-        let formattedRecipe = {
-          name:recipe.recipe,
-          image: recipe.image_of_recipe,
-          recipeText: recipe.recipe_text,
-          ingredients: ingredients,
-          category: recipe.category
-        }
-        // Once the recipe has been formatted, add to the
-        //  formattedRecipes array
-        formattedRecipes.push(formattedRecipe)
-      })
-      // Send the formattedRecipes array
-      res.send(formattedRecipes)
+      console.log('unformatted recipes:', recipes);
+      // // Format the recipes
+      // let formattedRecipes = []
+      // recipes.map(recipe => {
+      //   // Format the ingredients within the recipes
+      //   let ingredients = []
+      //   for (let i = 0; i < recipe.quantities.length; i++) {
+      //     let currentIngredient = {
+      //       ingredientId: recipe.recipe_ingredients_ids[i],
+      //       quantity: recipe.quantities[i],
+      //       unit: recipe.units[i],
+      //       ingredient: recipe.ingredients[i],
+      //       method: recipe.methods[i],
+      //       foodCategory: recipe.food_categories[i],
+      //       forWhichPart: recipe.for_which_parts[i]
+      //     }
+      //     // Once formatted, add to the ingredient to the
+      //     //  ingredients array
+      //     ingredients.push(currentIngredient)
+      //   }
+      //   let formattedRecipe = {
+      //     id: recipe.recipe_id,
+      //     name:recipe.recipe,
+      //     image: recipe.image_of_recipe,
+      //     recipeText: recipe.recipe_text,
+      //     ingredients: ingredients,
+      //     category: recipe.category
+      //   }
+      //   // Once the recipe has been formatted, add to the
+      //   //  formattedRecipes array
+      //   formattedRecipes.push(formattedRecipe)
+      // })
+      // // Send the formattedRecipes array
+      // // console.log('formattedRecipes:', formattedRecipes);
+      res.send(recipes)
     })
     .catch(dbErr => {
       // If unable to process request,
