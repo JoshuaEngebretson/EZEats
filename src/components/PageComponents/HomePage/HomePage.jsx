@@ -1,11 +1,11 @@
+import './HomePage.css'
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
 import RecipeCategory from "./RecipeCategory/RecipeCategory";
+import RecipeImageCard from "./RecipeImageCard/RecipeImageCard";
 
 export default function HomePage() {
   const dispatch = useDispatch();
-  const history = useHistory();
 
   useEffect(() => {
     dispatch({type: 'FETCH_RECIPE_CATEGORIES'});
@@ -19,13 +19,19 @@ export default function HomePage() {
   return (
     <>
       <h1>Inside the logged in Home Page view</h1>
-      <h2>Most Cooked</h2>
-      {/* {mostCooked.map(recipe => {
-        return (
-          
-        )
-      })} */}
+      <h2>Most Prepared</h2>
+      <div className="grid">
+        {mostCooked.map(recipe => {
+          return (
+            <RecipeImageCard
+              key={recipe.id}
+              recipe={recipe}
+            />
+          )
+        })}
+      </div>
       <h2>Categories</h2>
+      
       {categories.map(category => {
         return (
           <RecipeCategory

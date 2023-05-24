@@ -1,6 +1,6 @@
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
-export default function AssociatedRecipe({recipe}) {
+export default function RecipeImageCard({recipe}) {
   const history = useHistory();
 
   let recipeName = recipe.name.replaceAll(' ', '-')
@@ -13,13 +13,14 @@ export default function AssociatedRecipe({recipe}) {
 
   return (
     <div 
-      key={recipe.id}
       onClick={viewRecipe}
+      className='recipe-card'
     >
-      <h1>{recipe.name}</h1>
+      <h5>{recipe.name}</h5>
       <img 
         src={recipe.image}
         alt ={`An image of ${recipe.name}`}
+        className='square-image-small'
       /> 
     </div>
   )
