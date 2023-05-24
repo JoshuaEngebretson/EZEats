@@ -12,7 +12,7 @@ export default function HomePage() {
     dispatch({type: 'FETCH_RECIPES'});
   }, [])
 
-  const categories = useSelector(store => store.recipeCategories)
+  const categories = useSelector(store => store.recipes.recipeCategories)
   const mostCooked = useSelector(store => store.recipes.mostCooked)
   
   return (

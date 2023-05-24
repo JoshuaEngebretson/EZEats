@@ -13,8 +13,7 @@ import recipeCategories from './recipe_categories.reducer';
 const rootReducer = combineReducers({
   errors, // contains registrationMessage and loginMessage
   user, // will have an id and username if someone is logged in
-  recipes, // contains all the recipes associated with the logged in user
-  recipeCategories, // contains all the recipeCategories within the database
+  recipes, // contains allRecipes, recipeCategories, and mostCooked
 });
 
 export default rootReducer;
