@@ -12,7 +12,7 @@ function* fetchRecipes() {
 
 function* fetchRecipeCategories() {
   try {
-    const response = yield axios.get('/api/recipes/recipe_categories')
+    const response = yield axios.get('/api/recipes/recipe-categories')
     yield put({type: 'SET_RECIPE_CATEGORIES', payload: response.data});
   } catch (error) {
     console.log('GET recipeCategories request failed:', error);
@@ -21,7 +21,7 @@ function* fetchRecipeCategories() {
 
 function* fetchMostCooked() {
   try {
-    const response = yield axios.get('/api/recipes/most_cooked')
+    const response = yield axios.get('/api/recipes/most-cooked')
     yield put({type: 'SET_MOST_COOKED', payload: response.data});
   } catch (error) {
     console.log('GET mostCooked request failed:', error);

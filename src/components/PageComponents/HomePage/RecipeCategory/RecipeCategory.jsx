@@ -7,14 +7,12 @@ export default function RecipeCategory({category}) {
   const [categoryOpen, setCategoryOpen] = useState(false)
 
   const expandCategory = () => {
-    console.log(`${category.name} clicked`);
     if (categoryOpen) {
       setCategoryOpen(false)
     }
     else {
       setCategoryOpen(true)
     }
-    
   }
 
   if (categoryOpen) {

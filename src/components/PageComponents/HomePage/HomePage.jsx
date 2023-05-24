@@ -10,6 +10,7 @@ export default function HomePage() {
   useEffect(() => {
     dispatch({type: 'FETCH_RECIPE_CATEGORIES'});
     dispatch({type: 'FETCH_RECIPES'});
+    dispatch({type: 'FETCH_MOST_COOKED'});
   }, [])
 
   const categories = useSelector(store => store.recipes.recipeCategories)
