@@ -1,3 +1,4 @@
+import './AddToCartButtons.css'
 import { useDispatch } from "react-redux"
 
 export default function AddToCartButtons({currentRecipe}) {
@@ -13,15 +14,17 @@ export default function AddToCartButtons({currentRecipe}) {
   }
 
   const increaseOnMenu = () => {
-    console.log('clicked increaseOnMenu');
     dispatch({type:'INCREASE_ON_MENU', payload: currentRecipe.id})
   }
 
   return (
-    <div>
-      <button onClick={decreaseOnMenu}>-</button>
-      <p>{currentRecipe.on_menu}</p>
-      <button onClick={increaseOnMenu}>+</button>
+    <div className='list-btns'>
+      <h4 className='center'>Add to Shopping List</h4>
+      <div className='center'>
+      <button onClick={decreaseOnMenu} className='subtract cart-btn inline'>-</button>
+      <p className='inline'>{currentRecipe.on_menu}</p>
+      <button onClick={increaseOnMenu} className='add cart-btn inline'>+</button>
+      </div>
     </div>
   )
 }
