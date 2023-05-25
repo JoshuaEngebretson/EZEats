@@ -1,7 +1,8 @@
 import './ViewRecipePage.css'
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams, useHistory } from "react-router-dom/cjs/react-router-dom.min"
+import { useParams } from "react-router-dom/cjs/react-router-dom.min"
+import AddToCartButtons from "./AddToCartButtons/AddToCartButtons"
 
 export default function ViewRecipePage() {
   const dispatch = useDispatch();
@@ -86,6 +87,7 @@ export default function ViewRecipePage() {
               )
             }) 
           }
+          <AddToCartButtons currentRecipe={currentRecipe}/>
           <h3>Preparation</h3>
           <ol>
             {
