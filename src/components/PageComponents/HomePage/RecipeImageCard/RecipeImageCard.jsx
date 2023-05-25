@@ -2,13 +2,11 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 export default function RecipeImageCard({recipe}) {
   const history = useHistory();
-
-  let recipeName = recipe.name.replaceAll(' ', '-')
-  console.log(recipeName);
+  const recipeName = recipe.name.replaceAll(' ', '-')
 
   const viewRecipe = () => {
     console.log(`Clicked on ${recipe.name}`);
-    history.push(`/recipe/${recipe.category}/${recipeName}/${recipe.id}`)
+    history.push(`/view-recipe/${recipe.category}/${recipeName}/${recipe.id}`)
   }
 
   return (

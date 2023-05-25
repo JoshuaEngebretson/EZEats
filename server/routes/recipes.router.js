@@ -6,51 +6,20 @@ const router = express.Router();
 // GET all recipes route
 router.get('/', rejectUnauthenticated, (req, res) => {
   const userId = req.user.id
+
   /*
-    Show all recipes for the current user
-    These have been formatted to be an array of objects that have 
-    the following formatting
-    [
-      {
-        id: number,
-        name: string,
-        image: string,
-        recipe_text: string,
-        ingredients: array of objects [
-          {
-            recipeIngredientId: number,
-            quantity: number,
-            unit: string,
-            ingredient: string,
-            method: string,
-            foodCategory: string,
-            forWhichPart: string
-          }
-        ],
-        category: string
-      }
-    ]
+    Show the id, name, image, and category for all recipes
+    associated with this user.
   */
   const sqlText = `
     SELECT 
       recipes.id AS id,
       recipes.recipe_name AS name,
       recipes.image_of_recipe AS image,
-      recipes.recipe_text,
-      JSON_AGG(
-        JSON_BUILD_OBJECT(
-          'recipeIngredientId', recipe_ingredients.id, 'quantity', recipe_ingredients.quantity, 'unit', recipe_ingredients.unit,
-          'ingredient', ingredients.ingredient_name, 'method', recipe_ingredients.method,
-          'foodCategory', food_categories.food_category_name, 'forWhichPart', recipe_ingredients.for_which_part
-        )
-      ) AS ingredients,
       category.name AS category
     FROM recipes
     JOIN "user" ON recipes.user_id="user".id
-    JOIN recipe_ingredients ON recipe_ingredients.recipe_id=recipes.id
-    JOIN ingredients ON ingredients.id=recipe_ingredients.ingredients_id
     JOIN category ON category.id=recipes.category_id
-    JOIN food_categories ON food_categories.id = ingredients.food_category_id
       WHERE "user".id = $1
     GROUP BY
     recipes.id, recipes.recipe_name, recipes.image_of_recipe,
@@ -89,23 +58,23 @@ router.get('/recipe-categories', rejectUnauthenticated, (req, res) => {
 // GET most cooked recipes route
 router.get('/most-cooked', rejectUnauthenticated, (req, res) => {
   const userId = req.user.id
+  /*
+    Show id, name, image, and category of the most cooked recipes
+    associated with this user
+  */
   const sqlQuery = `
     SELECT
-      id,
-      recipe_name AS name,
-      image_of_recipe AS image,
-      user_id
+      recipes.id,
+      recipes.recipe_name AS name,
+      recipes.image_of_recipe AS image,
+      recipes.user_id,
+      category.name AS category
     FROM recipes
+    JOIN category ON category.id=recipes.category_id
     WHERE user_id = $1
-    ORDER BY times_cooked DESC, recipe_name
+    ORDER BY times_cooked DESC, recipe_name, category.name
     LIMIT 5;
   `;
-
-  console.log('**********');
-  console.log('userId:', userId);
-  console.log('**********');
-
-
 
   pool
     .query(sqlQuery, [userId])
@@ -117,7 +86,7 @@ router.get('/most-cooked', rejectUnauthenticated, (req, res) => {
       // If unable to process request,
       // send "Internal Server Error" message to client
       res.sendStatus(500);
-      console.log('Error inside GET /most-cooked');
+      console.log('Error inside GET /most-cooked:', dbErr);
     })
   
 }) // End GET most cooked recipes route
@@ -126,7 +95,31 @@ router.get('/most-cooked', rejectUnauthenticated, (req, res) => {
 router.get('/:id', rejectUnauthenticated, (req, res) => {
   const userId = req.user.id
   const recipeID = req.params.id
-
+  /*
+    Show this recipe for if the current user is associated
+    this has been formatted to be an array of objects that have 
+    the following formatting
+    [
+      {
+        id: number,
+        name: string,
+        image: string,
+        recipe_text: string,
+        ingredients: array of objects [
+          {
+            recipeIngredientId: number,
+            quantity: number,
+            unit: string,
+            ingredient: string,
+            method: string,
+            foodCategory: string,
+            forWhichPart: string
+          }
+        ],
+        category: string
+      }
+    ]
+  */
   const sqlText = `
     SELECT 
       recipes.id AS id,
@@ -140,7 +133,8 @@ router.get('/:id', rejectUnauthenticated, (req, res) => {
           'foodCategory', food_categories.food_category_name, 'forWhichPart', recipe_ingredients.for_which_part
         )
       ) AS ingredients,
-      category.name AS category
+      category.name AS category,
+      JSON_AGG(recipe_ingredients.for_which_part) AS "forWhichPart"
     FROM recipes
     JOIN "user" ON recipes.user_id="user".id
     JOIN recipe_ingredients ON recipe_ingredients.recipe_id=recipes.id
@@ -156,7 +150,7 @@ router.get('/:id', rejectUnauthenticated, (req, res) => {
   pool
   .query(sqlText, [userId, recipeID])
   .then(result => {
-    const recipe = result.rows[0]
+    const recipe = result.rows
     res.send(recipe)
   })
   .catch(dbErr => {

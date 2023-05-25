@@ -28,8 +28,19 @@ function* fetchMostCooked() {
   }
 }
 
+function* fetchCurrentRecipe(action) {
+  try {
+    const currentRecipeId = action.payload
+    const response = yield axios.get(`/api/recipes/${currentRecipeId}`);
+    yield put({type: 'SET_CURRENT_RECIPE', payload: response.data})
+  } catch (error) {
+    console.log('GET currentRecipe request failed:', error);
+  }
+}
+
 export default function* recipesSaga() {
   yield takeLatest('FETCH_RECIPES', fetchRecipes)
   yield takeLatest('FETCH_RECIPE_CATEGORIES', fetchRecipeCategories)
   yield takeLatest('FETCH_MOST_COOKED', fetchMostCooked)
+  yield takeLatest('FETCH_CURRENT_RECIPE', fetchCurrentRecipe)
 }

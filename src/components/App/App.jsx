@@ -78,7 +78,7 @@ function App() {
           >
             {user.id ?
               // If the user is already logged in, 
-              // redirect to the /user page
+              // redirect to the /home page
               <Redirect to="/home" />
               :
               // Otherwise, show the login page
@@ -92,7 +92,7 @@ function App() {
           >
             {user.id ?
               // If the user is already logged in, 
-              // redirect them to the /user page
+              // redirect them to the /home page
               <Redirect to="/home" />
               :
               // Otherwise, show the registration page
@@ -106,7 +106,7 @@ function App() {
           >
             {user.id ?
               // If the user is already logged in, 
-              // redirect them to the /user page
+              // show them the HomePage page
               <HomePage />
               :
               // Otherwise, show the Landing page
@@ -116,14 +116,14 @@ function App() {
 
           <Route
             exact
-            path="/recipe/:recipe-category/:recipe-name/:id"
+            path="/view-recipe/:recipeCategory/:recipeName/:id"
           >
             {user.id ?
               // If the user is already logged in, 
-              // redirect them to the /user page
+              // show them the ViewRecipePage
               <ViewRecipePage />
               :
-              // Otherwise, show the Landing page
+              // Otherwise, show the LandingPage
               <LandingPage />
             }
           </Route>
@@ -134,7 +134,7 @@ function App() {
           >
             {user.id ?
               // If the user is already logged in, 
-              // redirect them to the /user page
+              // show them the EditOrAddRecipePage page
               <EditOrAddRecipePage />
               :
               // Otherwise, show the Landing page
@@ -144,8 +144,10 @@ function App() {
 
           {/* If none of the other routes matched, we will show a 404. */}
           <Route>
-            <h1>404</h1>
-            <h2>This page does not exist</h2>
+            <div className='center'>
+              <h1>404</h1>
+              <h2>Page not found</h2>
+            </div>
           </Route>
         </Switch>
         <Footer />

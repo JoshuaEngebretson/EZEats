@@ -27,16 +27,27 @@ const mostCooked = (state = [], action) => {
   }
 }
 
+const currentRecipe = (state = [], action) => {
+  switch (action.type) {
+    case 'SET_CURRENT_RECIPE':
+      return action.payload;
+    default:
+      return state;
+  }
+}
+
 /*
   Make one object that has the following keys
     allRecipes, recipeCategories, and mostCooked
   these will be on the redux state at:
     state.recipes.allRecipes,
     state.recipes.recipeCategories,
-    state.recipes.mostCooked
+    state.recipes.mostCooked,
+    state.recipes.currentRecipe
 */
 export default combineReducers({
   allRecipes,
   recipeCategories,
   mostCooked,
+  currentRecipe,
 });
