@@ -116,7 +116,7 @@ function App() {
 
           <Route
             exact
-            path="/view-recipe/:recipeCategory/:recipeName/:id"
+            path="/view-recipe/:id"
           >
             {user.id ?
               // If the user is already logged in, 

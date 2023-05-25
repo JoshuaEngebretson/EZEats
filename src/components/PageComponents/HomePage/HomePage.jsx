@@ -18,7 +18,6 @@ export default function HomePage() {
   
   return (
     <>
-      <h1>Inside the logged in Home Page view</h1>
       <h2>Most Prepared</h2>
       <div className="grid">
         {mostCooked.map(recipe => {

@@ -6,7 +6,7 @@ export default function RecipeImageCard({recipe}) {
 
   const viewRecipe = () => {
     console.log(`Clicked on ${recipe.name}`);
-    history.push(`/view-recipe/${recipe.category}/${recipeName}/${recipe.id}`)
+    history.push(`/view-recipe/${recipe.id}`)
   }
 
   return (

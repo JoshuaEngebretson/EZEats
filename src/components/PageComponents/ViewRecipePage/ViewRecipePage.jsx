@@ -35,9 +35,9 @@ export default function ViewRecipePage() {
 
     return (
       <>
-        <h1>Inside Recipe Page view</h1>
         <div key={currentRecipe.id}>
           <h1>{currentRecipe.name}</h1>
+          <h2>{currentRecipe.category}</h2>
           <img 
             src={currentRecipe.image}
             alt ={`An image of ${currentRecipe.name}`}
