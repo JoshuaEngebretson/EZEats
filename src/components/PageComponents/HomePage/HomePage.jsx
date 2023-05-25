@@ -2,7 +2,7 @@ import './HomePage.css'
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import RecipeCategory from "./RecipeCategory/RecipeCategory";
-import RecipeImageCard from "./RecipeImageCard/RecipeImageCard";
+import RecipeImageCard from "../../ReusableComponents/RecipeImageCard/RecipeImageCard";
 
 export default function HomePage() {
   const dispatch = useDispatch();
