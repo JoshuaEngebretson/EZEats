@@ -33,7 +33,7 @@ function Nav() {
             </Link>
 
             <Link className="navLink" to="/shopping-list">
-              View Shopping List
+              Shopping List
             </Link>
 
             <Link className="navLink" to="/info">

@@ -58,6 +58,16 @@ function* decreaseOnMenu(action) {
   }
 }
 
+function* fetchShoppingList() {
+  try {
+    const {data:shoppingList} = yield axios.get('/api/recipes/shopping-list')
+    console.log('shopping list inside saga:', shoppingList);
+    yield put({type: 'SET_SHOPPING_LIST', payload: shoppingList})
+  } catch (error) {
+    console.log('Error inside fetchShopping List saga:', error);
+  }
+}
+
 export default function* recipesSaga() {
   yield takeLatest('FETCH_RECIPES', fetchRecipes)
   yield takeLatest('FETCH_RECIPE_CATEGORIES', fetchRecipeCategories)
@@ -65,4 +75,5 @@ export default function* recipesSaga() {
   yield takeLatest('FETCH_CURRENT_RECIPE', fetchCurrentRecipe)
   yield takeLatest('INCREASE_ON_MENU', increaseOnMenu)
   yield takeLatest('DECREASE_ON_MENU', decreaseOnMenu)
+  yield takeLatest('FETCH_SHOPPING_LIST', fetchShoppingList)
 }

@@ -91,6 +91,49 @@ router.get('/most-cooked', rejectUnauthenticated, (req, res) => {
   
 }) // End GET most cooked recipes route
 
+router.get('/shopping-list', rejectUnauthenticated, (req, res) => {
+  const userId = req.user.id
+  const sqlQuery = `
+    SELECT 
+      recipes.id AS id,
+      recipes.recipe_name AS name,
+      recipes.image_of_recipe AS image,
+      recipes.on_menu,
+      JSON_AGG(
+        JSON_BUILD_OBJECT(
+          'ingredient', ingredients.ingredient_name, 'quantity', recipe_ingredients.quantity,
+          'unit', recipe_ingredients.unit, 'foodCategory', food_categories.food_category_name, 'recipeIngredientId', recipe_ingredients.id 
+        )
+      ) AS ingredients,
+      category.name AS category
+
+    FROM recipes
+    JOIN "user" ON recipes.user_id="user".id
+    JOIN recipe_ingredients ON recipe_ingredients.recipe_id=recipes.id
+    JOIN ingredients ON ingredients.id=recipe_ingredients.ingredients_id
+    JOIN category ON category.id=recipes.category_id
+    JOIN food_categories ON food_categories.id = ingredients.food_category_id
+      WHERE "user".id = $1 AND recipes.on_menu > 0
+    GROUP BY
+      recipes.id, recipes.recipe_name, recipes.image_of_recipe,
+      recipes.recipe_text, category.name;
+  `;
+
+  pool
+    .query(sqlQuery,[userId])
+    .then(result => {
+      const shoppingList = result.rows
+      console.log(shoppingList);
+      res.send(shoppingList)
+    })
+    .catch(dbErr => {
+      // If unable to process request,
+      // send "Internal Server Error" message to client
+      res.sendStatus(500);
+      console.log('Error in GET shoppingList route:', dbErr);
+    })
+})
+
 // GET specific recipe route
 router.get('/:id', rejectUnauthenticated, (req, res) => {
   const userId = req.user.id
