@@ -1,0 +1,39 @@
+.subtract {
+  background-color: #D98787;
+}
+.subtract:hover {
+  background-color: #c37878;
+}
+
+.add {
+  background-color: #67CE65;
+}
+.add:hover{
+  background-color: #57b356;
+}
+
+.inline {
+  display: inline;
+  height:30px;
+  width: 30px;
+  margin: auto;
+  text-align: center;
+  font-weight: bold;
+  margin: -3px 3% 3% 3%;
+} 
+
+.list-btns {
+  background-color: rgb(175, 175, 175);
+  width: 200px;
+  height: 100px;
+  border: solid 2px black;
+  font-weight: bold;
+}
+
+.list-btns:hover {
+  background-color: gray;
+}
+
+.text {
+  padding-top: 12%;
+}

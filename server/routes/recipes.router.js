@@ -133,6 +133,8 @@ router.get('/:id', rejectUnauthenticated, (req, res) => {
           'foodCategory', food_categories.food_category_name, 'forWhichPart', recipe_ingredients.for_which_part
         )
       ) AS ingredients,
+      recipes.on_menu,
+      recipes.times_cooked,
       category.name AS category,
       JSON_AGG(recipe_ingredients.for_which_part) AS "forWhichPart"
     FROM recipes
@@ -144,7 +146,8 @@ router.get('/:id', rejectUnauthenticated, (req, res) => {
       WHERE "user".id = $1 AND recipes.id = $2
     GROUP BY
       recipes.id, recipes.recipe_name, recipes.image_of_recipe,
-      recipes.recipe_text, category.name;
+      recipes.recipe_text, category.name, recipes.on_menu,
+      recipes.times_cooked;
   `;
 
   pool
@@ -266,6 +269,40 @@ router.put('/:id', rejectUnauthenticated, (req, res) => {
       console.log(`Error in PUT /${idToUpdate} route:`, dbErr);
     })
 }); // End PUT recipe route
+
+// PUT adjust-on-menu route
+router.put('/adjust-on-menu/:id', rejectUnauthenticated, (req, res) => {
+  const userId = req.user.id
+  const idToUpdate = req.params.id
+  const adjustment = req.body.adjustment
+  console.log('req.body inside adjust-on-menu/:id:', req.body);
+
+  let sqlQuery;
+
+  if (adjustment === 'increaseNumber') {
+    sqlQuery = `
+      UPDATE recipes
+        SET on_menu = (on_menu+1)
+        WHERE id = $1 AND user_id = $2;
+    `;
+  } else if (adjustment === 'decreaseNumber') {
+    sqlQuery = `
+      UPDATE recipes
+        SET on_menu = (on_menu-1)
+        WHERE id = $1 AND user_id = $2;
+    `;
+  }
+
+  pool
+    .query(sqlQuery, [idToUpdate, userId])
+    .then(dbRes => {
+      res.sendStatus(200)
+    })
+    .catch(dbErr => {
+      console.log('Error inside PUT adjust-on-menu:', dbErr);
+      res.sendStatus(500)
+    })
+})
 
 // DELETE recipe route
 router.delete('/:id', rejectUnauthenticated, (req, res) => {

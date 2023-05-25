@@ -1,7 +1,9 @@
 import './ViewRecipePage.css'
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams, useHistory } from "react-router-dom/cjs/react-router-dom.min"
+import { useParams } from "react-router-dom/cjs/react-router-dom.min"
+import AddToCartButtons from "../../ReusableComponents/AddToCartButtons/AddToCartButtons"
+import EditButton from './EditButton/EditButton';
 
 export default function ViewRecipePage() {
   const dispatch = useDispatch();
@@ -34,16 +36,17 @@ export default function ViewRecipePage() {
     }
 
     return (
-      <>
-        <h1>Inside Recipe Page view</h1>
-        <div key={currentRecipe.id}>
+      <div className=''>
+        <img 
+          className='square-image-medium'
+          src={currentRecipe.image}
+          alt ={`An image of ${currentRecipe.name}`}
+        />
+        <div className=''>
           <h1>{currentRecipe.name}</h1>
-          <img 
-            src={currentRecipe.image}
-            alt ={`An image of ${currentRecipe.name}`}
-            className='square-image-medium'
-          />
+          <h2>{currentRecipe.category}</h2>
           <h3>Ingredients</h3>
+          <div>
           <ul>
             {
               currentRecipe.ingredients.map(ingredient => {
@@ -65,8 +68,8 @@ export default function ViewRecipePage() {
             */
             recipeParts.map(part=> {
               return (
-                <>
-                <h4 key={part}>{part}</h4>
+                <div key={part}>
+                <h4>{part}</h4>
                 <ul>
                   {
                     // Only show the ingredients that match with the current part
@@ -82,10 +85,15 @@ export default function ViewRecipePage() {
                     })
                   }
                 </ul>
-                </>
+                </div>
               )
             }) 
           }
+          </div>
+          <EditButton currentRecipe={currentRecipe} />
+          <AddToCartButtons currentRecipe={currentRecipe} />
+        </div> {/* End div4 */}
+        <div className=''>
           <h3>Preparation</h3>
           <ol>
             {
@@ -93,14 +101,14 @@ export default function ViewRecipePage() {
                 return <li key={paragraph}>{paragraph}</li>
               })
             }
-          </ol>       
-        </div>
-      </>
+          </ol>  
+        </div>   
+      </div>
     )
   }
   else {
     return (
-      <div className='center'>
+      <div className=''>
         <h1>404</h1>
         <h2>you do not have a recipe at this address</h2>
       </div>

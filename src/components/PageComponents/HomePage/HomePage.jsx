@@ -2,7 +2,7 @@ import './HomePage.css'
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import RecipeCategory from "./RecipeCategory/RecipeCategory";
-import RecipeImageCard from "./RecipeImageCard/RecipeImageCard";
+import RecipeImageCard from "../../ReusableComponents/RecipeImageCard/RecipeImageCard";
 
 export default function HomePage() {
   const dispatch = useDispatch();
@@ -18,7 +18,6 @@ export default function HomePage() {
   
   return (
     <>
-      <h1>Inside the logged in Home Page view</h1>
       <h2>Most Prepared</h2>
       <div className="grid">
         {mostCooked.map(recipe => {

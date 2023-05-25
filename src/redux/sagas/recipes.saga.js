@@ -38,9 +38,31 @@ function* fetchCurrentRecipe(action) {
   }
 }
 
+function* increaseOnMenu(action) {
+  try {
+    const increaseNumber = {adjustment:'increaseNumber'} 
+    const response = yield axios.put(`/api/recipes/adjust-on-menu/${action.payload}`, increaseNumber)
+    yield put({type:'FETCH_CURRENT_RECIPE', payload: action.payload})
+  } catch (error) {
+    console.log('Error inside increaseOnMenu saga:', error);
+  }
+}
+
+function* decreaseOnMenu(action) {
+  try {
+    const decreaseNumber = {adjustment:'decreaseNumber'}
+    const response = yield axios.put(`/api/recipes/adjust-on-menu/${action.payload}`, decreaseNumber)
+    yield put({type:'FETCH_CURRENT_RECIPE', payload: action.payload})
+  } catch (error) {
+    console.log('Error inside decreaseOnMenu saga:', error);
+  }
+}
+
 export default function* recipesSaga() {
   yield takeLatest('FETCH_RECIPES', fetchRecipes)
   yield takeLatest('FETCH_RECIPE_CATEGORIES', fetchRecipeCategories)
   yield takeLatest('FETCH_MOST_COOKED', fetchMostCooked)
   yield takeLatest('FETCH_CURRENT_RECIPE', fetchCurrentRecipe)
+  yield takeLatest('INCREASE_ON_MENU', increaseOnMenu)
+  yield takeLatest('DECREASE_ON_MENU', decreaseOnMenu)
 }

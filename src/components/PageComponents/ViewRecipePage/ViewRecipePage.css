@@ -1,6 +1,10 @@
+
 .square-image-medium {
   max-height: 400px;
   max-width: 400px;
-  width: auto;
+  width: 25%;
+  height: auto;
   margin: auto;
+  grid-column-start: col1-start;
+  grid-column-end: span col2-end;
 }

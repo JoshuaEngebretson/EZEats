@@ -1,4 +1,4 @@
-import RecipeImageCard from "../RecipeImageCard/RecipeImageCard"
+import RecipeImageCard from "../../../ReusableComponents/RecipeImageCard/RecipeImageCard"
 import { useSelector } from "react-redux"
 import { useState } from "react"
 
