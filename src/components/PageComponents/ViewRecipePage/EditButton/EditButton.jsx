@@ -8,7 +8,7 @@ export default function EditButton({currentRecipe}) {
   }
 
   return (
-    <div class='list-btns' onClick={editRecipe}>
+    <div className='list-btns' onClick={editRecipe}>
       <p className="center text">Edit</p>
     </div>
   )

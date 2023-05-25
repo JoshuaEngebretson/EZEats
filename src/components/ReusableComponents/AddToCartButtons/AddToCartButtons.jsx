@@ -17,9 +17,18 @@ export default function AddToCartButtons({currentRecipe}) {
     dispatch({type:'INCREASE_ON_MENU', payload: currentRecipe.id})
   }
 
+  const cartButtonText = () => {
+    if (currentRecipe.on_menu > 0) {
+      return <h4 className='center'>Added to List</h4>
+    }
+    else {
+      return <h4 className='center'>Add to Shopping List</h4>
+    }
+  }
+
   return (
     <div className='list-btns'>
-      <h4 className='center'>Add to Shopping List</h4>
+      {cartButtonText()}
       <div className='center'>
       <button onClick={decreaseOnMenu} className='subtract cart-btn inline'>-</button>
       <p className='inline'>{currentRecipe.on_menu}</p>
