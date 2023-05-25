@@ -5,6 +5,7 @@ import RecipeImageCard from "../../ReusableComponents/RecipeImageCard/RecipeImag
 export default function ShoppingListPage() {
   const dispatch = useDispatch();
   const shoppingList = useSelector(store => store.recipes.shoppingList)
+  console.log('shoppingList inside ShoppingListPage:', shoppingList);
 
   useEffect(() => {
     dispatch({
@@ -15,14 +16,16 @@ export default function ShoppingListPage() {
   return (
     <>
       <h2>Planned Meals</h2>
-      {/* {shoppingList.map(recipe => {
-        return (
-          <RecipeImageCard
-            key={recipe.id}
-            recipe={recipe}
-          />
-        ) 
-      })} */}
+      <div className='grid'>
+        {shoppingList.map(recipe => {
+          return (
+            <RecipeImageCard
+              key={recipe.id}
+              recipe={recipe}
+            />
+          ) 
+        })}
+      </div>
       <h2>Shopping List</h2>
       {/* {shoppingList.ingredients.map(ingredient => {
         return (

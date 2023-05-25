@@ -61,8 +61,8 @@ function* decreaseOnMenu(action) {
 function* fetchShoppingList() {
   try {
     const {data:shoppingList} = yield axios.get('/api/recipes/shopping-list')
-    console.log('shopping list inside saga:', shoppingList);
-    yield put({type: 'SET_SHOPPING_LIST', payload: shoppingList})
+    // console.log('shopping list inside saga:', shoppingList);
+    // yield put({type: 'SET_SHOPPING_LIST', payload: shoppingList})
   } catch (error) {
     console.log('Error inside fetchShopping List saga:', error);
   }
