@@ -2,6 +2,7 @@ const express = require('express');
 const pool = require('../modules/pool');
 const { rejectUnauthenticated } = require('../modules/authentication-middleware');
 const router = express.Router();
+const convertUnitToSmallest = require('../modules/unit-conversion');
 
 // GET all recipes route
 router.get('/', rejectUnauthenticated, (req, res) => {
@@ -105,6 +106,12 @@ router.get('/shopping-list', rejectUnauthenticated, (req, res) => {
   WHERE user_id = $1 AND recipes.on_menu > 0
   ORDER BY times_cooked DESC, recipe_name, category.name;
   `;
+
+  console.log('*****')
+  console.log('*****')
+  console.log('*****')
+  console.log('*****')
+  console.log('Expected mg 0.001:', convertUnitToSmallest(1, 'mg', 'mass'))
 
   pool
     .query(shoppingListCardsQuery,[userId])
