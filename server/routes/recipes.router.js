@@ -107,12 +107,6 @@ router.get('/shopping-list', rejectUnauthenticated, (req, res) => {
   ORDER BY times_cooked DESC, recipe_name, category.name;
   `;
 
-  console.log('*****')
-  console.log('*****')
-  console.log('*****')
-  console.log('*****')
-  console.log('Expected mg 0.001:', convertUnitToSmallest(1, 'mg', 'mass'))
-
   pool
     .query(shoppingListCardsQuery,[userId])
     .then(result => {
@@ -120,12 +114,17 @@ router.get('/shopping-list', rejectUnauthenticated, (req, res) => {
       const shoppingListIngredientsQuery = `
       SELECT
         JSON_BUILD_OBJECT(
-          'ingredient', ingredients.ingredient_name, 'quantity', recipe_ingredients.quantity,
-          'unit', recipe_ingredients.unit, 'foodCategory', food_categories.food_category_name, 'recipeIngredientId', recipe_ingredients.id 
+          'ingredient', ingredients.ingredient_name,
+          'times_on_menu', recipes.on_menu, 'multipliedQuantity', (recipe_ingredients.quantity*recipes.on_menu),
+          'unit', units_of_measurement.unit,
+          'multipliedConvertedQuantity', (recipe_ingredients.converted_quantity*recipes.on_menu),
+          'convertedUnit', recipe_ingredients.converted_unit, 'foodCategory', food_categories.food_category_name,
+          'recipeIngredientId', recipe_ingredients.id 
         ) AS ingredients
       FROM recipes
       JOIN "user" ON recipes.user_id="user".id
       JOIN recipe_ingredients ON recipe_ingredients.recipe_id=recipes.id
+      JOIN units_of_measurement ON units_of_measurement.id=recipe_ingredients.unit_id
       JOIN ingredients ON ingredients.id=recipe_ingredients.ingredients_id
       JOIN category ON category.id=recipes.category_id
       JOIN food_categories ON food_categories.id = ingredients.food_category_id
@@ -133,11 +132,12 @@ router.get('/shopping-list', rejectUnauthenticated, (req, res) => {
       GROUP BY
         recipes.id, recipes.recipe_name, recipes.image_of_recipe,
         recipes.recipe_text, ingredients.ingredient_name, recipe_ingredients.quantity,
-        recipe_ingredients.unit, food_categories.food_category_name, recipe_ingredients.id;
+        units_of_measurement.id, food_categories.food_category_name, recipe_ingredients.id;
       `;
       pool.query(shoppingListIngredientsQuery, [userId])
       .then(result => {
         let unformattedIngredients = result.rows
+        console.log();
 
         let list ={
           shoppingList,
@@ -191,7 +191,7 @@ router.get('/:id', rejectUnauthenticated, (req, res) => {
       recipes.recipe_text,
       JSON_AGG(
         JSON_BUILD_OBJECT(
-          'recipeIngredientId', recipe_ingredients.id, 'quantity', recipe_ingredients.quantity, 'unit', recipe_ingredients.unit,
+          'recipeIngredientId', recipe_ingredients.id, 'quantity', recipe_ingredients.quantity, 'unit', units_of_measurement.unit,
           'ingredient', ingredients.ingredient_name, 'method', recipe_ingredients.method,
           'foodCategory', food_categories.food_category_name, 'forWhichPart', recipe_ingredients.for_which_part
         )
@@ -203,6 +203,7 @@ router.get('/:id', rejectUnauthenticated, (req, res) => {
     FROM recipes
     JOIN "user" ON recipes.user_id="user".id
     JOIN recipe_ingredients ON recipe_ingredients.recipe_id=recipes.id
+    JOIN units_of_measurement ON units_of_measurement.id=recipe_ingredients.unit_id
     JOIN ingredients ON ingredients.id=recipe_ingredients.ingredients_id
     JOIN category ON category.id=recipes.category_id
     JOIN food_categories ON food_categories.id = ingredients.food_category_id

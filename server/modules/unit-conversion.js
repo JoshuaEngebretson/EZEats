@@ -40,109 +40,63 @@ const massConversionsTograms = {
   * 
   * @param {number} quantity The stored amount for the recipe
   * @param {string} unit The stored unit of measurement
-  * @param {string} volumetricOrMass Accepts 'mass', 'weight', 'volumetric', 'volume', or 'other'. Used to determine the type of conversion: weight into grams, from a volume into teaspoons, or unable to convert. 
+  * @param {string} volumeOrMass Accepts 'mass', 'volume', or 'other'. Used to determine the type of conversion: mass into grams, from a volume into teaspoons, or unable to convert. 
 */
-function convertUnitToSmallest(quantity, unit, volumetricOrMass) {
-  switch (volumetricOrMass) {
+function convertUnitToSmallest(quantity, unit, volumeOrMass) {
+  switch (volumeOrMass) {
     case 'mass':
-    case 'weight':
       switch (unit) {
-        case 'st':
         case 'stone':
           return quantity * massConversionsTograms.stoneToGram;
         case 'kg':
-        case 'kilogram':
           return quantity * massConversionsTograms.kilogramToGram;
         case 'lb':
-        case 'pound':
           return quantity * massConversionsTograms.poundToGram;
         case 'oz':
-        case 'ounce':
           return quantity * massConversionsTograms.ounceToGram;
         case 'g':
-        case 'gram':
           return quantity;
         case 'mg':
-        case 'milligram':
           return quantity * massConversionsTograms.milligramToGram;
         default:
           break;
       }
     case 'volume':
-    case 'volumetric':
       switch (unit) {
         case 'cubic foot':
           return quantity * volumetricConversionsToUsTeaspoon.cubicFootToUsTeaspoon;
         case 'gal':
-        case 'gallon': 
-        case 'US gal':
-        case 'US gallon': 
           return quantity * volumetricConversionsToUsTeaspoon.usGallonToUsTeaspoon;
         case 'qt':
-        case 'quart':
-        case 'US qt':
-        case 'US quart':
           return quantity * volumetricConversionsToUsTeaspoon.usQuartToUsTeaspoon;
         case 'pt':
-        case 'pint':
-        case 'US pt':
-        case 'US pint':
           return quantity * volumetricConversionsToUsTeaspoon.usPintToUsTeaspoon;
         case 'c':
-        case 'cup':
-        case 'US c':
-        case 'US cup':
           return quantity * volumetricConversionsToUsTeaspoon.usCupToUsTeaspoon;
         case 'fl oz':
-        case 'fluid ounce':
-        case 'US fl oz':
-        case 'US fluid ounce':
           return quantity * volumetricConversionsToUsTeaspoon.usFluidOunceToUsTeaspoon;
         case 'cubic inch':
           return quantity * volumetricConversionsToUsTeaspoon.cubicInchToUsTeaspoon;
-        case 'T':
-        case 'tbs':
         case 'tbsp':
-        case 'tablespoon':
-        case 'US T':
-        case 'US tbs':
-        case 'US tbsp':
-        case 'US tablespoon':
           return quantity * volumetricConversionsToUsTeaspoon.usTablespoonToUsTeaspoon;
-        case 't':
         case 'tsp':
-        case 'US t':
-        case 'US tsp':
-        case 'US teaspoon':
           return quantity
         case 'l':
-        case 'liter':
           return quantity * volumetricConversionsToUsTeaspoon.literToUsTeaspoon;
         case 'ml':
-        case 'milliliter':
           return quantity * volumetricConversionsToUsTeaspoon.milliliterToUsTeaspoon;
-        case 'Imperial gal':
         case 'Imperial gallon':
           return quantity * volumetricConversionsToUsTeaspoon.imperialGallonToUsTeaspoon;
-        case 'Imperial qt':
         case 'Imperial quart':
           return quantity * volumetricConversionsToUsTeaspoon.imperialQuartToUsTeaspoon;
-        case 'Imperial pt':
         case 'Imperial pint':
           return quantity * volumetricConversionsToUsTeaspoon.imperialPintToUsTeaspoon;
-        case 'Imperial c':
         case 'Imperial cup':
           return quantity * volumetricConversionsToUsTeaspoon.imperialCupToUsTeaspoon;
-        case 'Imperial fl oz':
         case 'Imperial fluid ounce':
           return quantity * volumetricConversionsToUsTeaspoon.imperialFluidOunceToUsTeaspoon;
-        case 'Imperial T':
-        case 'Imperial tbs':
-        case 'Imperial tbsp':
         case 'Imperial tablespoon':
           return quantity * volumetricConversionsToUsTeaspoon.imperialTablespoonToUsTeaspoon;
-        case 'Imperial t':
-        case 'Imperial tsp':
         case 'Imperial teaspoon':
           return quantity * volumetricConversionsToUsTeaspoon.imperialTeaspoonToUsTeaspoon;
         default:
@@ -161,23 +115,23 @@ function volumeTests () {
   console.log('Expected gal 768:', convertUnitToSmallest(1, 'gal', 'volume'))
   console.log('Expected qt 172:', convertUnitToSmallest(1, 'qt', 'volume'))
   console.log('Expected pt 96:', convertUnitToSmallest(1, 'pt', 'volume'))
-  console.log('Expected c 48.692:', convertUnitToSmallest(1, 'c', 'volumetric'))
-  console.log('Expected fl oz 6:', convertUnitToSmallest(1, 'fl oz', 'volumetric'))
-  console.log('Expected cubic inch 3.325:', convertUnitToSmallest(1, 'cubic inch', 'volumetric'))
+  console.log('Expected c 48.692:', convertUnitToSmallest(1, 'c', 'volume'))
+  console.log('Expected fl oz 6:', convertUnitToSmallest(1, 'fl oz', 'volume'))
+  console.log('Expected cubic inch 3.325:', convertUnitToSmallest(1, 'cubic inch', 'volume'))
   console.log('Expected tbsp 3:', convertUnitToSmallest(1, 'tbsp', 'volume'))
-  console.log('Expected t 1:', convertUnitToSmallest(1, 't', 'volume'))
+  console.log('Expected tsp 1:', convertUnitToSmallest(1, 'tsp', 'volume'))
   console.log('Expected l 202.9:', convertUnitToSmallest(1, 'l', 'volume'))
   console.log('Expected ml 0.203:', convertUnitToSmallest(1, 'ml', 'volume'))
-  console.log('Expected Imperial gal 922.3:', convertUnitToSmallest(1, 'Imperial gal', 'volume'))
-  console.log('Expected Imperial qt 230.6:', convertUnitToSmallest(1, 'Imperial qt', 'volume'))
-  console.log('Expected Imperial pt 115.3:', convertUnitToSmallest(1, 'Imperial pt', 'volume'))
-  console.log('Expected Imperial c 57.646:', convertUnitToSmallest(1, 'Imperial c', 'volume'))
-  console.log('Expected Imperial fl oz 5.765:', convertUnitToSmallest(1, 'Imperial fl oz', 'volume'))
-  console.log('Expected Imperial tbsp 3.603:', convertUnitToSmallest(1, 'Imperial tbsp', 'volume'))
-  console.log('Expected Imperial t 1.201:', convertUnitToSmallest(1, 'Imperial t', 'volume'))
+  console.log('Expected Imperial gallon 922.3:', convertUnitToSmallest(1, 'Imperial gallon', 'volume'))
+  console.log('Expected Imperial quart 230.6:', convertUnitToSmallest(1, 'Imperial quart', 'volume'))
+  console.log('Expected Imperial pint 115.3:', convertUnitToSmallest(1, 'Imperial pint', 'volume'))
+  console.log('Expected Imperial cup 57.646:', convertUnitToSmallest(1, 'Imperial cup', 'volume'))
+  console.log('Expected Imperial fluid ounce 5.765:', convertUnitToSmallest(1, 'Imperial fluid ounce', 'volume'))
+  console.log('Expected Imperial tablespoon 3.603:', convertUnitToSmallest(1, 'Imperial tablespoon', 'volume'))
+  console.log('Expected Imperial teaspoon 1.201:', convertUnitToSmallest(1, 'Imperial teaspoon', 'volume'))
 }
 function massTests() {
-  console.log('Expected st 6350.29:', convertUnitToSmallest(1, 'st', 'mass'))
+  console.log('Expected stone 6350.29:', convertUnitToSmallest(1, 'stone', 'mass'))
   console.log('Expected kg 1000:', convertUnitToSmallest(1, 'kg', 'mass'))
   console.log('Expected lb 453.6:', convertUnitToSmallest(1, 'lb', 'mass'))
   console.log('Expected oz 28.35:', convertUnitToSmallest(1, 'oz', 'mass'))
@@ -186,4 +140,4 @@ function massTests() {
 }
 // console.log(volumeTests());
 // console.log(massTests());
-// console.log(convertUnitToSmallest(2,'whole', 'volume'));
+// console.log('Expected whole null', convertUnitToSmallest(2,'whole', 'volume'));

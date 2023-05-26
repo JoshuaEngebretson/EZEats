@@ -51,9 +51,16 @@ export default function ViewRecipePage() {
             {
               currentRecipe.ingredients.map(ingredient => {
                 if (!ingredient.forWhichPart){
+                  if (ingredient.method) {
+                    return (
+                      <li key={ingredient.recipeIngredientId}>
+                        {ingredient.quantity} {ingredient.unit} {ingredient.ingredient} - {ingredient.method}
+                      </li>
+                    )
+                  }
                   return (
                     <li key={ingredient.recipeIngredientId}>
-                      {ingredient.quantity} {ingredient.unit} {ingredient.ingredient} {ingredient.method}
+                      {ingredient.quantity} {ingredient.unit} {ingredient.ingredient}
                     </li>
                   )
                 }
