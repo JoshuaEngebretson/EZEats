@@ -267,14 +267,14 @@ router.post('/', rejectUnauthenticated, (req, res) => {
             INSERT INTO recipe_ingredients
               (quantity, unit, ingredients_id, method, recipe_id, for_which_part)
             VALUES ($1, $2, $3, $4, $5, $6);
-          `
+          `;
         }
         else {
           newRecipeIngredientQuery=`
             INSERT INTO recipe_ingredients
               (quantity, unit, ingredients_id, method, recipe_id)
             VALUES ($1, $2, $3, $4, $5);
-          `
+          `;
         }
         const newRecipeIngredientValues = [
           ingredient.quantity,
