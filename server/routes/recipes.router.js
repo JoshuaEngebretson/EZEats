@@ -2,7 +2,7 @@ const express = require('express');
 const pool = require('../modules/pool');
 const { rejectUnauthenticated } = require('../modules/authentication-middleware');
 const router = express.Router();
-const convertUnitToSmallest = require('../modules/unit-conversion');
+const {convertUnitToSmallest, convertSmallestToLargestUsMeasurement} = require('../modules/unit-conversion');
 
 // GET all recipes route
 router.get('/', rejectUnauthenticated, (req, res) => {

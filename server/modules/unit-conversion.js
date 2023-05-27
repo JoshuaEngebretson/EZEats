@@ -1,10 +1,6 @@
 // Unit conversions provided via google.com
 
 // Volumetric conversions to US teaspoon
-/**
- * @ {768} usGallonToUsTeaspoon 768
- */
-
 const volumetricConversionsToUsTeaspoon = {
   // US volumes to US teaspoon
   usTeaspoonsInCubicFoot: 5745.04,
@@ -40,13 +36,18 @@ const massConversionsTograms = {
 }
 
 /**
-  * Converts a specified unit to the smallest version of itself for combining different unit types.
-  * 
-  * Mass is converted to grams. Volume is converted to US teaspoons
-  * 
+  * - Converts a specified unit to the smallest version of itself for 
+  *   combining different unit types.
+  * - Mass is converted to grams. Volume is converted to US teaspoons
   * @param {number} quantity The stored amount for the recipe
   * @param {string} unit The stored unit of measurement
-  * @param {'mass' | 'volume' | 'other'} volumeOrMass Accepts 'mass', 'volume', or 'other'. Used to determine the type of conversion: mass into grams, from a volume into teaspoons, or unable to convert. 
+  * @param {'mass' | 'volume' | 'other'} volumeOrMass
+ *  - - Accepts 'mass', 'volume', or 'other'. Used to determine the type of conversion:
+ *  mass into grams, from a volume into teaspoons, or unable to convert. 
+ * @returns
+ *  - A number of either US teaspoons
+ *  - A number of grams
+ *  - or NULL
 */
 function convertUnitToSmallest(quantity, unit, volumeOrMass) {
   switch (volumeOrMass) {
@@ -121,15 +122,19 @@ function convertUnitToSmallest(quantity, unit, volumeOrMass) {
 const formatter = new Intl.NumberFormat('en-US', {maximumFractionDigits: 2})
 
 /**
- * Converts a combined smallest unit and outputs the largets version that it could be.
- * Stops at the first unit the quantity is greater than, then converts to a number
- * of those units
- * 
- * If provided with (1500, volume) should return a object of:
- * 
- *  { quantity: 1.96, unit: 'gallons' }
- * @param {number} quantity 
- * @param {string} volumeOrMass Accepts 'mass', 'volume', or 'other'. Used to determine the type of conversion: mass into grams, from a volume into teaspoons, or unable to convert.  
+ * - Converts a combined smallest unit and outputs the largest 
+ *  unit that it could be.
+ * - Stops at the first unit the quantity is greater than, then
+ *  converts to a number of those units
+ * @example
+ * Input - (1500, 'volume')
+ * Output - { quantity: 1.96, unit: 'gallons' }
+ * @param {number} quantity - A number of US teaspoons OR grams
+ * @param {'mass' | 'volume' | 'other'} volumeOrMass
+ *  - - Accepts 'mass', 'volume', or 'other'. Used to determine the type of conversion:
+ *  mass into grams, from a volume into teaspoons, or unable to convert. 
+ * @returns {convertedObject} an object that consists of {quantity: number, unit: 'string'}
+
  */
 function convertSmallestToLargestUsMeasurement (quantity, volumeOrMass) {
   let conversion;
@@ -190,6 +195,8 @@ function convertQuantity(num, unitConvertingInto, unit) {
   return convertedObject
 }
 
+module.exports = {convertUnitToSmallest, convertSmallestToLargestUsMeasurement};
+
 function testConvertToLargest () {
   console.log('***** volume tests *****');
   console.log('Expected 1.(some decimal place) gallons:',convertSmallestToLargestUsMeasurement(1500, 'volume'));
@@ -235,8 +242,6 @@ function testConvertToSmallest () {
   console.log('Expected g 1:', convertUnitToSmallest(1, 'g', 'mass'))
   console.log('Expected mg 0.001:', convertUnitToSmallest(1, 'mg', 'mass'))
 }
-
 // console.log(testConvertToSmallest());
 // console.log(testConvertToLargest());
 
-module.exports = convertUnitToSmallest;
