@@ -11,6 +11,7 @@ const volumetricConversionsToUsTeaspoon = {
   usTeaspoonsInUsFluidOunce: 6,
   usTeaspoonsInCubicInch: 3.325,
   usTeaspoonsInUsTablespoon: 3,
+  usTeaspoonsInUsTeaspoon: 1,
   // Metric volumes to US teaspoon
   usTeaspoonsInLiter: 202.9,
   usTeaspoonsInMilliliter: 0.203,
@@ -32,6 +33,7 @@ const massConversionsTograms = {
   // Metric masses
   gramsInStone: 6350.29,
   gramsInKilogram: 1000,
+  gramsInGram: 1,
   gramsInMilligram: 0.001
 }
 
@@ -132,11 +134,12 @@ const formatter = new Intl.NumberFormat('en-US', {maximumFractionDigits: 2})
  * @param {number} quantity - A number of US teaspoons OR grams
  * @param {'mass' | 'volume' | 'other'} volumeOrMass
  *  - - Accepts 'mass', 'volume', or 'other'. Used to determine the type of conversion:
- *  mass into grams, from a volume into teaspoons, or unable to convert. 
+ *  mass into grams, from a volume into teaspoons, or unable to convert.
+ * @param {string} category - A string that is used to check if able to use any of the liquid based measurements: (fl oz, pint, quart, gallon)
  * @returns {convertedObject} an object that consists of {quantity: number, unit: 'string'}
 
  */
-function convertSmallestToLargestUsMeasurement (quantity, volumeOrMass) {
+function convertSmallestToLargestUsMeasurement (quantity, volumeOrMass, category) {
   let conversion;
   switch (volumeOrMass) {
     case 'volume':
@@ -144,26 +147,20 @@ function convertSmallestToLargestUsMeasurement (quantity, volumeOrMass) {
       switch (true){
         // stop at the first case the quantity is greater than, then convert
         // to that a number of those units
-        case quantity>=conversion.usTeaspoonsInUsGallon:
+        case quantity>=conversion.usTeaspoonsInUsGallon && category === 'liquids':
           return convertQuantity(quantity, conversion.usTeaspoonsInUsGallon, 'gallon');
-        case quantity>=conversion.usTeaspoonsInUsQuart:
+        case quantity>=conversion.usTeaspoonsInUsQuart && category === 'liquids':
           return convertQuantity(quantity, conversion.usTeaspoonsInUsQuart, 'quart');
-        case quantity>=conversion.usTeaspoonsInUsPint:
+        case quantity>=conversion.usTeaspoonsInUsPint && category === 'liquids':
           return convertQuantity(quantity, conversion.usTeaspoonsInUsPint, 'pint');
         case quantity>=conversion.usTeaspoonsInUsCup:
           return convertQuantity(quantity, conversion.usTeaspoonsInUsCup, 'cup');
-        case quantity>=conversion.usTeaspoonsInUsFluidOunce:
+        case quantity>=conversion.usTeaspoonsInUsFluidOunce && category === 'liquids':
           return convertQuantity(quantity, conversion.usTeaspoonsInUsFluidOunce, 'fluid ounce');
         case quantity>=conversion.usTeaspoonsInUsTablespoon:
           return convertQuantity(quantity, conversion.usTeaspoonsInUsTablespoon, 'tablespoon');
         default:
-          // For the shopping list, we would never get less than 1 teaspoon from the store
-          // So round up to nearest teaspoon
-          let convertedObject = {
-            quantity: Math.ceil(quantity),
-            unit: 'teaspoons'
-          }
-          return convertedObject
+          return convertQuantity(quantity, conversion.usTeaspoonsInUsTeaspoon, 'teaspoon')
     }
     case 'mass':
       conversion = massConversionsTograms;
@@ -199,15 +196,16 @@ module.exports = {convertUnitToSmallest, convertSmallestToLargestUsMeasurement};
 
 function testConvertToLargest () {
   console.log('***** volume tests *****');
-  console.log('Expected 1.(some decimal place) gallons:',convertSmallestToLargestUsMeasurement(1500, 'volume'));
-  console.log('Expected 1.(some decimal place) gallons:',convertSmallestToLargestUsMeasurement(769, 'volume'));
-  console.log('Expected 3.(some decimal place) quarts:',convertSmallestToLargestUsMeasurement(765, 'volume'));
-  console.log('Expected 1.(some decimal place) pints:',convertSmallestToLargestUsMeasurement(191, 'volume'));
+  console.log('Expected 1.(some decimal place) gallons:',convertSmallestToLargestUsMeasurement(1500, 'volume', 'liquids'));
+  console.log('Expected 30.(some decimal place) cups:',convertSmallestToLargestUsMeasurement(1500, 'volume'));
+  console.log('Expected 1.(some decimal place) gallons:',convertSmallestToLargestUsMeasurement(769, 'volume', 'liquids'));
+  console.log('Expected 3.(some decimal place) quarts:',convertSmallestToLargestUsMeasurement(765, 'volume', 'liquids'));
+  console.log('Expected 1.(some decimal place) pints:',convertSmallestToLargestUsMeasurement(191, 'volume', 'liquids'));
   console.log('Expected 1.(some decimal place) cups:',convertSmallestToLargestUsMeasurement(95, 'volume'));
-  console.log('Expected 7.(some decimal place) fluid ounces:',convertSmallestToLargestUsMeasurement(45, 'volume'));
+  console.log('Expected 7.(some decimal place) fluid ounces:',convertSmallestToLargestUsMeasurement(45, 'volume', 'liquids'));
   console.log('Expected 1.(some decimal place) tablespoons:',convertSmallestToLargestUsMeasurement(5, 'volume'));
-  console.log('Expected 3 teaspoons:',convertSmallestToLargestUsMeasurement(2.8, 'volume'));
-  console.log('Expected 1 teaspoons:',convertSmallestToLargestUsMeasurement(.8, 'volume'));
+  console.log('Expected 2.8 teaspoons:',convertSmallestToLargestUsMeasurement(2.8, 'volume'));
+  console.log('Expected 0.8 teaspoons:',convertSmallestToLargestUsMeasurement(.8, 'volume'));
   console.log('***** mass tests *****');
   console.log('Expected 3.(some decimal place) pounds:', convertSmallestToLargestUsMeasurement(1400, 'mass'));
   console.log('Expected 15.(some decimal place) ounces:', convertSmallestToLargestUsMeasurement(450, 'mass'));
@@ -243,5 +241,5 @@ function testConvertToSmallest () {
   console.log('Expected mg 0.001:', convertUnitToSmallest(1, 'mg', 'mass'))
 }
 // console.log(testConvertToSmallest());
-// console.log(testConvertToLargest());
+console.log(testConvertToLargest());
 
