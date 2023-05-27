@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux"
 import RecipeImageCard from "../../ReusableComponents/RecipeImageCard/RecipeImageCard"
+import PlannedMealCard from "./PlannedMealCard/PlannedMealCard";
 
 export default function ShoppingListPage() {
   const dispatch = useDispatch();
@@ -8,9 +9,7 @@ export default function ShoppingListPage() {
   console.log('shoppingList inside ShoppingListPage:', shoppingList);
 
   useEffect(() => {
-    dispatch({
-      type: 'FETCH_SHOPPING_LIST'
-    })
+    dispatch({type: 'FETCH_SHOPPING_LIST'})
   }, [])
 
   if (shoppingList.recipeCards != undefined){
@@ -25,7 +24,7 @@ export default function ShoppingListPage() {
         <div className='grid'>
           {recipeCards.map(recipe => {
             return (
-              <RecipeImageCard
+              <PlannedMealCard
                 key={recipe.id}
                 recipe={recipe}
               />

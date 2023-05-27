@@ -43,6 +43,7 @@ function* increaseOnMenu(action) {
     const increaseNumber = {adjustment:'increaseNumber'} 
     const response = yield axios.put(`/api/recipes/adjust-on-menu/${action.payload}`, increaseNumber)
     yield put({type:'FETCH_CURRENT_RECIPE', payload: action.payload})
+    yield put({type:'FETCH_SHOPPING_LIST'})
   } catch (error) {
     console.log('Error inside increaseOnMenu saga:', error);
   }
@@ -53,6 +54,7 @@ function* decreaseOnMenu(action) {
     const decreaseNumber = {adjustment:'decreaseNumber'}
     const response = yield axios.put(`/api/recipes/adjust-on-menu/${action.payload}`, decreaseNumber)
     yield put({type:'FETCH_CURRENT_RECIPE', payload: action.payload})
+    yield put({type:'FETCH_SHOPPING_LIST'})
   } catch (error) {
     console.log('Error inside decreaseOnMenu saga:', error);
   }

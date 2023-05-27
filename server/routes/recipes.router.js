@@ -95,16 +95,17 @@ router.get( '/most-cooked', rejectUnauthenticated, ( req, res ) => {
 router.get( '/shopping-list', rejectUnauthenticated, ( req, res ) => {
   const userId = req.user.id
   const shoppingListCardsQuery = `
-  SELECT
-    recipes.id,
-    recipes.recipe_name AS name,
-    recipes.image_of_recipe AS image,
-    recipes.user_id,
-    category.name AS category
-  FROM recipes
-  JOIN category ON category.id=recipes.category_id
-  WHERE user_id = $1 AND recipes.on_menu > 0
-  ORDER BY times_cooked DESC, recipe_name, category.name;
+    SELECT
+      recipes.id,
+      recipes.recipe_name AS name,
+      recipes.image_of_recipe AS image,
+      recipes.user_id,
+      recipes.on_menu,
+      category.name AS category
+    FROM recipes
+    JOIN category ON category.id=recipes.category_id
+    WHERE user_id = $1 AND recipes.on_menu > 0
+    ORDER BY times_cooked DESC, recipe_name, category.name;
   `;
 
   pool
@@ -133,7 +134,9 @@ router.get( '/shopping-list', rejectUnauthenticated, ( req, res ) => {
       GROUP BY
         recipes.id, recipes.recipe_name, recipes.image_of_recipe,
         recipes.recipe_text, ingredients.ingredient_name, recipe_ingredients.quantity,
-        units_of_measurement.id, food_categories.food_category_name, recipe_ingredients.id;
+        units_of_measurement.id, food_categories.food_category_name, recipe_ingredients.id
+      ORDER BY
+      food_categories.food_category_name, ingredients.ingredient_name;
       `;
       pool
         .query( shoppingListIngredientsQuery, [ userId ] )
