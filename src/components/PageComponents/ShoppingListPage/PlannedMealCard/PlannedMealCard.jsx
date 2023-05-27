@@ -8,7 +8,6 @@ export default function PlannedMealCard({recipe}) {
   const history = useHistory();
 
   const decreaseOnMenu = () => {
-    console.log('clicked decreaseOnMenu');
     if (recipe.on_menu > 1){
       dispatch({type:'DECREASE_ON_MENU', payload: recipe.id})
     }
@@ -18,8 +17,17 @@ export default function PlannedMealCard({recipe}) {
   }
 
   const increaseOnMenu = () => {
-    console.log('clicked increaseOnMenu');
     dispatch({type:'INCREASE_ON_MENU', payload: recipe.id})
+  }
+
+  const removeFromMenu = () => {
+    console.log('clicked removeFromMenu');
+    if (confirm(`Are you sure you want to completely remove ${recipe.name} from your shopping list?`)) {
+        console.log('you clicked okay');
+        dispatch({type: 'REMOVE_RECIPE_FROM_MENU', payload: recipe.id})
+    } else {
+      console.log('you clicked cancel');
+    }
   }
 
   const viewRecipe = () => {
@@ -38,10 +46,11 @@ export default function PlannedMealCard({recipe}) {
         /> 
       </div>
       <div>
-        <AddToCartButtons currentRecipe={recipe}/>
+        {/* <AddToCartButtons currentRecipe={recipe}/> */}
         <button onClick={decreaseOnMenu} className='subtract inline'>-</button>
         <p className='inline'>{recipe.on_menu}</p>
         <button onClick={increaseOnMenu} className='add inline'>+</button>
+        <button onClick={removeFromMenu} className='delete inline'>❌</button>
       </div>
     </div>
   )

@@ -454,6 +454,12 @@ router.put( '/adjust-on-menu/:id', rejectUnauthenticated, ( req, res ) => {
         SET on_menu = (on_menu-1)
         WHERE id = $1 AND user_id = $2;
     `;
+  } else if (adjustment === 'removeRecipe') {
+    sqlQuery = `
+      UPDATE recipes
+        SET on_menu = 0
+        WHERE id = $1 AND user_id = $2
+    `
   }
 
   pool

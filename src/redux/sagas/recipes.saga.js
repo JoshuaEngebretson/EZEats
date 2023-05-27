@@ -60,6 +60,16 @@ function* decreaseOnMenu(action) {
   }
 }
 
+function* removeRecipeFromMenu(action) {
+  try {
+    const removeRecipe = {adjustment:'removeRecipe'}
+    const response = yield axios.put(`/api/recipes/adjust-on-menu/${action.payload}`, removeRecipe)
+    yield put({type: 'FETCH_SHOPPING_LIST'})
+  } catch (error) {
+    console.log('Error inside removeRecipeFromMenu saga:', error);
+  }
+}
+
 function* fetchShoppingList() {
   try {
     const {data:shoppingList} = yield axios.get('/api/recipes/shopping-list')
@@ -78,4 +88,5 @@ export default function* recipesSaga() {
   yield takeLatest('INCREASE_ON_MENU', increaseOnMenu)
   yield takeLatest('DECREASE_ON_MENU', decreaseOnMenu)
   yield takeLatest('FETCH_SHOPPING_LIST', fetchShoppingList)
+  yield takeLatest('REMOVE_RECIPE_FROM_MENU', removeRecipeFromMenu)
 }
