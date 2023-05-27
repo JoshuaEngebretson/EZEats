@@ -139,6 +139,9 @@ router.get( '/shopping-list', rejectUnauthenticated, ( req, res ) => {
         .query( shoppingListIngredientsQuery, [ userId ] )
         .then( result => {
           let unformattedIngredients = result.rows
+          console.log('*****');
+          console.log( 'unformattedIngredients:', unformattedIngredients );
+          console.log('*****');
           // Combine the unformattedIngredients array and start to format them
           let combinedIngredients = unformattedIngredients.reduce( ( result, item ) => {
             const {
@@ -180,7 +183,9 @@ router.get( '/shopping-list', rejectUnauthenticated, ( req, res ) => {
             }
             return result;
           }, []);
+          // Keep only the values from combinedIngredients, this allows for easier looping
           combinedIngredients = Object.values( combinedIngredients )
+          let foodCategories = [];
           // Go through the combinedIngredients and further format the quantities needed for
             // the user to know what is on their shopping list.
           combinedIngredients.map( ingredient => {
@@ -220,15 +225,19 @@ router.get( '/shopping-list', rejectUnauthenticated, ( req, res ) => {
             delete ingredient.multipliedQuantity;
             delete ingredient.multipliedConvertedQuantity;
             delete ingredient.originalUnits;
+            if ( !foodCategories.includes( foodCategory ) ){
+              foodCategories.push( foodCategory );
+            }
           })
-          console.log('*****');
-          console.log( 'post conversions combinedIngredients:', combinedIngredients );
-          console.log('*****');
+          // console.log('*****');
+          // console.log( 'post conversions combinedIngredients:', combinedIngredients );
+          // console.log('*****');
           // Create an object that includes the recipes on the shoppingList and the
             // ingredients the user needs to make all those recipes
           let shoppingList = {
             recipeCards,
-            combinedIngredients
+            combinedIngredients,
+            foodCategories
           };
           res.send( shoppingList );
         })

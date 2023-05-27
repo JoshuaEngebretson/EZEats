@@ -36,7 +36,7 @@ const currentRecipe = (state = [], action) => {
   }
 }
 
-const shoppingList = (state = [], action) => {
+const shoppingList = (state = {}, action) => {
   switch (action.type) {
     case 'SET_SHOPPING_LIST':
       return action.payload;
