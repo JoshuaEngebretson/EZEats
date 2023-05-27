@@ -138,10 +138,10 @@ router.get('/shopping-list', rejectUnauthenticated, (req, res) => {
       pool.query(shoppingListIngredientsQuery, [userId])
       .then(result => {
         let unformattedIngredients = result.rows
-        const combinedIngredients = unformattedIngredients.reduce((result, item) => {
+        let combinedIngredients = unformattedIngredients.reduce((result, item) => {
           const {
             ingredient,
-            multipliedQuantity,
+            recipeIngredientId,
             multipliedConvertedQuantity, 
             conversionCategory,
             originalUnits
@@ -151,17 +151,40 @@ router.get('/shopping-list', rejectUnauthenticated, (req, res) => {
             key = `${ingredient}_${originalUnits}`
           } else {
             key = `${ingredient}_${conversionCategory}`;
+            delete item.ingredients.multipliedQuantity;
+            delete item.ingredients.originalUnits;
           }
           if (result[key]) {
             result[key].multipliedConvertedQuantity += multipliedConvertedQuantity;
+            result[key].recipeIngredientIds.push(recipeIngredientId);
           } else {
             result[key] = {
-              ...item.ingredients
+              ...item.ingredients,
+              recipeIngredientIds: [recipeIngredientId],
+              ingredientAndConversionCategory: key
             };
+            delete result[key].recipeIngredientId
           }
           return result;
         }, []);
-        console.log('combinedIngredients:',combinedIngredients);
+        console.log('combinedIngredients:',Object.values(combinedIngredients));
+        combinedIngredients = Object.values(combinedIngredients)
+        combinedIngredients.map(ingredient => {
+          console.log('ingredient before adding shoppingListQuantity',ingredient);
+          const category = ingredient.conversionCategory
+          const multipliedConvertedQuantity = ingredient.multipliedConvertedQuantity
+          if ( category === 'volume' || category === 'mass' ) {
+            shoppingListQuantity = convertSmallestToLargestUsMeasurement(multipliedConvertedQuantity, category);
+            ingredient.shoppingListQuantity = shoppingListQuantity
+          }
+        })
+        console.log('*****');
+        console.log('*****');
+        console.log('*****');
+        console.log('post conversions combinedIngredients',combinedIngredients);
+        console.log('*****');
+        console.log('*****');
+        console.log('*****');
 
         let list ={
           shoppingList,
