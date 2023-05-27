@@ -7,7 +7,7 @@ const volumetricConversionsToUsTeaspoon = {
   usTeaspoonsInUsGallon: 768,
   usTeaspoonsInUsQuart: 192,
   usTeaspoonsInUsPint: 96,
-  usTeaspoonsInUsCup: 49, //actual conversion would be 48.692 but for purposes 
+  usTeaspoonsInUsCup: 48.692, //actual conversion would be 48.692 but for purposes 
   usTeaspoonsInUsFluidOunce: 6,
   usTeaspoonsInCubicInch: 3.325,
   usTeaspoonsInUsTablespoon: 3,
@@ -136,10 +136,11 @@ const formatter = new Intl.NumberFormat('en-US', {maximumFractionDigits: 2})
  *  - - Accepts 'mass', 'volume', or 'other'. Used to determine the type of conversion:
  *  mass into grams, from a volume into teaspoons, or unable to convert.
  * @param {string} category - A string that is used to check if able to use any of the liquid based measurements: (fl oz, pint, quart, gallon)
+ * @param {string} optionalUnits - (optional) A string used when the volumeOrMass provided is equal to 'other'. This is used to provide a non converted output.
  * @returns {convertedObject} an object that consists of {quantity: number, unit: 'string'}
 
  */
-function convertSmallestToLargestUsMeasurement (quantity, volumeOrMass, category) {
+function convertSmallestToLargestUsMeasurement (quantity, volumeOrMass, category, optionalUnits) {
   let conversion;
   switch (volumeOrMass) {
     case 'volume':
@@ -173,6 +174,12 @@ function convertSmallestToLargestUsMeasurement (quantity, volumeOrMass, category
             //  But those are generally entered volumetrically in recipes
           return convertQuantity(quantity, conversion.gramsInOunce, 'ounce');
       }
+    case 'other':
+      let convertedObject = {
+        quantity: quantity,
+        unit: optionalUnits
+      }
+      return convertedObject
     default:
       break;
   }
@@ -241,5 +248,5 @@ function testConvertToSmallest () {
   console.log('Expected mg 0.001:', convertUnitToSmallest(1, 'mg', 'mass'))
 }
 // console.log(testConvertToSmallest());
-console.log(testConvertToLargest());
+// console.log(testConvertToLargest());
 

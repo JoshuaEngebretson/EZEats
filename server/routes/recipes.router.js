@@ -171,12 +171,21 @@ router.get('/shopping-list', rejectUnauthenticated, (req, res) => {
         combinedIngredients = Object.values(combinedIngredients)
         combinedIngredients.map(ingredient => {
           console.log('ingredient before adding shoppingListQuantity',ingredient);
-          const category = ingredient.conversionCategory
-          const multipliedConvertedQuantity = ingredient.multipliedConvertedQuantity
-          if ( category === 'volume' || category === 'mass' ) {
-            shoppingListQuantity = convertSmallestToLargestUsMeasurement(multipliedConvertedQuantity, category);
-            ingredient.shoppingListQuantity = shoppingListQuantity
+          const conversionCategory = ingredient.conversionCategory;
+          const foodCategory = ingredient.foodCategory;
+          const multipliedConvertedQuantity = ingredient.multipliedConvertedQuantity;
+          let shoppingListQuantity;
+          if ( conversionCategory === 'volume' || conversionCategory === 'mass' ) {
+            shoppingListQuantity = convertSmallestToLargestUsMeasurement(multipliedConvertedQuantity, conversionCategory, foodCategory);
           }
+          else if ( conversionCategory === 'other' ){
+            const multipliedQuantity = ingredient.multipliedQuantity
+            const originalUnits = ingredient.originalUnits
+            shoppingListQuantity = convertSmallestToLargestUsMeasurement(multipliedQuantity, conversionCategory, foodCategory, originalUnits)
+          }
+          ingredient.shoppingListQuantity = shoppingListQuantity
+          // delete ingredient.multipliedQuantity
+          // delete ingredient.multipliedConvertedQuantity
         })
         console.log('*****');
         console.log('*****');
