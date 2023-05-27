@@ -110,7 +110,7 @@ router.get( '/shopping-list', rejectUnauthenticated, ( req, res ) => {
   pool
     .query( shoppingListCardsQuery, [ userId ] )
     .then( result => {
-      const shoppingList = result.rows
+      const recipeCards = result.rows
       const shoppingListIngredientsQuery = `
       SELECT
         JSON_BUILD_OBJECT(
@@ -226,11 +226,11 @@ router.get( '/shopping-list', rejectUnauthenticated, ( req, res ) => {
           console.log('*****');
           // Create an object that includes the recipes on the shoppingList and the
             // ingredients the user needs to make all those recipes
-          let list = {
-            shoppingList,
+          let shoppingList = {
+            recipeCards,
             combinedIngredients
           };
-          res.send( list );
+          res.send( shoppingList );
         })
     })
     .catch( dbErr => {
