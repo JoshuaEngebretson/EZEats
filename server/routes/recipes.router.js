@@ -142,6 +142,7 @@ router.get('/shopping-list', rejectUnauthenticated, (req, res) => {
           const {
             ingredient,
             recipeIngredientId,
+            multipliedQuantity,
             multipliedConvertedQuantity, 
             conversionCategory,
             originalUnits
@@ -156,6 +157,7 @@ router.get('/shopping-list', rejectUnauthenticated, (req, res) => {
           }
           if (result[key]) {
             result[key].multipliedConvertedQuantity += multipliedConvertedQuantity;
+            result[key].multipliedQuantity += multipliedQuantity;
             result[key].recipeIngredientIds.push(recipeIngredientId);
           } else {
             result[key] = {
