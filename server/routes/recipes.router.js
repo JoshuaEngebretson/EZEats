@@ -115,10 +115,11 @@ router.get('/shopping-list', rejectUnauthenticated, (req, res) => {
       SELECT
         JSON_BUILD_OBJECT(
           'ingredient', ingredients.ingredient_name,
-          'times_on_menu', recipes.on_menu, 'multipliedQuantity', (recipe_ingredients.quantity*recipes.on_menu),
-          'unit', units_of_measurement.unit,
+          'multipliedQuantity', (recipe_ingredients.quantity*recipes.on_menu),
+          'conversionCategory', units_of_measurement.conversion_category,
+          'originalUnits', units_of_measurement.unit,
           'multipliedConvertedQuantity', (recipe_ingredients.converted_quantity*recipes.on_menu),
-          'convertedUnit', recipe_ingredients.converted_unit, 'foodCategory', food_categories.food_category_name,
+          'foodCategory', food_categories.food_category_name,
           'recipeIngredientId', recipe_ingredients.id 
         ) AS ingredients
       FROM recipes
@@ -137,7 +138,30 @@ router.get('/shopping-list', rejectUnauthenticated, (req, res) => {
       pool.query(shoppingListIngredientsQuery, [userId])
       .then(result => {
         let unformattedIngredients = result.rows
-        console.log();
+        const combinedIngredients = unformattedIngredients.reduce((result, item) => {
+          const {
+            ingredient,
+            multipliedQuantity,
+            multipliedConvertedQuantity, 
+            conversionCategory,
+            originalUnits
+          } = item.ingredients;
+          let key;
+          if (conversionCategory === 'other'){
+            key = `${ingredient}_${originalUnits}`
+          } else {
+            key = `${ingredient}_${conversionCategory}`;
+          }
+          if (result[key]) {
+            result[key].multipliedConvertedQuantity += multipliedConvertedQuantity;
+          } else {
+            result[key] = {
+              ...item.ingredients
+            };
+          }
+          return result;
+        }, []);
+        console.log('combinedIngredients:',combinedIngredients);
 
         let list ={
           shoppingList,
