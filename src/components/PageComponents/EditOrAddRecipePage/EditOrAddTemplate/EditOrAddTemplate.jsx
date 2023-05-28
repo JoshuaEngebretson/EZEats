@@ -1,5 +1,6 @@
+import './EditOrAddTemplate.css'
 import { useEffect, useState } from "react";
-import { useParams, useHistory } from "react-router-dom"
+import { useHistory } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux";
 import IngredientsInput from "./IngredientsInput/IngredientsInput";
 
@@ -16,8 +17,7 @@ export default function EditOrAddRecipePageTemplate({inputs}) {
     ingredient: '',
     method: '',
   }
-  const [ingredientsInput, setIngredientsInput] = useState([{quantity:1, units:'', ingredient:'', method:''}]);
-
+  const [ingredientsInputArray, setIngredientsInputArray] = useState([initialIngredientObj]);
   
   useEffect(() => {
     dispatch({type: 'FETCH_RECIPE_CATEGORIES'});
@@ -52,15 +52,24 @@ export default function EditOrAddRecipePageTemplate({inputs}) {
   }
 
   const addNewIngredientLine = () => {
-    setIngredientsInput([
-      ...ingredientsInput,
+    setIngredientsInputArray([
+      ...ingredientsInputArray,
       initialIngredientObj
     ])
   }
   const handleIngredientChange = (index, field, value) => {
-    const newIngredients = [...ingredientsInput];
+    const newIngredients = [...ingredientsInputArray];
     newIngredients[index][field] = value;
-    setIngredientsInput(newIngredients)
+    setIngredientsInputArray(newIngredients);
+  }
+
+  const handleDeleteLine = (index) => {
+    const newIngredients = [...ingredientsInputArray];
+    if (newIngredients.length > 1) {
+      newIngredients.splice(index, 1);
+      setIngredientsInputArray(newIngredients);
+      console.log(newIngredients);
+    }
   }
 
   return (
@@ -91,15 +100,16 @@ export default function EditOrAddRecipePageTemplate({inputs}) {
         {otherCategory()}
         <br />
         {/*  */}
-        <div>
+        <div className='ingredients-form'>
           <h3>Enter Ingredients</h3>
-          {ingredientsInput.map((ingredient, index) => {
+          {ingredientsInputArray.map((recipeIngredient, index) => {
             return (
               <IngredientsInput 
                 key={index}
-                recipeIngredient={ingredient}
+                recipeIngredient={recipeIngredient}
                 index={index}
                 handleIngredientChange={handleIngredientChange}
+                handleDeleteLine={handleDeleteLine}
               />
             )
           })}

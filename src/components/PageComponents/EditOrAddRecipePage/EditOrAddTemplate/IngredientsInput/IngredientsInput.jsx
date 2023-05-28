@@ -1,13 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
-export default function IngredientsInput({index, recipeIngredient, handleIngredientChange}) {
+export default function IngredientsInput({index, recipeIngredient, handleIngredientChange, handleDeleteLine}) {
   const dispatch = useDispatch()
   const unitsOfMeasurement = useSelector(store => store.recipes.unitsOfMeasurement)
   const allIngredients = useSelector(store => store.recipes.allIngredients)
-  const {quantity, units, ingredient: selectedIngredient, method} = recipeIngredient
+  const {quantity, units, ingredient, method} = recipeIngredient
   const [showUnitInput, setShowUnitInput] = useState(units === 'other')
-  const [showIngredientInput, setShowIngredientInput] = useState(selectedIngredient === 'other')
+  const [showIngredientInput, setShowIngredientInput] = useState(ingredient === 'other')
 
   useEffect(() => {
     dispatch({type: 'FETCH_UNITS_OF_MEASUREMENT'});
@@ -24,15 +24,17 @@ export default function IngredientsInput({index, recipeIngredient, handleIngredi
 
   const handleIngredientSelectChange = (value) => {
     handleIngredientChange(index, 'ingredient', value);
-    setShowIngredientInput(true)
+    setShowIngredientInput(value === 'other')
   }
   const handleOtherIngredientInput = (e) => {
     handleIngredientChange(index, 'ingredient', e.target.value)
+    
   }
 
-  if (unitsOfMeasurement != undefined) {
+  if (unitsOfMeasurement[1] !== undefined && allIngredients.foodCategories[0] != undefined) {
     return (
-      <div>
+      <div className='ingredients-input'>
+        <div className='center-vertically'>
         <input
           type='number'
           placeholder='Quantity'
@@ -47,7 +49,7 @@ export default function IngredientsInput({index, recipeIngredient, handleIngredi
           onChange={e => handleUnitSelectChange(e.target.value)}
         >
           <option value=''>--Please select the units--</option>
-          <option value='' disabled>Mass</option>
+          <option value='' disabled>MASS</option>
           {unitsOfMeasurement.map(unit => {
             if (unit.conversion_category === 'mass') {
               return (
@@ -55,7 +57,7 @@ export default function IngredientsInput({index, recipeIngredient, handleIngredi
               )
             }
           })}
-          <option value='' disabled>Volume</option>
+          <option value='' disabled>VOLUME</option>
           {unitsOfMeasurement.map(unit => {
             if (unit.conversion_category === 'volume') {
               return (
@@ -63,7 +65,7 @@ export default function IngredientsInput({index, recipeIngredient, handleIngredi
               )
             }
           })}
-          <option value='' disabled>Other</option>
+          <option value='' disabled>OTHER</option>
           {unitsOfMeasurement.map(unit => {
             if (unit.conversion_category === 'other') {
               return (
@@ -71,8 +73,7 @@ export default function IngredientsInput({index, recipeIngredient, handleIngredi
               )
             }
           })}
-          <option value='' disabled>New Unit</option>
-          <option value='' disabled>Other</option>
+          <option value='' disabled>NEW UNIT</option>
           <option value='other'>Create New Ingredient</option>
         </select>
         {showUnitInput && (
@@ -83,15 +84,31 @@ export default function IngredientsInput({index, recipeIngredient, handleIngredi
           />
         )}
         <select
-          value={selectedIngredient}
-          onchange={e => handleIngredientSelectChange(e.target.value)}
+          value={ingredient}
+          onChange={e => handleIngredientSelectChange(e.target.value)}
         >
           <option value=''>--Please select the Ingredient--</option>
+          {allIngredients.foodCategories.map(category => {
+            const capitalizedCategory = category.name.toUpperCase();
+            return (
+              <>
+                <option key={category.id} disabled>{capitalizedCategory}</option>
+                {allIngredients.ingredients.map(i => {
+                  if (i.foodCategory === category.name) {
+                    return (
+                      <option key={i.id} value={i.id}>{i.name}</option>
+                    )
+                  }
+                })}
+              </>
+            )
+          })}
+          <option value ='' disabled>NEW INGREDIENT</option>
           <option value='other'>Create New Unit</option>
         </select>
         {showIngredientInput && (
           <input
-            value={selectedIngredient}
+            value={ingredient}
             onChange={handleOtherIngredientInput}
             placeholder='Enter new ingredient'
           />
@@ -102,6 +119,8 @@ export default function IngredientsInput({index, recipeIngredient, handleIngredi
           value={method}
           onChange={e => handleIngredientChange(index, 'method', e.target.value)}
         />
+        <button onClick={() => handleDeleteLine(index)}>❌</button>
+        </div>
       </div>
     )
   }

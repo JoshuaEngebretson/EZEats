@@ -99,11 +99,21 @@ function* fetchUnitsOfMeasurement() {
   }
 }
 
+function* fetchAllIngredients() {
+  try {
+    const { data: allIngredients } = yield axios.get('/api/recipes/all-ingredients')
+    yield put({type: 'SET_ALL_INGREDIENTS', payload: allIngredients})
+  } catch (error) {
+    console.log('Error inside fetchAllIngredients saga:', error);
+  }
+}
+
 export default function* recipesSaga() {
   yield takeLatest('FETCH_CURRENT_RECIPE', fetchCurrentRecipe)
   yield takeLatest('FETCH_MOST_COOKED', fetchMostCooked)
   yield takeLatest('FETCH_RECIPES', fetchRecipes)
 
+  yield takeLatest('FETCH_ALL_INGREDIENTS', fetchAllIngredients)
   yield takeLatest('FETCH_RECIPE_CATEGORIES', fetchRecipeCategories)
   yield takeLatest('FETCH_UNITS_OF_MEASUREMENT', fetchUnitsOfMeasurement)
 
@@ -114,5 +124,5 @@ export default function* recipesSaga() {
   yield takeLatest('REMOVE_RECIPE_FROM_MENU', removeRecipeFromMenu)
 
   yield takeLatest('INCREASE_TIMES_COOKED', increaseTimesCooked)
- 
+  
 }

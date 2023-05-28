@@ -257,7 +257,7 @@ router.get( '/shopping-list', rejectUnauthenticated, ( req, res ) => {
 // GET units of measurement route
 router.get( '/units-of-measurement', rejectUnauthenticated, ( req, res ) => {
   pool
-    .query(`SELECT * from units_of_measurement ORDER BY conversion_category, unit;`)
+    .query(`SELECT * FROM units_of_measurement ORDER BY conversion_category, unit;`)
     .then(result => {
       const unitsofMeasurement = result.rows
       res.send(unitsofMeasurement)
@@ -269,6 +269,49 @@ router.get( '/units-of-measurement', rejectUnauthenticated, ( req, res ) => {
       console.log( 'Error in GET units of measurement route:', dbErr );
     })
 }) // End GET units of measurement route
+
+// GET all ingredients route
+router.get('/all-ingredients', rejectUnauthenticated,  ( req, res ) => {
+  const allFoodCategoriesQuery = `
+    SELECT
+      id,
+      food_category_name AS name
+    FROM food_categories;
+  `;
+  pool
+    .query(allFoodCategoriesQuery)
+    .then(result => {
+      const foodCategories = result.rows
+      const allIngredientsQuery = `
+        SELECT
+          JSON_AGG(
+            JSON_BUILD_OBJECT(
+              'id', ingredients.id,
+              'name', ingredients.ingredient_name,
+              'foodCategory', food_categories.food_category_name
+            )
+          ) AS ingredients
+        FROM ingredients
+        JOIN food_categories on food_categories.id = ingredients.food_category_id;
+      `;
+      pool
+        .query(allIngredientsQuery)
+        .then(result => {
+          const ingredients = result.rows[0].ingredients
+          const allIngredients = {
+            foodCategories,
+            ingredients
+          }
+          res.send(allIngredients)
+        })
+        .catch(dbErr => {
+          // If unable to process request,
+          // send "Internal Server Error" message to client
+          res.sendStatus(500)
+          console.log('Error inside GET all-ingredients route:', dbErr);
+        })
+    })
+})
 
 // GET specific recipe route
 router.get( '/:id', rejectUnauthenticated, ( req, res ) => {

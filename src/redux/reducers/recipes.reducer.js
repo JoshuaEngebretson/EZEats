@@ -45,6 +45,15 @@ const shoppingList = (state = {}, action) => {
   }
 }
 
+const allIngredients = (state = {}, action) => {
+  switch (action.type) {
+    case 'SET_ALL_INGREDIENTS':
+      return action.payload;
+    default:
+      return state;
+  }
+}
+
 const unitsOfMeasurement = (state = [], action) => {
   switch (action.type) {
     case 'SET_UNITS_OF_MEASUREMENT':
@@ -57,7 +66,8 @@ const unitsOfMeasurement = (state = [], action) => {
 /*
   Make one object that has the following keys
     allRecipes, recipeCategories, mostCooked,
-    currentRecipe, shoppingList, and unitsOfMeasurement
+    currentRecipe, shoppingList, unitsOfMeasurement,
+    and allIngredients
   these will be on the redux state at:
     state.recipes.allRecipes,
     state.recipes.recipeCategories,
@@ -65,6 +75,7 @@ const unitsOfMeasurement = (state = [], action) => {
     state.recipes.currentRecipe,
     state.recipes.shoppingList,
     state.recipes.unitsOfMeasurement,
+    state.recipes.allIngredients,
 */
 export default combineReducers({
   allRecipes,
@@ -73,4 +84,5 @@ export default combineReducers({
   currentRecipe,
   shoppingList,
   unitsOfMeasurement,
+  allIngredients,
 });

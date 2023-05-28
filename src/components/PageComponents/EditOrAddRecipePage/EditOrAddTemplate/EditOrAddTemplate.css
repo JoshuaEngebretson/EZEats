@@ -1,0 +1,20 @@
+.ingredients-form {
+  background-color: rgb(204, 204, 204);
+  width: 70%;
+  /* margin: auto; */
+}
+
+.ingredients-input {
+  background-color: bisque;
+  width: 95%;
+  margin: auto;
+  border: 1px solid;
+  display: flex;
+  /* align-items: center;
+  justify-content: center; */
+}
+
+.center-vertically {
+  justify-content: center;
+  padding: 1px;
+}
