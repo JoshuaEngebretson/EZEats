@@ -4,7 +4,7 @@ export default function EditButton({currentRecipe}) {
   const history = useHistory();
 
   const editRecipe = () => {
-    history.push(`/add-or-edit-recipe/${currentRecipe.id}`)
+    history.push(`/edit-recipe/${currentRecipe.id}`)
   }
 
   return (
