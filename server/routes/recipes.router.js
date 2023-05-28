@@ -473,6 +473,28 @@ router.put( '/adjust-on-menu/:id', rejectUnauthenticated, ( req, res ) => {
     })
 })
 
+// PUT increase-times-cooked route
+router.put( '/increase-times-cooked/:id', rejectUnauthenticated, ( req, res ) => {
+  const userId = req.user.id
+  const idToUpdate = req.params.id
+
+  const sqlQuery = `
+    UPDATE recipes
+    SET times_cooked = (times_cooked+1)
+    WHERE id = $1 AND user_id = $2
+  `;
+
+  pool
+    .query( sqlQuery, [ idToUpdate, userId ] )
+    .then( dbRes => {
+      res.sendStatus( 200 )
+    })
+    .catch( dbErr => {
+      console.log( 'Error inside PUT increase-times-cooked:', dbErr );
+      res.sendStatus( 500 )
+    })
+})
+
 // DELETE recipe route
 router.delete( '/:id', rejectUnauthenticated, ( req, res ) => {
   const userId = req.user.id
