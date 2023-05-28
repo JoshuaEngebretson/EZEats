@@ -80,10 +80,11 @@ function* fetchShoppingList() {
   }
 }
 
-function* increaseTimesCooked(action) {
+function* increaseTimesCooked({payload: id}) {
   try {
-    const response = yield axios.put(`/api/recipes/increase-times-cooked/${action.payload}`)
+    const response = yield axios.put(`/api/recipes/increase-times-cooked/${id}`)
     yield put({type: 'FETCH_MOST_COOKED'})
+    yield put({type: 'FETCH_CURRENT_RECIPE', payload: id})
   } catch (error) {
     console.log('Error inside increaseTimesCooked saga:', error);
   }

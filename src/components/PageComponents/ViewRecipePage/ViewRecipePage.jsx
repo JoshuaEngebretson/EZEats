@@ -112,7 +112,7 @@ export default function ViewRecipePage() {
               })
             }
           </ol>
-          <CompletedRecipeButton id={id} />
+          <CompletedRecipeButton currentRecipe={currentRecipe} />
         </div>   
       </div>
     )
