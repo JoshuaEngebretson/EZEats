@@ -1,8 +1,19 @@
+import { useEffect } from "react";
 import { useParams } from "react-router-dom"
+import { useSelector, useDispatch } from "react-redux";
 
 export default function EditOrAddRecipePage() {
+  const dispatch = useDispatch();
+  const {id} = useParams();
 
-  let {id} = useParams();
+  if (id) {
+    useEffect(() => {
+      dispatch({
+        type: 'FETCH_CURRENT_RECIPE',
+        payload: id
+      })
+    }, [])
+  }
 
   return (
     <>
