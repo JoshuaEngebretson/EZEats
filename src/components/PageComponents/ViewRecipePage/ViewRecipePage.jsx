@@ -3,7 +3,9 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min"
 import AddToCartButtons from "../../ReusableComponents/AddToCartButtons/AddToCartButtons"
-import EditButton from './EditButton/EditButton';
+import EditButton from './ViewRecipeButtons/EditButton/EditButton';
+import GoToShoppingListButton from './ViewRecipeButtons/GoToShoppingListButton/GoToShoppingListButton';
+import CompletedRecipeButton from './ViewRecipeButtons/CompletedRecipeButton/CompletedRecipeButton';
 
 export default function ViewRecipePage() {
   const dispatch = useDispatch();
@@ -51,9 +53,16 @@ export default function ViewRecipePage() {
             {
               currentRecipe.ingredients.map(ingredient => {
                 if (!ingredient.forWhichPart){
+                  if (ingredient.method) {
+                    return (
+                      <li key={ingredient.recipeIngredientId}>
+                        {ingredient.quantity} {ingredient.unit} {ingredient.ingredient} - {ingredient.method}
+                      </li>
+                    )
+                  }
                   return (
                     <li key={ingredient.recipeIngredientId}>
-                      {ingredient.quantity} {ingredient.unit} {ingredient.ingredient} {ingredient.method}
+                      {ingredient.quantity} {ingredient.unit} {ingredient.ingredient}
                     </li>
                   )
                 }
@@ -69,22 +78,22 @@ export default function ViewRecipePage() {
             recipeParts.map(part=> {
               return (
                 <div key={part}>
-                <h4>{part}</h4>
-                <ul>
-                  {
-                    // Only show the ingredients that match with the current part
-                    // that has been mapped
-                    currentRecipe.ingredients.map(ingredient => {
-                      if (ingredient.forWhichPart === part){
-                        return (
-                          <li key={ingredient.recipeIngredientId}>
-                            {ingredient.quantity} {ingredient.unit} {ingredient.ingredient} {ingredient.method}
-                          </li>
-                        )
-                      }
-                    })
-                  }
-                </ul>
+                  <h4>{part}</h4>
+                  <ul>
+                    {
+                      // Only show the ingredients that match with the current part
+                      // that has been mapped
+                      currentRecipe.ingredients.map(ingredient => {
+                        if (ingredient.forWhichPart === part){
+                          return (
+                            <li key={ingredient.recipeIngredientId}>
+                              {ingredient.quantity} {ingredient.unit} {ingredient.ingredient} {ingredient.method}
+                            </li>
+                          )
+                        }
+                      })
+                    }
+                  </ul>
                 </div>
               )
             }) 
@@ -92,7 +101,8 @@ export default function ViewRecipePage() {
           </div>
           <EditButton currentRecipe={currentRecipe} />
           <AddToCartButtons currentRecipe={currentRecipe} />
-        </div> {/* End div4 */}
+          <GoToShoppingListButton />
+        </div>
         <div className=''>
           <h3>Preparation</h3>
           <ol>
@@ -101,7 +111,8 @@ export default function ViewRecipePage() {
                 return <li key={paragraph}>{paragraph}</li>
               })
             }
-          </ol>  
+          </ol>
+          <CompletedRecipeButton currentRecipe={currentRecipe} />
         </div>   
       </div>
     )

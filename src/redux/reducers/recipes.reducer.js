@@ -36,6 +36,15 @@ const currentRecipe = (state = [], action) => {
   }
 }
 
+const shoppingList = (state = {}, action) => {
+  switch (action.type) {
+    case 'SET_SHOPPING_LIST':
+      return action.payload;
+    default:
+      return state;
+  }
+}
+
 /*
   Make one object that has the following keys
     allRecipes, recipeCategories, and mostCooked
@@ -43,11 +52,13 @@ const currentRecipe = (state = [], action) => {
     state.recipes.allRecipes,
     state.recipes.recipeCategories,
     state.recipes.mostCooked,
-    state.recipes.currentRecipe
+    state.recipes.currentRecipe,
+    state.recipes.shoppingList,
 */
 export default combineReducers({
   allRecipes,
   recipeCategories,
   mostCooked,
   currentRecipe,
+  shoppingList,
 });

@@ -43,6 +43,7 @@ function* increaseOnMenu(action) {
     const increaseNumber = {adjustment:'increaseNumber'} 
     const response = yield axios.put(`/api/recipes/adjust-on-menu/${action.payload}`, increaseNumber)
     yield put({type:'FETCH_CURRENT_RECIPE', payload: action.payload})
+    yield put({type:'FETCH_SHOPPING_LIST'})
   } catch (error) {
     console.log('Error inside increaseOnMenu saga:', error);
   }
@@ -53,8 +54,39 @@ function* decreaseOnMenu(action) {
     const decreaseNumber = {adjustment:'decreaseNumber'}
     const response = yield axios.put(`/api/recipes/adjust-on-menu/${action.payload}`, decreaseNumber)
     yield put({type:'FETCH_CURRENT_RECIPE', payload: action.payload})
+    yield put({type:'FETCH_SHOPPING_LIST'})
   } catch (error) {
     console.log('Error inside decreaseOnMenu saga:', error);
+  }
+}
+
+function* removeRecipeFromMenu(action) {
+  try {
+    const removeRecipe = {adjustment:'removeRecipe'}
+    const response = yield axios.put(`/api/recipes/adjust-on-menu/${action.payload}`, removeRecipe)
+    yield put({type: 'FETCH_SHOPPING_LIST'})
+  } catch (error) {
+    console.log('Error inside removeRecipeFromMenu saga:', error);
+  }
+}
+
+function* fetchShoppingList() {
+  try {
+    const {data:shoppingList} = yield axios.get('/api/recipes/shopping-list')
+    console.log('shopping list inside saga:', shoppingList);
+    yield put({type: 'SET_SHOPPING_LIST', payload: shoppingList})
+  } catch (error) {
+    console.log('Error inside fetchShoppingList saga:', error);
+  }
+}
+
+function* increaseTimesCooked({payload: id}) {
+  try {
+    const response = yield axios.put(`/api/recipes/increase-times-cooked/${id}`)
+    yield put({type: 'FETCH_MOST_COOKED'})
+    yield put({type: 'FETCH_CURRENT_RECIPE', payload: id})
+  } catch (error) {
+    console.log('Error inside increaseTimesCooked saga:', error);
   }
 }
 
@@ -65,4 +97,7 @@ export default function* recipesSaga() {
   yield takeLatest('FETCH_CURRENT_RECIPE', fetchCurrentRecipe)
   yield takeLatest('INCREASE_ON_MENU', increaseOnMenu)
   yield takeLatest('DECREASE_ON_MENU', decreaseOnMenu)
+  yield takeLatest('FETCH_SHOPPING_LIST', fetchShoppingList)
+  yield takeLatest('REMOVE_RECIPE_FROM_MENU', removeRecipeFromMenu)
+  yield takeLatest('INCREASE_TIMES_COOKED', increaseTimesCooked)
 }

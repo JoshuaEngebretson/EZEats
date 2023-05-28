@@ -134,10 +134,24 @@ function App() {
           >
             {user.id ?
               // If the user is already logged in, 
-              // show them the EditOrAddRecipePage page
+              // show them the EditOrAddRecipePage
               <EditOrAddRecipePage />
               :
-              // Otherwise, show the Landing page
+              // Otherwise, show the LandingPage
+              <LandingPage />
+            }
+          </Route>
+
+          <Route
+            exact
+            path="/shopping-list"
+          >
+            {user.id ?
+              // If the user is already logged in, 
+              // show them the ShoppingListPage
+              <ShoppingListPage />
+              :
+              // Otherwise, show the LandingPage
               <LandingPage />
             }
           </Route>
