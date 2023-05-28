@@ -5,7 +5,7 @@ export default function IngredientsInput({index, recipeIngredient, handleIngredi
   const dispatch = useDispatch()
   const unitsOfMeasurement = useSelector(store => store.recipes.unitsOfMeasurement)
   const allIngredients = useSelector(store => store.recipes.allIngredients)
-  const {quantity, unit, ingredient, recipeIngredientId, method, forWhichPart} = recipeIngredient
+  const {quantity, unit, ingredient, recipeIngredientId, method, unitId, forWhichPart} = recipeIngredient
   const [showUnitInput, setShowUnitInput] = useState(unit === 'other')
   const [showIngredientInput, setShowIngredientInput] = useState(ingredient === 'other')
 
@@ -48,7 +48,7 @@ export default function IngredientsInput({index, recipeIngredient, handleIngredi
           <select
             name='units-select'
             id='units-select'
-            value={unit}
+            value={unitId}
             onChange={e => handleUnitSelectChange(e)}
           >
             <option value=''>--Please select the units--</option>
@@ -84,7 +84,7 @@ export default function IngredientsInput({index, recipeIngredient, handleIngredi
           </select>
           {showUnitInput && (
             <input
-              value={unit}
+              value={unitId}
               onChange={handleOtherUnitInput}
               placeholder='Enter other unit'
             />

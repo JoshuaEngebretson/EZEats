@@ -352,7 +352,8 @@ router.get( '/:id', rejectUnauthenticated, ( req, res ) => {
         JSON_BUILD_OBJECT(
           'recipeIngredientId', recipe_ingredients.id, 'quantity', recipe_ingredients.quantity, 'unit', units_of_measurement.unit,
           'ingredient', ingredients.ingredient_name, 'method', recipe_ingredients.method,
-          'foodCategory', food_categories.food_category_name, 'forWhichPart', recipe_ingredients.for_which_part
+          'foodCategory', food_categories.food_category_name, 'forWhichPart', recipe_ingredients.for_which_part,
+          'unitId', units_of_measurement.id
         )
       ) AS ingredients,
       recipes.on_menu,
