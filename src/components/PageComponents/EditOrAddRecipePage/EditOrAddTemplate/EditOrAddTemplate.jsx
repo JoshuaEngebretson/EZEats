@@ -9,8 +9,16 @@ export default function EditOrAddRecipePageTemplate({inputs}) {
   const categories = useSelector(store => store.recipes.recipeCategories)
   const [toggleCategoryInput, setToggleCategoryInput] = useState(false)
   const [categoryInput, setCategoryInput] = useState('')
-  let IngredientsInputArray = [];
 
+  const initialIngredientObj = {
+    quantity: '',
+    units: '',
+    ingredient: '',
+    method: '',
+  }
+  const [ingredientsInput, setIngredientsInput] = useState([{quantity:1, units:'', ingredient:'', method:''}]);
+
+  
   useEffect(() => {
     dispatch({type: 'FETCH_RECIPE_CATEGORIES'});
   }, [])
@@ -43,10 +51,22 @@ export default function EditOrAddRecipePageTemplate({inputs}) {
     }
   }
 
+  const addNewIngredientLine = () => {
+    setIngredientsInput([
+      ...ingredientsInput,
+      initialIngredientObj
+    ])
+  }
+  const handleIngredientChange = (index, field, value) => {
+    const newIngredients = [...ingredientsInput];
+    newIngredients[index][field] = value;
+    setIngredientsInput(newIngredients)
+  }
+
   return (
     <>
       <h2>This is the Edit Or Add Recipe Page Template</h2>
-      <form>
+      <div>
         {/* Recipe Image Input */}
         <input 
           type='text'
@@ -58,7 +78,7 @@ export default function EditOrAddRecipePageTemplate({inputs}) {
           placeholder='Recipe Name'
         />
         {/* Category Input */}
-        <label htmlFor='category-select'>Select a category</label>
+        <label htmlFor='category-select'>Select a category: </label>
         <select name='category-select' id='category-select' onChange={handleCategorySelect}>
           <option value=''>--Please select a category--</option>
           {categories.map(category => {
@@ -73,12 +93,20 @@ export default function EditOrAddRecipePageTemplate({inputs}) {
         {/*  */}
         <div>
           <h3>Enter Ingredients</h3>
-          <IngredientsInput />
-          {IngredientsInputArray.map(input => {
-            <IngredientsInput />
+          {ingredientsInput.map((ingredient, index) => {
+            return (
+              <IngredientsInput 
+                key={index}
+                recipeIngredient={ingredient}
+                index={index}
+                handleIngredientChange={handleIngredientChange}
+              />
+            )
           })}
+          <br />
+          <button onClick={addNewIngredientLine} className='add'>Add New Line</button>
         </div>
-      </form>
+      </div>
     </>
   )
 
