@@ -8,14 +8,17 @@ export default function EditOrAddRecipePageTemplate({inputs, id}) {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  if (id) {
-    console.log('*****');
-    console.log('id in EditOrAddTemplate:', id);
-    console.log('*****');
-  }
+  // if (id) {
+  //   console.log('*****');
+  //   console.log('id in EditOrAddTemplate:', id);
+  //   console.log('*****');
+  // }
 
   useEffect(() => {
     dispatch({type: 'FETCH_RECIPE_CATEGORIES'});
+    if (id) {
+      setIngredientsInputArray(inputs.recipeIngredients)
+    }
   }, [])
 
   // Functions to deal with the whole page
@@ -126,13 +129,18 @@ export default function EditOrAddRecipePageTemplate({inputs, id}) {
   // End functions to deal with selecting a category
 
   // Functions to deal with with entering ingredients
+  const [ingredientsInputArray, setIngredientsInputArray] = useState([]);
+
+  // else {
+  //   setIngredientsInputArray(inputs.recipeIngredients.recipeIngredientsArray)
+  // }
   const initialIngredientObj = {
     quantity: '',
     units: '',
     ingredient: '',
     method: '',
+    forWhichPart: '',
   }
-  const [ingredientsInputArray, setIngredientsInputArray] = useState([initialIngredientObj]);
   const addNewIngredientLine = () => {
     setIngredientsInputArray([
       ...ingredientsInputArray,
@@ -146,13 +154,17 @@ export default function EditOrAddRecipePageTemplate({inputs, id}) {
   }
   const handleDeleteLine = (index) => {
     const newIngredients = [...ingredientsInputArray];
+    
     if (newIngredients.length > 1) {
-      newIngredients.splice(index, 1);
+      let thing = newIngredients.splice(index, 1);
       setIngredientsInputArray(newIngredients);
+      console.log('thing deleted', thing);
       console.log(newIngredients);
     }
   }
   // End functions to deal with with entering ingredients
+
+  console.log('ingredientsInputArray:', ingredientsInputArray);
 
   return (
     <>
@@ -185,6 +197,7 @@ export default function EditOrAddRecipePageTemplate({inputs, id}) {
         <div className='ingredients-form'>
           <h3>Enter Ingredients</h3>
           {ingredientsInputArray.map((recipeIngredient, index) => {
+            // console.log('recipeIngredient during mapping in EditOrAddTemp:', recipeIngredient);
             return (
               <IngredientsInput 
                 key={index}

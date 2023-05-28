@@ -17,14 +17,27 @@ export default function AddRecipePage() {
     }
   }, [])
 
-  return (
-    <>
-      <h1>Inside Edit Page view</h1>
-      <h2>We would be editing the recipe with id = {id}</h2>
-      <EditOrAddRecipePageTemplate 
-        inputs={currentRecipe}
-        id={id}
-      />
-    </>
-  )
+  if(currentRecipe != undefined) {
+
+    // console.log('currentRecipe inside EditRecipePage', currentRecipe);
+
+    const inputs = {
+      image: currentRecipe.image,
+      recipeName: currentRecipe.name,
+      timesCooked: currentRecipe.times_cooked,
+      recipeText: currentRecipe.recipe_text,
+      recipeIngredients: currentRecipe.ingredients,
+    }
+
+    return (
+      <>
+        <h1>Inside Edit Page view</h1>
+        <h2>We would be editing the recipe with id = {id}</h2>
+        <EditOrAddRecipePageTemplate 
+          inputs={inputs}
+          id={id}
+        />
+      </>
+    )
+  }
 }
