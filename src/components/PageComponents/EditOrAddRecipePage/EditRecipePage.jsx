@@ -23,6 +23,7 @@ export default function AddRecipePage() {
       <h2>We would be editing the recipe with id = {id}</h2>
       <EditOrAddRecipePageTemplate 
         inputs={currentRecipe}
+        id={id}
       />
     </>
   )
