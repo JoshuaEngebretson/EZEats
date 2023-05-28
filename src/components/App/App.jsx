@@ -17,8 +17,8 @@ import RegisterPage from '../PageComponents/LoginAndRegisterPages/RegisterPage/R
 import ShoppingListPage from '../PageComponents/ShoppingListPage/ShoppingListPage';
 import ViewRecipePage from '../PageComponents/ViewRecipePage/ViewRecipePage';
 import HomePage from '../PageComponents/HomePage/HomePage';
-import AddRecipePage from '../PageComponents/EditOrAddRecipePage/AddRecipePage';
-import EditRecipePage from '../PageComponents/EditOrAddRecipePage/EditRecipePage';
+import AddRecipePage from '../PageComponents/EditOrAddRecipePages/AddRecipePage/AddRecipePage';
+import EditRecipePage from '../PageComponents/EditOrAddRecipePages/EditRecipePage/EditRecipePage';
 
 function App() {
   const dispatch = useDispatch();

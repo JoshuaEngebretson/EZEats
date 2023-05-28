@@ -3,11 +3,16 @@ import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux";
 import IngredientsInput from "./IngredientsInput/IngredientsInput";
-import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
 
 export default function EditOrAddRecipePageTemplate({inputs, id}) {
   const history = useHistory();
   const dispatch = useDispatch();
+
+  if (id) {
+    console.log('*****');
+    console.log('id in EditOrAddTemplate:', id);
+    console.log('*****');
+  }
 
   useEffect(() => {
     dispatch({type: 'FETCH_RECIPE_CATEGORIES'});
@@ -15,23 +20,46 @@ export default function EditOrAddRecipePageTemplate({inputs, id}) {
 
   // Functions to deal with the whole page
     // Save Recipe, Delete Recipe, Cancel Add, Reset Cooked Count
-  const handleSaveRecipe = () => {
-    // If successful would push to that recipes page
-      // Need to figure out how to grab the id of 
+  const saveRecipeButton = () => {
+    const handleSaveRecipe = () => {
+      // If successful would push to that recipes page
+        // Need to figure out how to grab the id of 
+    }
+    return (
+      <div
+      className='stacked-buttons add'
+      onClick={handleSaveRecipe}
+      >
+        <p className='center'>Save Recipe</p>
+      </div>
+    )
   }
-  const handleCancelButton = () => {
-    // Maybe route to view recipe page if this was an edit?
-      // Unsure how to implement
-      // function could be passed down via the parent??
-    history.push('/home')
+  const cancelButton = () => {
+    const handleCancelButton = () => {
+      // Maybe route to view recipe page if this was an edit?
+        // Unsure how to implement
+        // function could be passed down via the parent??
+      history.push('/home')
+    }
+    // If an id is present, we are editing a recipe and want to 'Cancel Edit'
+    if (id) {
+      return (
+        <div className='stacked-buttons cancel' onClick={handleCancelButton}>
+          <p className='center'>Cancel Edit</p>
+        </div>
+      )
+    }
+    // Else we are adding a recipe and want to 'Cancel Add'
+    else {
+      return (
+        <div className='stacked-buttons cancel' onClick={handleCancelButton}>
+          <p className='center'>Cancel Add</p>
+        </div>
+      )
+    }
   }
-  // The following functions should only be visible if
+  // The following Buttons should only be visible if
   //  an id was passed into this template
-  if (id) {
-    console.log('*****');
-    console.log('id in EditOrAddTemplate:', id);
-    console.log('*****');
-  }
   const deleteRecipeButton = () => {
     if (id) {
       const handleDeleteRecipe = () => {
@@ -40,7 +68,12 @@ export default function EditOrAddRecipePageTemplate({inputs, id}) {
         dispatch({type: 'DELETE_CURRENT_RECIPE', payload: id})
       }
       return (
-        <button class='delete' onClick={handleDeleteRecipe}>Delete Recipe</button>
+        <div
+          className='stacked-buttons delete'
+          onClick={handleDeleteRecipe}
+        >
+          <p className='center'>Delete Recipe</p>
+        </div>
       )
     }
   }
@@ -50,7 +83,12 @@ export default function EditOrAddRecipePageTemplate({inputs, id}) {
         dispatch({type: 'RESET_COOKED_COUNT', payload: id})
       }
       return (
-        <button class='subtract' onClick={handleResetCookedCount}>Reset Cooked Count</button>
+        <div
+          className='stacked-buttons subtract'
+          onClick={handleResetCookedCount}
+        >
+          <p class='center' >Reset Cooked Count</p>
+        </div>
       )
     }
   }
@@ -69,6 +107,7 @@ export default function EditOrAddRecipePageTemplate({inputs, id}) {
     }
     else {
       setToggleCategoryInput(false)
+      setCategoryInput(selectedCategory)
       console.log('Expected false:', toggleCategoryInput);
     }
   }
@@ -131,8 +170,8 @@ export default function EditOrAddRecipePageTemplate({inputs, id}) {
         />
         {/* Category Input */}
         <label htmlFor='category-select'>Select a category: </label>
-        <select name='category-select' id='category-select' onChange={handleCategorySelect}>
-          <option value=''>--Please select a category--</option>
+        <select name='category-select' id='category-select' onChange={handleCategorySelect} value={categoryInput}>
+          <option value='' default>--Please select a category--</option>
           {categories.map(category => {
             return (
               <option key={category.id} value={category.id}>{category.name}</option>
@@ -159,8 +198,20 @@ export default function EditOrAddRecipePageTemplate({inputs, id}) {
           <br />
           <button onClick={addNewIngredientLine} className='add'>Add New Line</button>
         </div>
-        {deleteRecipeButton()}
+        <div className='recipe-text inline'>
+          <textarea
+            placeholder='Enter Recipe Here'
+            value={inputs.recipeText}
+            onChange={e => handleRecipeTextChange(e.target.value)}
+            // I want this to be dynamic, and stretch about 85% of the page if possible
+            rows='5'
+            cols='100'
+          />
+        </div>
         {resetCookedCountButton()}
+        {deleteRecipeButton()}
+        {cancelButton()}
+        {saveRecipeButton()}
       </div>
     </>
   )

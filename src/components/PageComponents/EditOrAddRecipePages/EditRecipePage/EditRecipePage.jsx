@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux";
-import EditOrAddRecipePageTemplate from "./EditOrAddTemplate/EditOrAddTemplate";
+import EditOrAddRecipePageTemplate from "../EditOrAddTemplate/EditOrAddTemplate";
 
 export default function AddRecipePage() {
   const dispatch = useDispatch();

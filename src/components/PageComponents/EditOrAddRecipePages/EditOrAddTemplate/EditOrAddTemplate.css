@@ -25,3 +25,18 @@
 .delete:hover {
   background-color: #bb2626;
 }
+
+.stacked-buttons {
+  width: 10%;
+  border: 1px solid;
+  margin:auto;
+  margin-top: 3px;
+  /* border-radius: 5%; */
+}
+
+.cancel {
+  background-color: lightgray;
+}
+.cancel:hover {
+  background-color: rgb(190, 190, 190);
+}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import EditOrAddRecipePageTemplate from "./EditOrAddTemplate/EditOrAddTemplate";
+import EditOrAddRecipePageTemplate from "../EditOrAddTemplate/EditOrAddTemplate";
 
 export default function AddRecipePage() {
   const [imageInput, setImageInput] = useState('')
