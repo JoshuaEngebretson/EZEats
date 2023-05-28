@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux"
-import RecipeImageCard from "../../ReusableComponents/RecipeImageCard/RecipeImageCard"
 import PlannedMealCard from "./PlannedMealCard/PlannedMealCard";
+import DisplayShoppingListIngredients from "./DisplayShoppingListIngredients/DisplayShoppingListIngredients";
 
 export default function ShoppingListPage() {
   const dispatch = useDispatch();
@@ -32,28 +32,10 @@ export default function ShoppingListPage() {
           })}
         </div>
         <h2>Shopping List</h2>
-        {foodCategories.map(foodCategory => {
-          // Capitalize the first character of each foodCategory before writing it to the DOM
-          const capitalizedFoodCategory = foodCategory.charAt(0).toUpperCase() + foodCategory.slice(1);
-          return (
-            <div>
-            <h4>{capitalizedFoodCategory}</h4>
-            {combinedIngredients.map(ingredient => {
-              if (ingredient.foodCategory === foodCategory){
-                const shoppingListQuantity = ingredient.shoppingListQuantity
-                return (
-                  <li key={ingredient.ingredientAndConversionCategory}>
-                    {shoppingListQuantity.quantity} {shoppingListQuantity.unit} {ingredient.ingredient}
-                  </li>
-                ) 
-              }
-            })}
-            </div>
-          )
-
-        })}
-
-        
+        <DisplayShoppingListIngredients
+          foodCategories={foodCategories}
+          combinedIngredients={combinedIngredients}
+        />
       </>
     )
   }
