@@ -90,14 +90,29 @@ function* increaseTimesCooked({payload: id}) {
   }
 }
 
+function* fetchUnitsOfMeasurement() {
+  try {
+    const { data: unitsOfMeasurement } = yield axios.get('/api/recipes/units-of-measurement')
+    yield put({type: 'SET_UNITS_OF_MEASUREMENT', payload: unitsOfMeasurement})
+  } catch (error) {
+    console.log('Error inside fetchUnitsOfMeasurement saga:', error);
+  }
+}
+
 export default function* recipesSaga() {
-  yield takeLatest('FETCH_RECIPES', fetchRecipes)
-  yield takeLatest('FETCH_RECIPE_CATEGORIES', fetchRecipeCategories)
-  yield takeLatest('FETCH_MOST_COOKED', fetchMostCooked)
   yield takeLatest('FETCH_CURRENT_RECIPE', fetchCurrentRecipe)
+  yield takeLatest('FETCH_MOST_COOKED', fetchMostCooked)
+  yield takeLatest('FETCH_RECIPES', fetchRecipes)
+
+  yield takeLatest('FETCH_RECIPE_CATEGORIES', fetchRecipeCategories)
+  yield takeLatest('FETCH_UNITS_OF_MEASUREMENT', fetchUnitsOfMeasurement)
+
+  yield takeLatest('FETCH_SHOPPING_LIST', fetchShoppingList)
   yield takeLatest('INCREASE_ON_MENU', increaseOnMenu)
   yield takeLatest('DECREASE_ON_MENU', decreaseOnMenu)
-  yield takeLatest('FETCH_SHOPPING_LIST', fetchShoppingList)
+
   yield takeLatest('REMOVE_RECIPE_FROM_MENU', removeRecipeFromMenu)
+
   yield takeLatest('INCREASE_TIMES_COOKED', increaseTimesCooked)
+ 
 }

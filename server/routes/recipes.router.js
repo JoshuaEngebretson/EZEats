@@ -92,6 +92,7 @@ router.get( '/most-cooked', rejectUnauthenticated, ( req, res ) => {
   
 }) // End GET most cooked recipes route
 
+// GET shopping list route
 router.get( '/shopping-list', rejectUnauthenticated, ( req, res ) => {
   const userId = req.user.id
   const shoppingListCardsQuery = `
@@ -251,7 +252,23 @@ router.get( '/shopping-list', rejectUnauthenticated, ( req, res ) => {
       res.sendStatus( 500 );
       console.log( 'Error in GET shoppingList route:', dbErr );
     })
-})
+}) // End GET shopping list route
+
+// GET units of measurement route
+router.get( '/units-of-measurement', rejectUnauthenticated, ( req, res ) => {
+  pool
+    .query(`SELECT * from units_of_measurement ORDER BY conversion_category, unit;`)
+    .then(result => {
+      const unitsofMeasurement = result.rows
+      res.send(unitsofMeasurement)
+    })
+    .catch(dbErr => {
+      // If unable to process request,
+      // send "Internal Server Error" message to client
+      res.sendStatus( 500 );
+      console.log( 'Error in GET units of measurement route:', dbErr );
+    })
+}) // End GET units of measurement route
 
 // GET specific recipe route
 router.get( '/:id', rejectUnauthenticated, ( req, res ) => {
