@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min"
 import AddToCartButtons from "../../ReusableComponents/AddToCartButtons/AddToCartButtons"
 import EditButton from './EditButton/EditButton';
+import GoToShoppingListButton from './GoToShoppingListButton/GoToShoppingListButton';
 
 export default function ViewRecipePage() {
   const dispatch = useDispatch();
@@ -99,6 +100,7 @@ export default function ViewRecipePage() {
           </div>
           <EditButton currentRecipe={currentRecipe} />
           <AddToCartButtons currentRecipe={currentRecipe} />
+          <GoToShoppingListButton />
         </div> {/* End div4 */}
         <div className=''>
           <h3>Preparation</h3>
