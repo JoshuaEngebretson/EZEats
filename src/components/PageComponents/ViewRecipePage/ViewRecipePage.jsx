@@ -21,7 +21,7 @@ export default function ViewRecipePage() {
 
   // confirm currentRecipe is defined, then render information
   //  This ensures that the page will load
-  if (currentRecipe != undefined){
+  if (currentRecipe != undefined && currentRecipe.recipe_text){
     // This separates out the recipe into an array an allows for
     // the recipe to be viewed on multipe lines
     let recipeAsParagraph = currentRecipe.recipe_text.split('\n')
