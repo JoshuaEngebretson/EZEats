@@ -177,7 +177,6 @@ export default function EditOrAddRecipePageTemplate(props) {
   ) {
     return (
     <>
-      <h2>This is the Edit Or Add Recipe Page Template</h2>
       <div>
         {/* Recipe Image Input */}
         <input 
@@ -211,7 +210,6 @@ export default function EditOrAddRecipePageTemplate(props) {
         </select>
         {otherCategory()}
         <br />
-        {/*  */}
         <div className='ingredients-form'>
           <h3 className='table-title center'>Enter Ingredients</h3>
           <table>
