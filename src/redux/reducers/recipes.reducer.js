@@ -40,7 +40,7 @@ const currentRecipe = (state = [], action) => {
     case 'MODIFY_CURRENT_RECIPE_INGREDIENTS':
       return {...state, ingredients: action.payload};
     case 'MODIFY_CURRENT_RECIPE_CATEGORY':
-      return {...state.categoryId= action.payload};
+      return {...state, categoryId: action.payload};
     default:
       return state;
   }

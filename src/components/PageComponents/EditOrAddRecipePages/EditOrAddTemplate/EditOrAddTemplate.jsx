@@ -22,13 +22,19 @@ export default function EditOrAddRecipePageTemplate(props) {
     dispatch({type: 'FETCH_RECIPE_CATEGORIES'});
     if (id) {
       setIngredientsInputArray(inputs.recipeIngredients)
-      setCategoryInput(inputs.categoryId)
     }
-  }, [inputs])
+    console.log('***');
+    console.log('***');
+    console.log('***');
+    console.log('useEffect called');
+    console.log('***');
+    console.log('***');
+    console.log('***');
+  }, [id, inputs.recipeIngredients])
 
-  console.log('*****');
-  console.log('inputs:', inputs);
-  console.log('*****');
+  // console.log('*****');
+  // console.log('inputs:', inputs);
+  // console.log('*****');
 
   // Functions to deal with the whole page
     // Save Recipe, Delete Recipe, Cancel Add, Reset Cooked Count
@@ -111,17 +117,21 @@ export default function EditOrAddRecipePageTemplate(props) {
   const categories = useSelector(store => store.recipes.recipeCategories)
   const [toggleCategoryInput, setToggleCategoryInput] = useState(false)
   const [categoryInput, setCategoryInput] = useState(inputs.categoryId)
-  const handleCategorySelect = (e) => {
-    let selectedCategory = e.target.value
-    // console.log('value of category-select:', selectedCategory);
-    if (selectedCategory === 'other') {
+  const categoryChange = (value) => {
+    if (value === 'other') {
       setToggleCategoryInput(true)
+      setCategoryInput(value)
     }
     else {
       setToggleCategoryInput(false)
-      setCategoryInput(selectedCategory)
     }
+    handleCategoryIdChange(value)
   }
+  const handleCategoryInputChange = (value) => {
+    setCategoryInput(value);
+    handleCategoryIdChange(value);
+  }
+
   const otherCategory = () => {
     if (toggleCategoryInput) {
       return (
@@ -129,7 +139,7 @@ export default function EditOrAddRecipePageTemplate(props) {
         type='text'
         placeholder='Enter new category'
         value={categoryInput}
-        onChange={e => setCategoryInput(e.target.value)}
+        onChange={e => handleCategoryInputChange(e.target.value)}
         />
       )
     }
@@ -201,7 +211,11 @@ export default function EditOrAddRecipePageTemplate(props) {
         />
         {/* Category Input */}
         <label htmlFor='category-select'>Select a category: </label>
-        <select name='category-select' id='category-select' onChange={handleCategorySelect} value={categoryInput}>
+        <select
+          name='category-select'
+          id='category-select'
+          onChange={e => categoryChange(e.target.value)}
+          value={inputs.categoryId}>
           <option value='' default>--Please select a category--</option>
           {categories.map(category => {
             return (
