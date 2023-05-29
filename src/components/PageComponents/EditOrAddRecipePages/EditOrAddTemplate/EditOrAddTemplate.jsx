@@ -15,7 +15,8 @@ export default function EditOrAddRecipePageTemplate(props) {
     handleRecipeNameChange,
     handleRecipeTextChange,
     handleRecipeIngredientsChange,
-    handleCategoryIdChange
+    handleCategoryIdChange,
+    handleSaveRecipe
   } = props;
 
   useEffect(() => {
@@ -23,26 +24,11 @@ export default function EditOrAddRecipePageTemplate(props) {
     if (id) {
       setIngredientsInputArray(inputs.recipeIngredients)
     }
-    console.log('***');
-    console.log('***');
-    console.log('***');
-    console.log('useEffect called');
-    console.log('***');
-    console.log('***');
-    console.log('***');
   }, [id, inputs.recipeIngredients])
-
-  // console.log('*****');
-  // console.log('inputs:', inputs);
-  // console.log('*****');
 
   // Functions to deal with the whole page
     // Save Recipe, Delete Recipe, Cancel Add, Reset Cooked Count
   const saveRecipeButton = () => {
-    const handleSaveRecipe = () => {
-      // If successful would push to that recipes page
-        // Need to figure out how to grab the id of 
-    }
     return (
       <div
       className='stacked-buttons add'
@@ -131,7 +117,6 @@ export default function EditOrAddRecipePageTemplate(props) {
     setCategoryInput(value);
     handleCategoryIdChange(value);
   }
-
   const otherCategory = () => {
     if (toggleCategoryInput) {
       return (
@@ -180,8 +165,8 @@ export default function EditOrAddRecipePageTemplate(props) {
   }
   // End functions to deal with with entering ingredients
 
-  console.log('ingredientsInputArray:', ingredientsInputArray);
-  console.log('categories:', categories);
+  // console.log('ingredientsInputArray:', ingredientsInputArray);
+  // console.log('categories:', categories);
 
   if(
     inputs!== undefined
@@ -235,7 +220,7 @@ export default function EditOrAddRecipePageTemplate(props) {
                 <th>Quantity</th>
                 <th>Units of Measurement</th>
                 <th>Ingredient Name</th>
-                <th>Optional: Prepared Method (optional)</th>
+                <th>Optional: Prepared Method (e.g., sliced, minced)</th>
                 <th>Optional: For which part of the recipe? (e.g., sauce, garnish)</th>
                 <th>Remove Ingredient</th>
               </tr>
@@ -258,21 +243,24 @@ export default function EditOrAddRecipePageTemplate(props) {
           {/* <br /> */}
           <button onClick={addNewIngredientLine} className='add'>Add New Line</button>
         </div>
-        <div className='recipe-text inline'>
-          <textarea
-            placeholder='Enter Recipe Here'
-            value={inputs.recipeText}
-            onChange={(e) => handleRecipeTextChange(e.target.value)}
-
-            // I want this to be dynamic, and stretch about 85% of the page if possible
-            rows='5'
-            cols='100'
-          />
+        <div className='bottom-container'>
+          <div className='textarea-container'>
+            <textarea
+              placeholder='Enter Recipe Here'
+              value={inputs.recipeText}
+              onChange={(e) => handleRecipeTextChange(e.target.value)}
+              // I want this to be dynamic, and stretch about 85% of the page if possible
+              // rows='5'
+              // cols='100'
+            />
+          </div>
+          <div className='button-container'>
+          {resetCookedCountButton()}
+          {deleteRecipeButton()}
+          {cancelButton()}
+          {saveRecipeButton()}
+          </div>
         </div>
-        {resetCookedCountButton()}
-        {deleteRecipeButton()}
-        {cancelButton()}
-        {saveRecipeButton()}
       </div>
     </>
   )}

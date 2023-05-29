@@ -18,7 +18,6 @@ export default function AddRecipePage() {
   }, [])
 
   if(currentRecipe != undefined) {
-
     // console.log('currentRecipe inside EditRecipePage', currentRecipe);
     const inputs = {
       image: currentRecipe.image,
@@ -28,7 +27,6 @@ export default function AddRecipePage() {
       recipeIngredients: currentRecipe.ingredients,
       categoryId: currentRecipe.categoryId
     }
-
     const handleImageChange = (value) => {
       dispatch({
         type: 'MODIFY_CURRENT_RECIPE_IMAGE',
@@ -59,6 +57,10 @@ export default function AddRecipePage() {
         payload: value
       })
     }
+    const handleSaveRecipe = () => {
+      // If successful would push to that recipes page
+        // Need to figure out how to grab the id of 
+    }
 
     return (
       <>
@@ -72,6 +74,7 @@ export default function AddRecipePage() {
           handleRecipeTextChange={handleRecipeTextChange}
           handleRecipeIngredientsChange={handleRecipeIngredientsChange}
           handleCategoryIdChange={handleCategoryIdChange}
+          handleSaveRecipe={handleSaveRecipe}
         />
       </>
     )

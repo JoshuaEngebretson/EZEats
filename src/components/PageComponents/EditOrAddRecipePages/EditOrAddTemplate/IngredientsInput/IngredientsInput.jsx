@@ -19,17 +19,14 @@ export default function IngredientsInput({ index, recipeIngredient, handleIngred
     handleIngredientChange(index, 'unit', value);
     setShowUnitInput(value === 'other');
   };
-
   const handleOtherUnitInput = (e) => {
     handleIngredientChange(index, 'unit', e.target.value);
   };
-
   const handleIngredientSelectChange = (e) => {
     const value = e.target.value;
     handleIngredientChange(index, 'ingredient', value);
     setShowIngredientInput(value === 'other');
   };
-
   const handleOtherIngredientInput = (e) => {
     handleIngredientChange(index, 'ingredient', e.target.value);
   };
@@ -128,7 +125,7 @@ export default function IngredientsInput({ index, recipeIngredient, handleIngred
         <td>
           <input
             type='text'
-            placeholder='prepared method (optional)'
+            placeholder='Prepared method?'
             value={method}
             onChange={e => handleIngredientChange(index, 'method', e.target.value)}
           />
@@ -147,6 +144,5 @@ export default function IngredientsInput({ index, recipeIngredient, handleIngred
       </tr>
     );
   }
-  
   return <tr></tr>;
 }
