@@ -189,6 +189,7 @@ export default function EditOrAddRecipePageTemplate(props) {
           type='text'
           placeholder='image url'
           value={inputs.image}
+          onChange={e => handleImageChange(e.target.value)}
         />
         <img src={inputs.image} className='square-image-small'/>
         {/*Recipe Name Input */}
