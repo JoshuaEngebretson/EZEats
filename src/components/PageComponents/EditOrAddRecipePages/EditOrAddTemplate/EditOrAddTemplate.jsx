@@ -197,6 +197,7 @@ export default function EditOrAddRecipePageTemplate(props) {
           type='text'
           placeholder='Recipe Name'
           value={inputs.recipeName}
+          onChange={e => handleRecipeNameChange(e.target.value)}
         />
         {/* Category Input */}
         <label htmlFor='category-select'>Select a category: </label>
