@@ -4,22 +4,31 @@ import { useHistory } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux";
 import IngredientsInput from "./IngredientsInput/IngredientsInput";
 
-export default function EditOrAddRecipePageTemplate({inputs, id}) {
+export default function EditOrAddRecipePageTemplate(props) {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  // if (id) {
-  //   console.log('*****');
-  //   console.log('id in EditOrAddTemplate:', id);
-  //   console.log('*****');
-  // }
+  const {
+    inputs,
+    id,
+    handleImageChange,
+    handleRecipeNameChange,
+    handleRecipeTextChange,
+    handleRecipeIngredientsChange,
+    handleCategoryIdChange
+  } = props;
 
   useEffect(() => {
     dispatch({type: 'FETCH_RECIPE_CATEGORIES'});
     if (id) {
       setIngredientsInputArray(inputs.recipeIngredients)
+      setCategoryInput(inputs.categoryId)
     }
-  }, [])
+  }, [inputs])
+
+  console.log('*****');
+  console.log('inputs:', inputs);
+  console.log('*****');
 
   // Functions to deal with the whole page
     // Save Recipe, Delete Recipe, Cancel Add, Reset Cooked Count
@@ -101,17 +110,16 @@ export default function EditOrAddRecipePageTemplate({inputs, id}) {
   // functions to deal with selecting a category
   const categories = useSelector(store => store.recipes.recipeCategories)
   const [toggleCategoryInput, setToggleCategoryInput] = useState(false)
-  const [categoryInput, setCategoryInput] = useState('')
+  const [categoryInput, setCategoryInput] = useState(inputs.categoryId)
   const handleCategorySelect = (e) => {
     let selectedCategory = e.target.value
-    console.log('value of category-select:', selectedCategory);
+    // console.log('value of category-select:', selectedCategory);
     if (selectedCategory === 'other') {
       setToggleCategoryInput(true)
     }
     else {
       setToggleCategoryInput(false)
       setCategoryInput(selectedCategory)
-      console.log('Expected false:', toggleCategoryInput);
     }
   }
   const otherCategory = () => {
@@ -129,11 +137,6 @@ export default function EditOrAddRecipePageTemplate({inputs, id}) {
   // End functions to deal with selecting a category
 
   // Functions to deal with with entering ingredients
-  const [ingredientsInputArray, setIngredientsInputArray] = useState([]);
-
-  // else {
-  //   setIngredientsInputArray(inputs.recipeIngredients.recipeIngredientsArray)
-  // }
   const initialIngredientObj = {
     quantity: '',
     units: '',
@@ -141,6 +144,7 @@ export default function EditOrAddRecipePageTemplate({inputs, id}) {
     method: '',
     forWhichPart: '',
   }
+  const [ingredientsInputArray, setIngredientsInputArray] = useState([initialIngredientObj]);
   const addNewIngredientLine = () => {
     setIngredientsInputArray([
       ...ingredientsInputArray,
@@ -151,6 +155,7 @@ export default function EditOrAddRecipePageTemplate({inputs, id}) {
     const newIngredients = [...ingredientsInputArray];
     newIngredients[index][field] = value;
     setIngredientsInputArray(newIngredients);
+    handleRecipeIngredientsChange(newIngredients)
   }
   const handleDeleteLine = (index) => {
     const newIngredients = [...ingredientsInputArray];
@@ -158,6 +163,7 @@ export default function EditOrAddRecipePageTemplate({inputs, id}) {
     if (newIngredients.length > 1) {
       let thing = newIngredients.splice(index, 1);
       setIngredientsInputArray(newIngredients);
+      handleRecipeIngredientsChange(newIngredients)
       console.log('thing deleted', thing);
       console.log(newIngredients);
     }
@@ -165,8 +171,16 @@ export default function EditOrAddRecipePageTemplate({inputs, id}) {
   // End functions to deal with with entering ingredients
 
   console.log('ingredientsInputArray:', ingredientsInputArray);
+  console.log('categories:', categories);
 
-  return (
+  if(
+    inputs!== undefined
+    && 
+    categories && 
+    ingredientsInputArray && 
+    ingredientsInputArray.length > 0
+  ) {
+    return (
     <>
       <h2>This is the Edit Or Add Recipe Page Template</h2>
       <div>
@@ -174,11 +188,14 @@ export default function EditOrAddRecipePageTemplate({inputs, id}) {
         <input 
           type='text'
           placeholder='image url'
+          value={inputs.image}
         />
+        <img src={inputs.image} className='square-image-small'/>
         {/*Recipe Name Input */}
         <input 
           type='text'
           placeholder='Recipe Name'
+          value={inputs.recipeName}
         />
         {/* Category Input */}
         <label htmlFor='category-select'>Select a category: </label>
@@ -195,27 +212,42 @@ export default function EditOrAddRecipePageTemplate({inputs, id}) {
         <br />
         {/*  */}
         <div className='ingredients-form'>
-          <h3>Enter Ingredients</h3>
-          {ingredientsInputArray.map((recipeIngredient, index) => {
-            // console.log('recipeIngredient during mapping in EditOrAddTemp:', recipeIngredient);
-            return (
-              <IngredientsInput 
-                key={index}
-                recipeIngredient={recipeIngredient}
-                index={index}
-                handleIngredientChange={handleIngredientChange}
-                handleDeleteLine={handleDeleteLine}
-              />
-            )
-          })}
-          <br />
+          <h3 className='table-title center'>Enter Ingredients</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Quantity</th>
+                <th>Units of Measurement</th>
+                <th>Ingredient Name</th>
+                <th>Optional: Prepared Method (optional)</th>
+                <th>Optional: For which part of the recipe? (e.g., sauce, garnish)</th>
+                <th>Remove Ingredient</th>
+              </tr>
+            </thead>
+            <tbody>
+            {ingredientsInputArray.map((recipeIngredient, index) => {
+              // console.log('recipeIngredient during mapping in EditOrAddTemp:', recipeIngredient);
+              return (
+                <IngredientsInput 
+                  key={index}
+                  recipeIngredient={recipeIngredient}
+                  index={index}
+                  handleIngredientChange={handleIngredientChange}
+                  handleDeleteLine={handleDeleteLine}
+                />
+              )
+            })}
+            </tbody>
+          </table>
+          {/* <br /> */}
           <button onClick={addNewIngredientLine} className='add'>Add New Line</button>
         </div>
         <div className='recipe-text inline'>
           <textarea
             placeholder='Enter Recipe Here'
             value={inputs.recipeText}
-            onChange={e => handleRecipeTextChange(e.target.value)}
+            onChange={(e) => handleRecipeTextChange(e.target.value)}
+
             // I want this to be dynamic, and stretch about 85% of the page if possible
             rows='5'
             cols='100'
@@ -227,6 +259,6 @@ export default function EditOrAddRecipePageTemplate({inputs, id}) {
         {saveRecipeButton()}
       </div>
     </>
-  )
+  )}
 
 }

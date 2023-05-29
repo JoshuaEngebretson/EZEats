@@ -6,7 +6,7 @@ import EditOrAddRecipePageTemplate from "../EditOrAddTemplate/EditOrAddTemplate"
 export default function AddRecipePage() {
   const dispatch = useDispatch();
   const {id} = useParams();
-  const currentRecipe = useSelector(store => store.recipes.currentRecipe[0])
+  const currentRecipe = useSelector(store => store.recipes.currentRecipe)
   
   useEffect(() => {
     if (Number(id)) {
@@ -20,13 +20,44 @@ export default function AddRecipePage() {
   if(currentRecipe != undefined) {
 
     // console.log('currentRecipe inside EditRecipePage', currentRecipe);
-
     const inputs = {
       image: currentRecipe.image,
       recipeName: currentRecipe.name,
       timesCooked: currentRecipe.times_cooked,
       recipeText: currentRecipe.recipe_text,
       recipeIngredients: currentRecipe.ingredients,
+      categoryId: currentRecipe.categoryId
+    }
+
+    const handleImageChange = (value) => {
+      dispatch({
+        type: 'MODIFY_CURRENT_RECIPE_IMAGE',
+        payload: value
+      })
+    }
+    const handleRecipeNameChange = (value) => {
+      dispatch({
+        type: 'MODIFY_CURRENT_RECIPE_NAME',
+        payload: value
+      })
+    }
+    const handleRecipeTextChange = (value) => {
+      dispatch({
+        type: 'MODIFY_CURRENT_RECIPE_TEXT',
+        payload: value
+      })
+    }
+    const handleRecipeIngredientsChange = (array) => {
+      dispatch({
+        type: 'MODIFY_CURRENT_RECIPE_INGREDIENTS',
+        payload: array
+      })
+    }
+    const handleCategoryIdChange = (value) => {
+      dispatch({
+        type: 'MODIFY_CURRENT_RECIPE_CATEGORY',
+        payload: value
+      })
     }
 
     return (
@@ -36,6 +67,11 @@ export default function AddRecipePage() {
         <EditOrAddRecipePageTemplate 
           inputs={inputs}
           id={id}
+          handleImageChange={handleImageChange}
+          handleRecipeNameChange={handleRecipeNameChange}
+          handleRecipeTextChange={handleRecipeTextChange}
+          handleRecipeIngredientsChange={handleRecipeIngredientsChange}
+          handleCategoryIdChange={handleCategoryIdChange}
         />
       </>
     )

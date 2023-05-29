@@ -1,7 +1,7 @@
 .ingredients-form {
   background-color: rgb(204, 204, 204);
   width: 70%;
-  /* margin: auto; */
+  margin: 2%;
 }
 
 .ingredients-input {
@@ -39,4 +39,38 @@
 }
 .cancel:hover {
   background-color: rgb(190, 190, 190);
+}
+.table-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* Table styles */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  /* margin:auto; */
+}
+
+/* Table header styles */
+thead th {
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+/* Table row styles */
+tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+/* Table cell styles */
+td {
+  border: 1px solid #ccc;
+  padding: 8px;
 }

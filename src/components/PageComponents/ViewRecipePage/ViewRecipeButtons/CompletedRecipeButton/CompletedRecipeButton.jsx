@@ -4,7 +4,7 @@ import './CompletedRecipeButton.css'
 
 export default function CompletedRecipeButton() {
   const dispatch = useDispatch();
-  const currentRecipe = useSelector(store => store.recipes.currentRecipe[0])
+  const currentRecipe = useSelector(store => store.recipes.currentRecipe)
   const [canClick, setCanClick] = useState(true);
 
   const increaseTimesCooked = () => {

@@ -31,6 +31,16 @@ const currentRecipe = (state = [], action) => {
   switch (action.type) {
     case 'SET_CURRENT_RECIPE':
       return action.payload;
+    case 'MODIFY_CURRENT_RECIPE_IMAGE':
+      return {...state, image: action.payload};
+    case 'MODIFY_CURRENT_RECIPE_NAME':
+      return {...state, name: action.payload};
+    case 'MODIFY_CURRENT_RECIPE_TEXT':
+      return {...state, recipe_text: action.payload};
+    case 'MODIFY_CURRENT_RECIPE_INGREDIENTS':
+      return {...state, ingredients: action.payload};
+    case 'MODIFY_CURRENT_RECIPE_CATEGORY':
+      return {...state.categoryId= action.payload};
     default:
       return state;
   }

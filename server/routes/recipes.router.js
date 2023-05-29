@@ -354,11 +354,12 @@ router.get( '/:id', rejectUnauthenticated, ( req, res ) => {
           'ingredient', ingredients.ingredient_name, 'method', recipe_ingredients.method,
           'foodCategory', food_categories.food_category_name, 'forWhichPart', recipe_ingredients.for_which_part,
           'unitId', units_of_measurement.id
-        )
+        ) ORDER BY recipe_ingredients.id
       ) AS ingredients,
       recipes.on_menu,
       recipes.times_cooked,
       category.name AS category,
+      category.id AS "categoryId",
       JSON_AGG(recipe_ingredients.for_which_part) AS "forWhichPart"
     FROM recipes
     JOIN "user" ON recipes.user_id="user".id
@@ -371,13 +372,13 @@ router.get( '/:id', rejectUnauthenticated, ( req, res ) => {
     GROUP BY
       recipes.id, recipes.recipe_name, recipes.image_of_recipe,
       recipes.recipe_text, category.name, recipes.on_menu,
-      recipes.times_cooked;
+      recipes.times_cooked, category.id;
   `;
 
   pool
     .query( sqlText, [ userId, recipeID ] )
     .then( result => {
-      const recipe = result.rows
+      const recipe = result.rows[0]
       res.send( recipe )
     })
     .catch( dbErr => {

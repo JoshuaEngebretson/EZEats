@@ -10,7 +10,7 @@ import CompletedRecipeButton from './ViewRecipeButtons/CompletedRecipeButton/Com
 export default function ViewRecipePage() {
   const dispatch = useDispatch();
   const {id} = useParams();
-  const currentRecipe = useSelector(store => store.recipes.currentRecipe[0])
+  const currentRecipe = useSelector(store => store.recipes.currentRecipe)
 
   useEffect(() => {
     dispatch({
