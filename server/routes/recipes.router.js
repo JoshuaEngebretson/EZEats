@@ -393,7 +393,7 @@ router.get( '/:id', rejectUnauthenticated, ( req, res ) => {
 router.post( '/', rejectUnauthenticated, ( req, res ) => {
   const userId = req.user.id
   const newRecipe = req.body
-  const ingredients = newRecipe.ingredients
+  const ingredients = newRecipe.recipeIngredients
 
   const newRecipeNameQuery = `
   INSERT INTO recipes
@@ -401,68 +401,77 @@ router.post( '/', rejectUnauthenticated, ( req, res ) => {
   VALUES ($1, $2, $3, $4, $5)
   RETURNING id;
   `;
-
-  const newRecipeNameValues = [
-    newRecipe.name,
-    newRecipe.recipe_text,
-    newRecipe.image_of_recipe,
+  let newRecipeNameValues;
+  
+  newRecipeNameValues = [
+    newRecipe.recipeName,
+    newRecipe.recipeText,
+    newRecipe.image,
     userId,
-    newRecipe.category_id
+    newRecipe.categoryInput
   ]
+
+  console.log('******');
+  console.log('******');
+  console.log('newRecipe within POST', newRecipe);
+  console.log('ingredients within POST', ingredients);
+  console.log('******');
+  console.log('******');
 
   // FIRST QUERY MAKES THE RECIPE
   pool
-    .query( newRecipeNameQuery, newRecipeNameValues )
+    // .query( newRecipeNameQuery, newRecipeNameValues )
+    .query( 'SELECT * FROM recipes;' )
     .then( result => {
-      const createdRecipeId = result.rows[ 0 ].id
+      // const createdRecipeId = result.rows[ 0 ].id
       
-      /* 
-        Now loop through the ingredients array and add an ingredient
-        to the recipe_ingredients table for each item of the array
-        all while referencing the createdRecipeId
-      */
-      ingredients.map( ingredient => {
-        let newRecipeIngredientQuery;
-        if ( ingredient.for_which_part ) {
-          newRecipeIngredientQuery= `
-            INSERT INTO recipe_ingredients
-              (quantity, unit, ingredients_id, method, recipe_id, for_which_part)
-            VALUES ($1, $2, $3, $4, $5, $6);
-          `;
-        }
-        else {
-          newRecipeIngredientQuery=`
-            INSERT INTO recipe_ingredients
-              (quantity, unit, ingredients_id, method, recipe_id)
-            VALUES ($1, $2, $3, $4, $5);
-          `;
-        }
-        const newRecipeIngredientValues = [
-          ingredient.quantity,
-          ingredient.unit,
-          ingredient.ingredients_id,
-          ingredient.method,
-          createdRecipeId,
-          // If for_which_part exists, add it to the array, otherwise it
-          //  should be left off
-          ... ingredient.for_which_part ? [ ingredient.for_which_part ] : [] 
-        ];
+      // /* 
+      //   Now loop through the ingredients array and add an ingredient
+      //   to the recipe_ingredients table for each item of the array
+      //   all while referencing the createdRecipeId
+      // */
+      // ingredients.map( ingredient => {
+      //   let newRecipeIngredientQuery;
+      //   if ( ingredient.for_which_part ) {
+      //     newRecipeIngredientQuery= `
+      //       INSERT INTO recipe_ingredients
+      //         (quantity, unit, ingredients_id, method, recipe_id, for_which_part)
+      //       VALUES ($1, $2, $3, $4, $5, $6);
+      //     `;
+      //   }
+      //   else {
+      //     newRecipeIngredientQuery=`
+      //       INSERT INTO recipe_ingredients
+      //         (quantity, unit, ingredients_id, method, recipe_id)
+      //       VALUES ($1, $2, $3, $4, $5);
+      //     `;
+      //   }
+      //   const newRecipeIngredientValues = [
+      //     ingredient.quantity,
+      //     ingredient.unit,
+      //     ingredient.ingredients_id,
+      //     ingredient.method,
+      //     createdRecipeId,
+      //     // If for_which_part exists, add it to the array, otherwise it
+      //     //  should be left off
+      //     ... ingredient.for_which_part ? [ ingredient.for_which_part ] : [] 
+      //   ];
 
-        // Nth Query ADDS AN INGREDIENT FOR THAT NEW RECIPE
-        pool
-          .query( newRecipeIngredientQuery, newRecipeIngredientValues )
-          .catch( error => {
-            // Catch for Nth query
-            console.log(
-              `Error while adding an ingredient to the recipe_ingredients table:`,
-              error
-            );
-            res.sendStatus( 500 );
-          })
-      }) // End ingredients.map
+      //   // Nth Query ADDS AN INGREDIENT FOR THAT NEW RECIPE
+      //   pool
+      //     .query( newRecipeIngredientQuery, newRecipeIngredientValues )
+      //     .catch( error => {
+      //       // Catch for Nth query
+      //       console.log(
+      //         `Error while adding an ingredient to the recipe_ingredients table:`,
+      //         error
+      //       );
+      //       res.sendStatus( 500 );
+      //     })
+      // }) // End ingredients.map
 
-      // Now that all portions of adding a recipe are completed, send the
-      // "Created" status 
+      // // Now that all portions of adding a recipe are completed, send the
+      // // "Created" status 
       res.sendStatus( 201 )
     })
     .catch( dbErr => {

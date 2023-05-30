@@ -16,22 +16,45 @@ export default function IngredientsInput({ index, recipeIngredient, handleIngred
 
   const handleUnitSelectChange = (e) => {
     const value = e.target.value;
-    handleIngredientChange(index, 'unit', value);
-    setShowUnitInput(value === 'other');
+    if(value) {
+      const [id, conversion_category] = value.split(':')
+      const selectedUnit = {id, conversion_category} 
+      handleIngredientChange(index, 'units', selectedUnit);
+      setShowUnitInput(value === 'other');
+    }
   };
   const handleOtherUnitInput = (e) => {
-    handleIngredientChange(index, 'unit', e.target.value);
+    const value = e.target.value;
+    if(value) {
+      // Every new unit of measurement will be created with a conversion
+      // category of 'other' and the id will be the entered value
+      const selectedUnit = {id: value, conversion_category: 'other'}
+      handleIngredientChange(index, 'units', selectedUnit);
+    }
+
   };
   const handleIngredientSelectChange = (e) => {
     const value = e.target.value;
-    handleIngredientChange(index, 'ingredient', value);
-    setShowIngredientInput(value === 'other');
+    if(value) {
+      const [id, foodCategory] = value.split(':')
+      const selectedIngredient = {id, foodCategory}
+      handleIngredientChange(index, 'ingredient', selectedIngredient);
+      setShowIngredientInput(value === 'other');
+    }
   };
-  const handleOtherIngredientInput = (e) => {
-    handleIngredientChange(index, 'ingredient', e.target.value);
+  const handleOtherIngrdientInput = (e) => {
+    const value = e.target.value;
+    if(value) {
+      const selectedIngredient = {id: value, conversion_category}
+      handleIngredientChange(index, 'ingredient', e.target.value);
+    }
   };
 
-  if (unitsOfMeasurement.length > 0 && allIngredients && allIngredients.foodCategories && allIngredients.foodCategories.length > 0) {
+  if (
+    unitsOfMeasurement.length > 0 &&
+    allIngredients && allIngredients.foodCategories &&
+    allIngredients.foodCategories.length > 0
+  ) {
     return (
       <tr>
         <td>
@@ -55,7 +78,7 @@ export default function IngredientsInput({ index, recipeIngredient, handleIngred
             {unitsOfMeasurement.map(unit => {
               if (unit.conversion_category === 'mass') {
                 return (
-                  <option key={unit.id} value={unit.id}>{unit.unit}</option>
+                  <option key={unit.id} value={`${unit.id}:${unit.conversion_category}`}>{unit.unit}</option>
                 );
               }
               return null;
@@ -64,7 +87,7 @@ export default function IngredientsInput({ index, recipeIngredient, handleIngred
             {unitsOfMeasurement.map(unit => {
               if (unit.conversion_category === 'volume') {
                 return (
-                  <option key={unit.id} value={unit.id}>{unit.unit}</option>
+                  <option key={unit.id} value={`${unit.id}:${unit.conversion_category}`}>{unit.unit}</option>
                 );
               }
               return null;
@@ -73,7 +96,7 @@ export default function IngredientsInput({ index, recipeIngredient, handleIngred
             {unitsOfMeasurement.map(unit => {
               if (unit.conversion_category === 'other') {
                 return (
-                  <option key={unit.id} value={unit.id}>{unit.unit}</option>
+                  <option key={unit.id} value={`${unit.id}:${unit.conversion_category}`}>{unit.unit}</option>
                 );
               }
               return null;
@@ -103,7 +126,7 @@ export default function IngredientsInput({ index, recipeIngredient, handleIngred
                   {allIngredients.ingredients.map(i => {
                     if (i.foodCategory === category.name) {
                       return (
-                        <option key={i.id} value={i.id}>{i.name}</option>
+                        <option key={i.id} value={`${i.id}:${i.foodCategories}`}>{i.name}</option>
                       );
                     }
                     return null;

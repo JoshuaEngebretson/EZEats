@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 
 export default function AddRecipePage() {
   const dispatch = useDispatch();
-  const history = useHistory
+  const history = useHistory();
   const [imageInput, setImageInput] = useState('')
   const [recipeNameInput, setRecipeNameInput] = useState('')
   const [recipeTextInput, setRecipeTextInput] = useState('')
@@ -53,13 +53,13 @@ export default function AddRecipePage() {
     if (
       recipeNameInput!== '' && 
       categoryInput !== '' && 
-      recipeText !== '' &&
+      recipeTextInput !== '' &&
       recipeIngredientsArray.length > 0
       ) {
       const newRecipe = {
         image: imageInput,
         recipeName: recipeNameInput,
-        recipeText: recipeText,
+        recipeText: recipeTextInput,
         recipeIngredients: recipeIngredientsArray,
         categoryInput 
       }

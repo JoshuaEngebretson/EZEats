@@ -220,7 +220,7 @@ export default function EditOrAddRecipePageTemplate(props) {
                 <th>Ingredient Name</th>
                 <th>Optional: Prepared Method (e.g., sliced, minced)</th>
                 <th>Optional: For which part of the recipe? (e.g., sauce, garnish)</th>
-                <th>Remove Ingredient</th>
+                <th>Remove Line</th>
               </tr>
             </thead>
             <tbody>
