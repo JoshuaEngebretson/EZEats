@@ -321,26 +321,30 @@ router.get( '/:id', rejectUnauthenticated, ( req, res ) => {
     Show this recipe for if the current user is associated
     this has been formatted to be an array of objects that have 
     the following formatting
-    [
-      {
-        id: number,
-        name: string,
-        image: string,
-        recipe_text: string,
-        ingredients: array of objects [
-          {
-            recipeIngredientId: number,
-            quantity: number,
-            unit: string,
-            ingredient: string,
-            method: string,
-            foodCategory: string,
-            forWhichPart: string
-          }
-        ],
-        category: string
-      }
-    ]
+    [{
+      id: number,
+      name: string,
+      image: string,
+      recipe_text: string,
+      ingredients: array of objects [
+        {
+          quantity: number,
+          unit: {
+            id: number,
+            unitName: string,
+            conversion_category: string
+          },
+          ingredient: {
+            id: number,
+            ingredientName: string,
+            foodCategory: string
+          },
+          method: string,
+          forWhichPart: string
+        }
+      ],
+      category: string
+    }]
   */
   const sqlText = `
     SELECT 
@@ -350,10 +354,19 @@ router.get( '/:id', rejectUnauthenticated, ( req, res ) => {
       recipes.recipe_text,
       JSON_AGG(
         JSON_BUILD_OBJECT(
-          'recipeIngredientId', recipe_ingredients.id, 'quantity', recipe_ingredients.quantity, 'unit', units_of_measurement.unit,
-          'ingredient', ingredients.ingredient_name, 'method', recipe_ingredients.method,
-          'foodCategory', food_categories.food_category_name, 'forWhichPart', recipe_ingredients.for_which_part,
-          'unitId', units_of_measurement.id
+          'quantity', recipe_ingredients.quantity, 
+          'unit', JSON_BUILD_OBJECT(
+            'id', units_of_measurement.id,
+            'name', units_of_measurement.unit,
+            'conversionCategory', units_of_measurement.conversion_category
+          ),
+          'ingredient', JSON_BUILD_OBJECT(
+            'id', recipe_ingredients.id,
+            'name', ingredients.ingredient_name,
+            'foodCategory', food_categories.food_category_name
+          ), 
+          'method', recipe_ingredients.method, 
+          'forWhichPart', recipe_ingredients.for_which_part
         ) ORDER BY recipe_ingredients.id
       ) AS ingredients,
       recipes.on_menu,
@@ -379,6 +392,7 @@ router.get( '/:id', rejectUnauthenticated, ( req, res ) => {
     .query( sqlText, [ userId, recipeID ] )
     .then( result => {
       const recipe = result.rows[0]
+      console.log('recipe:', recipe);
       res.send( recipe )
     })
     .catch( dbErr => {
@@ -395,12 +409,6 @@ router.post( '/', rejectUnauthenticated, ( req, res ) => {
   const newRecipe = req.body
   const ingredients = newRecipe.recipeIngredients
 
-  const newRecipeNameQuery = `
-  INSERT INTO recipes
-  (recipe_name, recipe_text, image_of_recipe, user_id, category_id)
-  VALUES ($1, $2, $3, $4, $5)
-  RETURNING id;
-  `;
   let newRecipeNameValues;
   
   newRecipeNameValues = [
@@ -412,12 +420,17 @@ router.post( '/', rejectUnauthenticated, ( req, res ) => {
   ]
 
   console.log('******');
-  console.log('******');
   console.log('newRecipe within POST', newRecipe);
   console.log('ingredients within POST', ingredients);
   console.log('******');
-  console.log('******');
 
+
+  const newRecipeNameQuery = `
+    INSERT INTO recipes
+    (recipe_name, recipe_text, image_of_recipe, user_id, category_id)
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING id;
+    `;
   // FIRST QUERY MAKES THE RECIPE
   pool
     // .query( newRecipeNameQuery, newRecipeNameValues )

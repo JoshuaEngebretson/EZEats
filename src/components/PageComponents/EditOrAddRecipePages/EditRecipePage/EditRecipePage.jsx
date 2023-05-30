@@ -46,10 +46,10 @@ export default function AddRecipePage() {
       })
     }
     const handleRecipeIngredientsChange = (array) => {
-      dispatch({
-        type: 'MODIFY_CURRENT_RECIPE_INGREDIENTS',
-        payload: array
-      })
+      // dispatch({
+      //   type: 'MODIFY_CURRENT_RECIPE_INGREDIENTS',
+      //   payload: array
+      // })
     }
     const handleCategoryIdChange = (value) => {
       dispatch({

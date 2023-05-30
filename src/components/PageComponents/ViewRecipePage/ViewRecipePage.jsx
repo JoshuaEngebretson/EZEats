@@ -51,18 +51,18 @@ export default function ViewRecipePage() {
           <div>
           <ul>
             {
-              currentRecipe.ingredients.map(ingredient => {
-                if (!ingredient.forWhichPart){
-                  if (ingredient.method) {
+              currentRecipe.ingredients.map(i => {
+                if (!i.forWhichPart){
+                  if (i.method) {
                     return (
-                      <li key={ingredient.recipeIngredientId}>
-                        {ingredient.quantity} {ingredient.unit} {ingredient.ingredient} - {ingredient.method}
+                      <li key={i.ingredient.id}>
+                        {i.quantity} {i.unit.name} {i.ingredient.name} - {i.method}
                       </li>
                     )
                   }
                   return (
-                    <li key={ingredient.recipeIngredientId}>
-                      {ingredient.quantity} {ingredient.unit} {ingredient.ingredient}
+                    <li key={i.recipeIngredientId}>
+                      {i.quantity} {i.unit.name} {i.ingredient.name}
                     </li>
                   )
                 }
@@ -83,11 +83,18 @@ export default function ViewRecipePage() {
                     {
                       // Only show the ingredients that match with the current part
                       // that has been mapped
-                      currentRecipe.ingredients.map(ingredient => {
-                        if (ingredient.forWhichPart === part){
+                      currentRecipe.ingredients.map(i => {
+                        if (i.forWhichPart === part){
+                          if (i.method) {
+                            return (
+                              <li key={i.ingredient.id}>
+                                {i.quantity} {i.unit.name} {i.ingredient.name} - {i.method}
+                              </li>
+                            )
+                          }
                           return (
-                            <li key={ingredient.recipeIngredientId}>
-                              {ingredient.quantity} {ingredient.unit} {ingredient.ingredient} {ingredient.method}
+                            <li key={i.recipeIngredientId}>
+                              {i.quantity} {i.unit.name} {i.ingredient.name}
                             </li>
                           )
                         }
