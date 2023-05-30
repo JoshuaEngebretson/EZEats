@@ -8,7 +8,7 @@ function* createNewRecipe({payload: newRecipe}) {
       const {data: newCategoryId} = yield axios.post('/api/recipes/recipe-categories', newRecipe.categoryInput)
       newRecipe.categoryInput = newCategoryId
     }
-    newRecipe.recipeIngredients.map((ingredient, index) => {
+    for (let ingredient of newRecipe.recipeIngredients) {
       if(isNaN(ingredient.units)) {
         const {data: newUnitId} = yield axios.post('/api/recipes/units-of-measurement', ingredient.units)
         ingredient.units = newUnitId
@@ -17,7 +17,7 @@ function* createNewRecipe({payload: newRecipe}) {
         const {data: newIngredientId} = yield axios.post('/api/recipes/ingredients', ingredient.ingredient)
         ingredient.ingredient = newIngredientId
       }
-    })
+    }
 
 
     const response = yield axios.post('/api/recipes/', newRecipe)
