@@ -288,7 +288,8 @@ router.get('/all-ingredients', rejectUnauthenticated,  ( req, res ) => {
             JSON_BUILD_OBJECT(
               'id', ingredients.id,
               'name', ingredients.ingredient_name,
-              'foodCategory', food_categories.food_category_name
+              'foodCategory', food_categories.food_category_name,
+              'foodCategoryId', food_categories.id
             )
           ) AS ingredients
         FROM ingredients
@@ -404,7 +405,7 @@ router.get( '/:id', rejectUnauthenticated, ( req, res ) => {
 }) // End Get specific recipe route
 
 // POST new recipe route
-router.post( '/', rejectUnauthenticated, ( req, res ) => {
+router.post( '/', rejectUnauthenticated, async ( req, res ) => {
   const userId = req.user.id
   const newRecipe = req.body
   const ingredients = newRecipe.recipeIngredients
@@ -494,6 +495,28 @@ router.post( '/', rejectUnauthenticated, ( req, res ) => {
       console.log( 'Error in POST /new-recipe route:', dbErr );
     })
 }); // End POST new recipe route
+
+router.post( '/recipe-categories', rejectUnauthenticated, ( req, res ) => {
+  const newCategory = req.body.data
+  console.log('newCategory at start of post:', newCategory);
+  const sqlQuery = `
+    INSERT INTO category (name)
+    VALUES ($1)
+    RETURNING id;
+  `;
+  pool
+    .query( sqlQuery, [ newCategory ] )
+    .then( result => {
+      console.log( 'new category id:', result.rows[0].id ); // uncover where id is located.
+      res.sendStatus( 200 )
+    })
+    .catch( dbErr => {
+      // If unable to process request,
+      // send "Internal Server Error" message to client
+      res.sendStatus( 500 );
+      console.log( 'Error in POST new category route:', dbErr );
+    })
+})
 
 // PUT recipe route
 router.put( '/:id', rejectUnauthenticated, ( req, res ) => {

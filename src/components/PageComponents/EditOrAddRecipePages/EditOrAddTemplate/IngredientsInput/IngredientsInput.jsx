@@ -1,5 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
+import CreateIngredientModal from "./CreateIngredientModal/CreateIngredientModal";
+
 
 export default function IngredientsInput({ index, recipeIngredient, handleIngredientChange, handleDeleteLine }) {
   const dispatch = useDispatch();
@@ -8,6 +10,7 @@ export default function IngredientsInput({ index, recipeIngredient, handleIngred
   const { quantity, unit, ingredient, method, forWhichPart } = recipeIngredient;
   const [showUnitInput, setShowUnitInput] = useState(unit === 'other');
   const [showIngredientInput, setShowIngredientInput] = useState(ingredient === 'other');
+  
 
   useEffect(() => {
     // dispatch({ type: 'FETCH_UNITS_OF_MEASUREMENT' });
@@ -58,14 +61,16 @@ export default function IngredientsInput({ index, recipeIngredient, handleIngred
       selectedId = Number(selectedId)
       let foodCategory;
       let ingredientName;
+      let foodCategoryId;
       allIngredients.ingredients.map(i => {
         if (i.id === Number(selectedId)) {
           console.log('i.foodCategory', i.foodCategory);
           foodCategory = i.foodCategory
+          foodCategoryId = i.foodCategoryId
           ingredientName = i.name
         }
       })
-      const selectedIngredient = {id:selectedId, name: ingredientName, foodCategory: foodCategory}
+      const selectedIngredient = {id:selectedId, name: ingredientName, foodCategory: foodCategory, foodCategoryId: foodCategoryId}
       console.log('selectedIngredient:', selectedIngredient);
       handleIngredientChange(index, 'ingredient', selectedIngredient);
       setShowIngredientInput(false)
@@ -92,6 +97,8 @@ export default function IngredientsInput({ index, recipeIngredient, handleIngred
   };
 
 
+
+
   if (
     unitsOfMeasurement.length > 0 &&
     allIngredients && allIngredients.foodCategories &&
@@ -104,6 +111,7 @@ export default function IngredientsInput({ index, recipeIngredient, handleIngred
     const iName = ingredient && ingredient.name
     const ingredientId = ingredient && ingredient.id
     const foodCategory = ingredient && ingredient.foodCategory
+
     return (
       <tr>
         <td>
@@ -127,7 +135,7 @@ export default function IngredientsInput({ index, recipeIngredient, handleIngred
             {unitsOfMeasurement.map(unit => {
               if (unit.conversion_category === 'mass') {
                 return (
-                  <option key={unit.id} value={`${unit.id}`}>{unit.unit}</option>
+                  <option key={unit.id} value={unit.id}>{unit.unit}</option>
                 );
               }
               return null;
@@ -186,12 +194,16 @@ export default function IngredientsInput({ index, recipeIngredient, handleIngred
             <option value='' disabled>NEW INGREDIENT</option>
             <option value='other'>Create New Ingredient</option>
           </select>
+          <CreateIngredientModal />
           {showIngredientInput && (
-            <input
-              value={ingredientId}
-              onChange={handleOtherIngredientInput}
-              placeholder='Enter new ingredient'
-            />
+            <>
+              {/* <input
+                value={ingredientId}
+                onChange={handleOtherIngredientInput}
+                placeholder='Enter new ingredient'
+              /> */}
+              
+            </>
           )}
         </td>
         <td>
