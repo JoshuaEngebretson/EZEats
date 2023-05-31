@@ -132,7 +132,7 @@ export default function EditOrAddRecipePageTemplate(props) {
   // Functions to deal with with entering ingredients
   const initialIngredientObj = {
     quantity: '',
-    units: {
+    unit: {
       id: 0,
       name: '',
       conversionCategory: ''

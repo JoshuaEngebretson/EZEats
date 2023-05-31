@@ -71,16 +71,24 @@ export default function IngredientsInput({ index, recipeIngredient, handleIngred
       setShowIngredientInput(false)
     }
     else {
-      const selectedIngredient = {id:selectedId, foodCategory: ''}
+          // Need to add in selection field for foodCategory and also allow the user to enter in
+          //  a new option. (this should be handled in it's own modal of adding an ingredient.)
+            //  That would allow for this logic to be easier. Anytime other is chosen it opens the modal
+            //  Which would have it's own 'Save Ingredient button'
+      const selectedIngredient = {id:selectedId, name: selectedId, foodCategory: 'placeholder'}
       handleIngredientChange(index, 'ingredient', selectedIngredient);
       setShowIngredientInput(selectedId === 'other');
     }
   };
   const handleOtherIngredientInput = (e) => {
     const selectedId = e.target.value;
-    const selectedIngredient = {id: selectedId, foodCategory: ''}
+        // Need to add in selection field for foodCategory and also allow the user to enter in
+        //  a new option. (this should be handled in it's own modal of adding an ingredient.)
+          //  That would allow for this logic to be easier. Anytime other is chosen it opens the modal
+          //  Which would have it's own 'Save Ingredient button'
+    const selectedIngredient = {id: selectedId, name: selectedId, foodCategory: 'placeholder'}
     console.log('selectedIngredient:', selectedIngredient);
-    handleIngredientChange(index, 'ingredient', e.target.value);
+    handleIngredientChange(index, 'ingredient', selectedIngredient);
   };
 
 
