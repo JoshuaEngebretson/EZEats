@@ -559,6 +559,24 @@ router.post( '/food-categories', rejectUnauthenticated, ( req, res ) => {
     })
 })
 
+router.post( '/ingredients', rejectUnauthenticated, ( req, res ) => {
+  const newIngredient = req.body.data
+  console.log('newIngredient in server:', newIngredient);
+  const sqlQuery = `
+    INSERT INTO ingredients (ingredient_name, food_category_id)
+    VALUES ($1, $2);
+  `;
+  pool
+    .query(sqlQuery, [newIngredient.ingredientName, newIngredient.foodCategory])
+    .then( result => {
+      res.sendStatus( 201 )
+    })
+    .catch( dbErr => {
+      res.sendStatus( 500 );
+      console.log( 'Error in POST new ingredient route:', dbErr );
+    })
+})
+
 // PUT recipe route
 router.put( '/:id', rejectUnauthenticated, ( req, res ) => {
   const userId = req.user.id
