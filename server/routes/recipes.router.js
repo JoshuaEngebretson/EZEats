@@ -508,13 +508,34 @@ router.post( '/recipe-categories', rejectUnauthenticated, ( req, res ) => {
     .query( sqlQuery, [ newCategory ] )
     .then( result => {
       console.log( 'new category id:', result.rows[0].id ); // uncover where id is located.
-      res.sendStatus( 200 )
+      const newCategoryId = { id: result.rows[0].id } 
+      res.send( newCategoryId )
     })
     .catch( dbErr => {
       // If unable to process request,
       // send "Internal Server Error" message to client
       res.sendStatus( 500 );
       console.log( 'Error in POST new category route:', dbErr );
+    })
+})
+
+router.post( '/units-of-measurement', rejectUnauthenticated, ( req, res ) => {
+  const newUnit = req.body.data
+  console.log('newUnit in server:', newUnit);
+  const sqlQuery = `
+    INSERT INTO units_of_measurement (unit, conversion_category)
+    VALUES ($1, 'other')
+    returning id;
+  `;
+  pool
+    .query(sqlQuery, [newUnit])
+    .then( result => {
+      const newUnitId = { id: result.rows[0].id }
+      res.send( newUnitId )
+    })
+    .catch( dbErr => {
+      res.sendStatus( 500 );
+      console.log( 'Error in POST new units-of-measurement route:', dbErr );
     })
 })
 

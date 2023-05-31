@@ -38,7 +38,7 @@ export default function CreateIngredientModal() {
     setIngredientInput('')
     setFoodCategoryInput('')
   }
-  const saveNewIngredient = () => {
+  const saveNewIngredient = async () => {
     console.log('clicked save Ingredient');
     if (ingredientInput !== '' &&
     foodCategoryInput !== ''
@@ -48,10 +48,10 @@ export default function CreateIngredientModal() {
         foodCategory: foodCategoryInput
       }
       console.log('newIngredient:', newIngredient);
-      // dispatch({
-      //   type: 'CREATE_NEW_INGREDIENT',
-      //   payload: newIngredient
-      // })
+      dispatch({
+        type: 'CREATE_NEW_INGREDIENT',
+        payload: newIngredient
+      })
       // toggleModal()
     }
     else {

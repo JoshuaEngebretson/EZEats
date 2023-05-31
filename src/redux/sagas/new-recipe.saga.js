@@ -6,23 +6,16 @@ function* createNewRecipe({payload: newRecipe}) {
   try {
     console.log('newRecipe within saga:', {...newRecipe});
     if(isNaN(newRecipe.categoryInput)) {
-      const {data: newCategoryId} = yield axios.post('/api/recipes/recipe-categories', {data: newRecipe.categoryInput})
-      newRecipe.categoryInput = newCategoryId
+      const {data: newCategory} = yield axios.post('/api/recipes/recipe-categories', {data: newRecipe.categoryInput})
+      console.log('newCategory:', newCategory);
+      newRecipe.categoryInput = newCategory.id
     }
     for (let ingredient of newRecipe.recipeIngredients) {
       if(isNaN(ingredient.unit.id)) {
-        console.log('ingredient.units.name:', ingredient.unit.name);
-        // const {data: newUnitId} = yield axios.post('/api/recipes/units-of-measurement', {data: ingredient.units.name})
-        // ingredient.units.id = newUnitId
-      }
-      if(isNaN(ingredient.ingredient.id)) {
-        console.log('ingredient.ingredient.name:', ingredient.ingredient.name);
-        // const {data: newIngredientId} = yield axios.post('/api/recipes/ingredients', {data: ingredient.ingredient.name})
-        // ingredient.ingredient.id = newIngredientId
-      }
-      if(isNaN(ingredient.ingredient.foodCategory)) {
-        console.log('ingredient.ingredient.foodCategory:', ingredient.ingredient.foodCategory);
-        // const {data: newFoodCategoryId} = yield axios.post('/api/recipes/food-categories', {data: ingredient.ingredient.foodCategory})
+        console.log('ingredient.units.name:', ingredient.unit.unit);
+        const {data: newUnit} = yield axios.post('/api/recipes/units-of-measurement', {data: ingredient.unit.unit})
+        console.log('newUnit:', newUnit);
+        ingredient.unit.id = newUnit.id
       }
     }
     console.log('newRecipe within post creations saga:', {...newRecipe});
@@ -43,7 +36,23 @@ function* fetchNewRecipe() {
   }
 }
 
+function* createNewIngredient({payload: newIngredient}) {
+  try {
+    console.log('new ingredient in saga:', newIngredient);
+    if(isNaN(newIngredient.foodcategory)) {
+      const {data: newFoodCategoryId} = yield axios.post('/api/recipes/food-categories', {data: newIngredient.foodCategory})
+      console.log('newFoodCategoryId:', newFoodCategoryId);
+      // newIngredient.foodcategory = newFoodCategoryId
+    }
+    const response = yield axios.post('/api/recipes/ingredients')
+    yield put({type: 'FETCH_ALL_INGREDIENTS'})
+  } catch (error) {
+    console.log('Error within createNewIngredient saga:', error);
+  }
+}
+
 export default function* recipesSaga() {
   yield takeLatest('CREATE_NEW_RECIPE', createNewRecipe)
   yield takeLatest('FETCH_NEW_RECIPE', fetchNewRecipe)
+  yield takeLatest('CREATE_NEW_INGREDIENT', createNewIngredient)
 }
