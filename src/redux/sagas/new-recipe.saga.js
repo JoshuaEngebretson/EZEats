@@ -40,12 +40,13 @@ function* createNewIngredient({payload: newIngredient}) {
   try {
     console.log('new ingredient in saga:', newIngredient);
     if(isNaN(newIngredient.foodcategory)) {
-      const {data: newFoodCategoryId} = yield axios.post('/api/recipes/food-categories', {data: newIngredient.foodCategory})
-      console.log('newFoodCategoryId:', newFoodCategoryId);
-      // newIngredient.foodcategory = newFoodCategoryId
+      const {data: newFoodCategory} = yield axios.post('/api/recipes/food-categories', {data: newIngredient.foodCategory})
+      console.log('newFoodCategoryId:', newFoodCategory);
+      newIngredient.foodcategory = newFoodCategory.id
     }
-    const response = yield axios.post('/api/recipes/ingredients')
-    yield put({type: 'FETCH_ALL_INGREDIENTS'})
+    console.log(newIngredient.foodcategory);
+    // const response = yield axios.post('/api/recipes/ingredients')
+    // yield put({type: 'FETCH_ALL_INGREDIENTS'})
   } catch (error) {
     console.log('Error within createNewIngredient saga:', error);
   }

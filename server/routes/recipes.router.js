@@ -525,7 +525,7 @@ router.post( '/units-of-measurement', rejectUnauthenticated, ( req, res ) => {
   const sqlQuery = `
     INSERT INTO units_of_measurement (unit, conversion_category)
     VALUES ($1, 'other')
-    returning id;
+    RETURNING id;
   `;
   pool
     .query(sqlQuery, [newUnit])
@@ -536,6 +536,26 @@ router.post( '/units-of-measurement', rejectUnauthenticated, ( req, res ) => {
     .catch( dbErr => {
       res.sendStatus( 500 );
       console.log( 'Error in POST new units-of-measurement route:', dbErr );
+    })
+})
+
+router.post( '/food-categories', rejectUnauthenticated, ( req, res ) => {
+  const newFoodCategory = req.body.data
+  console.log('newFoodCategory in server:', newFoodCategory);
+  const sqlQuery = `
+    INSERT INTO food_categories (food_category_name)
+    VALUES ($1)
+    RETURNING id;
+  `;
+  pool
+    .query(sqlQuery, [newFoodCategory])
+    .then( result => {
+      const newFoodCategoryId = { id: result.rows[0].id }
+      res.send( newFoodCategoryId )
+    })
+    .catch( dbErr => {
+      res.sendStatus( 500 );
+      console.log( 'Error in POST new food-categories route:', dbErr );
     })
 })
 
