@@ -5,78 +5,97 @@ export default function IngredientsInput({ index, recipeIngredient, handleIngred
   const dispatch = useDispatch();
   const unitsOfMeasurement = useSelector(store => store.recipes.unitsOfMeasurement);
   const allIngredients = useSelector(store => store.recipes.allIngredients);
-  const { quantity, unit, ingredient, recipeIngredientId, method, unitId, forWhichPart } = recipeIngredient;
+  const { quantity, unit, ingredient, method, forWhichPart } = recipeIngredient;
   const [showUnitInput, setShowUnitInput] = useState(unit === 'other');
   const [showIngredientInput, setShowIngredientInput] = useState(ingredient === 'other');
 
   useEffect(() => {
-    dispatch({ type: 'FETCH_UNITS_OF_MEASUREMENT' });
-    dispatch({ type: 'FETCH_ALL_INGREDIENTS' });
+    // dispatch({ type: 'FETCH_UNITS_OF_MEASUREMENT' });
+    // dispatch({ type: 'FETCH_ALL_INGREDIENTS' });
   }, []);
 
   const handleUnitSelectChange = (e) => {
-    const selectedId = e.target.value;
+    let selectedId = e.target.value;
     if(selectedId !== 'other') {
+      selectedId = Number(selectedId)
       let conversion_category, unitName;
       unitsOfMeasurement.map(unit => {
-        if (unit.id == selectedId) {
+        if (unit.id === selectedId) {
           console.log(unit.conversion_category);
           conversion_category = unit.conversion_category
           unitName = unit.unit
           console.log('conversion_category:', conversion_category);
         }
       })
-      const selectedUnit = {id: selectedId, unit: unitName, conversion_category: conversion_category} 
+      const selectedUnit = {id: selectedId, name: unitName, conversion_category: conversion_category} 
       console.log('selectedUnit:', selectedUnit);
-      handleIngredientChange(index, 'units', selectedUnit);
+      handleIngredientChange(index, 'unit', selectedUnit);
+      setShowUnitInput(false)
     }
     else {
       // Every new unit of measurement will be created with a conversion
       // category of 'other' and the id and unit will be the entered value
       const selectedUnit = {id: selectedId, unit:selectedId, conversion_category: 'other'} 
       console.log('selectedUnit:', selectedUnit);
-      handleIngredientChange(index, 'units', selectedUnit);
+      handleIngredientChange(index, 'unit', selectedUnit);
       setShowUnitInput(selectedId === 'other');
     }
   };
   const handleOtherUnitInput = (e) => {
     const selectedId = e.target.value;
-    if(selectedId) {
+    if(selectedId !== 'other') {
       // Every new unit of measurement will be created with a conversion
       // category of 'other' and the id and unit will be the entered value
       const selectedUnit = {id: selectedId, unit: selectedId, conversion_category: 'other'}
       console.log('selectedUnit:', selectedUnit);
-      handleIngredientChange(index, 'units', selectedUnit);
+      handleIngredientChange(index, 'unit', selectedUnit);
     }
 
   };
   const handleIngredientSelectChange = (e) => {
-    const selectedId = e.target.value;
-    if (selectedId) {
+    let selectedId = e.target.value;
+    if (selectedId !== 'other') {
+      selectedId = Number(selectedId)
       let foodCategory;
-      allIngredients.map(i => {
-        if (i.id === selectedId) {
+      let ingredientName;
+      allIngredients.ingredients.map(i => {
+        if (i.id === Number(selectedId)) {
+          console.log('i.foodCategory', i.foodCategory);
           foodCategory = i.foodCategory
+          ingredientName = i.name
         }
       })
-      const selectedIngredient = {id:selectedId, foodCategory: foodCategory}
+      const selectedIngredient = {id:selectedId, name: ingredientName, foodCategory: foodCategory}
       console.log('selectedIngredient:', selectedIngredient);
+      handleIngredientChange(index, 'ingredient', selectedIngredient);
+      setShowIngredientInput(false)
+    }
+    else {
+      const selectedIngredient = {id:selectedId, foodCategory: ''}
       handleIngredientChange(index, 'ingredient', selectedIngredient);
       setShowIngredientInput(selectedId === 'other');
     }
   };
   const handleOtherIngredientInput = (e) => {
     const selectedId = e.target.value;
-      const selectedIngredient = {id: selectedId, foodCategory: foodCategory}
-      console.log('selectedIngredient:', selectedIngredient);
-      handleIngredientChange(index, 'ingredient', e.target.value);
+    const selectedIngredient = {id: selectedId, foodCategory: ''}
+    console.log('selectedIngredient:', selectedIngredient);
+    handleIngredientChange(index, 'ingredient', e.target.value);
   };
+
 
   if (
     unitsOfMeasurement.length > 0 &&
     allIngredients && allIngredients.foodCategories &&
-    allIngredients.foodCategories.length > 0
+    allIngredients.foodCategories.length > 0 &&
+    recipeIngredient
   ) {
+    const unitId = unit && unit.id
+    const uName = unit && unit.name
+    const conversionCategory = unit && unit.conversionCategory
+    const iName = ingredient && ingredient.name
+    const ingredientId = ingredient && ingredient.id
+    const foodCategory = ingredient && ingredient.foodCategory
     return (
       <tr>
         <td>
@@ -85,7 +104,7 @@ export default function IngredientsInput({ index, recipeIngredient, handleIngred
             placeholder='Quantity'
             min='0'
             value={quantity}
-            onChange={e => handleIngredientChange(index, 'quantity', e.target.value)}
+            onChange={e => handleIngredientChange(index, 'quantity', Number(e.target.value))}
           />
         </td>
         <td>
@@ -124,7 +143,7 @@ export default function IngredientsInput({ index, recipeIngredient, handleIngred
               return null;
             })}
             <option value='' disabled>NEW UNIT</option>
-            <option value='other'>Create New Ingredient</option>
+            <option value='other'>Create New Unit</option>
           </select>
           {showUnitInput && (
             <input
@@ -136,7 +155,7 @@ export default function IngredientsInput({ index, recipeIngredient, handleIngred
         </td>
         <td>
           <select
-            value={recipeIngredientId}
+            value={ingredientId}
             onChange={e => handleIngredientSelectChange(e)}
           >
             <option value=''>--Please select the Ingredient--</option>
@@ -157,11 +176,11 @@ export default function IngredientsInput({ index, recipeIngredient, handleIngred
               );
             })}
             <option value='' disabled>NEW INGREDIENT</option>
-            <option value='other'>Create New Unit</option>
+            <option value='other'>Create New Ingredient</option>
           </select>
           {showIngredientInput && (
             <input
-              value={ingredient}
+              value={ingredientId}
               onChange={handleOtherIngredientInput}
               placeholder='Enter new ingredient'
             />

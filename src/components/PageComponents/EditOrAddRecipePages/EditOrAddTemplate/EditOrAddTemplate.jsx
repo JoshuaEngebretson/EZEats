@@ -9,22 +9,19 @@ export default function EditOrAddRecipePageTemplate(props) {
   const dispatch = useDispatch();
 
   const {
-    inputs,
-    id,
-    handleImageChange,
-    handleRecipeNameChange,
-    handleRecipeTextChange,
-    handleRecipeIngredientsChange,
-    handleCategoryIdChange,
-    handleSaveRecipe
+    inputs, id, handleImageChange, handleRecipeNameChange,
+    handleRecipeTextChange, handleRecipeIngredientsChange,
+    handleCategoryIdChange, handleSaveRecipe
   } = props;
 
   useEffect(() => {
     dispatch({type: 'FETCH_RECIPE_CATEGORIES'});
-    if (id) {
-      setIngredientsInputArray(inputs.recipeIngredients)
-    }
+    dispatch({ type: 'FETCH_UNITS_OF_MEASUREMENT' });
+    dispatch({ type: 'FETCH_ALL_INGREDIENTS' });
+    setIngredientsInputArray(inputs.recipeIngredients)
   }, [id, inputs.recipeIngredients])
+
+
 
   // Functions to deal with the whole page
     // Save Recipe, Delete Recipe, Cancel Add, Reset Cooked Count
@@ -91,7 +88,7 @@ export default function EditOrAddRecipePageTemplate(props) {
           className='stacked-buttons subtract'
           onClick={handleResetCookedCount}
         >
-          <p class='center' >Reset Cooked Count</p>
+          <p className='center' >Reset Cooked Count</p>
         </div>
       )
     }
@@ -107,11 +104,12 @@ export default function EditOrAddRecipePageTemplate(props) {
     if (value === 'other') {
       setToggleCategoryInput(true)
       setCategoryInput(value)
+      handleCategoryIdChange(value)
     }
     else {
       setToggleCategoryInput(false)
-    }
-    handleCategoryIdChange(value)
+      handleCategoryIdChange(Number(value))
+    } 
   }
   const handleCategoryInputChange = (value) => {
     setCategoryInput(value);
@@ -135,13 +133,13 @@ export default function EditOrAddRecipePageTemplate(props) {
   const initialIngredientObj = {
     quantity: '',
     units: {
-      id: '',
-      unitName: '',
-      conversion_category: ''
+      id: 0,
+      name: '',
+      conversionCategory: ''
     },
     ingredient: {
-      id: '',
-      ingredientName: '',
+      id: 0,
+      name: '',
       foodCategory: ''
     },
     method: '',

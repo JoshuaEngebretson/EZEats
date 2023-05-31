@@ -11,8 +11,16 @@ export default function AddRecipePage() {
   const [recipeTextInput, setRecipeTextInput] = useState('')
   const initialIngredientObj = {
     quantity: '',
-    units: '',
-    ingredient: '',
+    unit: {
+      id: 0,
+      name: '',
+      conversionCategory: ''
+    },
+    ingredient: {
+      id: 0,
+      name: '',
+      foodCategory: ''
+    },
     method: '',
     forWhichPart: '',
   }
@@ -30,8 +38,9 @@ export default function AddRecipePage() {
     recipeName: recipeNameInput,
     recipeText: recipeTextInput,
     recipeIngredients: recipeIngredientsArray,
-    categoryInput 
+    categoryId: categoryInput 
   }
+  console.log('inputs within AddRecipePage:', inputs);
   const handleImageChange = (value) => {
     setImageInput(value)
   }

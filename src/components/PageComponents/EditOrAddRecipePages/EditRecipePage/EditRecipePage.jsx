@@ -27,6 +27,7 @@ export default function AddRecipePage() {
       recipeIngredients: currentRecipe.ingredients,
       categoryId: currentRecipe.categoryId
     }
+    console.log('inputs within EditRecipePage:', inputs);
     const handleImageChange = (value) => {
       dispatch({
         type: 'MODIFY_CURRENT_RECIPE_IMAGE',
@@ -46,10 +47,10 @@ export default function AddRecipePage() {
       })
     }
     const handleRecipeIngredientsChange = (array) => {
-      // dispatch({
-      //   type: 'MODIFY_CURRENT_RECIPE_INGREDIENTS',
-      //   payload: array
-      // })
+      dispatch({
+        type: 'MODIFY_CURRENT_RECIPE_INGREDIENTS',
+        payload: array
+      })
     }
     const handleCategoryIdChange = (value) => {
       dispatch({

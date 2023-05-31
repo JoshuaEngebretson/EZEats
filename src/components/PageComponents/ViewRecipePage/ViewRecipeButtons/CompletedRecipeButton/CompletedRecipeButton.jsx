@@ -19,6 +19,7 @@ export default function CompletedRecipeButton() {
         setCanClick(true);
       }, 10000) // 10 seconds is equal to 10,000 milliseconds
     } else {
+      // Styling would like the button to shake if cannot update
       console.log('Please wait a bit longer before attempting to increase the prepared count');
     }
 

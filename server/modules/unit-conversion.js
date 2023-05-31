@@ -7,7 +7,7 @@ const volumetricConversionsToUsTeaspoon = {
   usTeaspoonsInUsGallon: 768,
   usTeaspoonsInUsQuart: 192,
   usTeaspoonsInUsPint: 96,
-  usTeaspoonsInUsCup: 48.692, //actual conversion would be 48.692 but for purposes 
+  usTeaspoonsInUsCup: 48.692,
   usTeaspoonsInUsFluidOunce: 6,
   usTeaspoonsInCubicInch: 3.325,
   usTeaspoonsInUsTablespoon: 3,
@@ -138,7 +138,6 @@ const formatter = new Intl.NumberFormat('en-US', {maximumFractionDigits: 2})
  * @param {string} category - A string that is used to check if able to use any of the liquid based measurements: (fl oz, pint, quart, gallon)
  * @param {string} optionalUnits - (optional) A string used when the volumeOrMass provided is equal to 'other'. This is used to provide a non converted output.
  * @returns {convertedObject} an object that consists of {quantity: number, unit: 'string'}
-
  */
 function convertSmallestToLargestUsMeasurement (quantity, volumeOrMass, category, optionalUnits) {
   let conversion;

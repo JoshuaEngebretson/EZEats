@@ -9,16 +9,15 @@ function* createNewRecipe({payload: newRecipe}) {
       newRecipe.categoryInput = newCategoryId
     }
     for (let ingredient of newRecipe.recipeIngredients) {
-      if(isNaN(ingredient.units)) {
+      if(isNaN(ingredient.units.id)) {
         const {data: newUnitId} = yield axios.post('/api/recipes/units-of-measurement', ingredient.units)
-        ingredient.units = newUnitId
+        ingredient.units.id = newUnitId
       }
-      if(isNaN(ingredient.ingredient)) {
+      if(isNaN(ingredient.ingredient.id)) {
         const {data: newIngredientId} = yield axios.post('/api/recipes/ingredients', ingredient.ingredient)
-        ingredient.ingredient = newIngredientId
+        ingredient.ingredient.id = newIngredientId
       }
     }
-
 
     const response = yield axios.post('/api/recipes/', newRecipe)
     yield put({type: 'FETCH_RECIPES'})
