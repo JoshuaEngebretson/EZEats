@@ -52,7 +52,8 @@ export default function CreateIngredientModal() {
         type: 'CREATE_NEW_INGREDIENT',
         payload: newIngredient
       })
-      // toggleModal()
+      toggleModal()
+      setShowFoodCategoryInput(false)
     }
     else {
       alert('Please ensure both fields are filled in')

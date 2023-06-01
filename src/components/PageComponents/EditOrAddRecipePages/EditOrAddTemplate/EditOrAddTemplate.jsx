@@ -7,6 +7,7 @@ import IngredientsInput from "./IngredientsInput/IngredientsInput";
 export default function EditOrAddRecipePageTemplate(props) {
   const history = useHistory();
   const dispatch = useDispatch();
+  const deletedIngredientsArray = []
 
   const {
     inputs, id, handleImageChange, handleRecipeNameChange,
@@ -21,19 +22,35 @@ export default function EditOrAddRecipePageTemplate(props) {
     setIngredientsInputArray(inputs.recipeIngredients)
   }, [id, inputs.recipeIngredients])
 
-
-
   // Functions to deal with the whole page
     // Save Recipe, Delete Recipe, Cancel Add, Reset Cooked Count
   const saveRecipeButton = () => {
-    return (
-      <div
-      className='stacked-buttons add'
-      onClick={handleSaveRecipe}
-      >
-        <p className='center'>Save Recipe</p>
-      </div>
-    )
+    if (id && deletedIngredientsArray.length > 0) {
+      // If we are editing a recipe, we want to capture what
+      //  recipe_ingredients have been deleted so we can remove those
+      //  from the database
+        // The id that is associated with each deleted ingredient in
+        //  the array should be the recipe_ingredients id that we want
+        //  to delete
+      console.log(deletedIngredientsArray);
+      return (
+        <div
+        className='stacked-buttons add'
+        onClick={() => handleSaveRecipe(deletedIngredientsArray)}
+        >
+          <p className='center'>Save Recipe</p>
+        </div>
+      )
+    } else {
+      return (
+        <div
+        className='stacked-buttons add'
+        onClick={handleSaveRecipe}
+        >
+          <p className='center'>Save Recipe</p>
+        </div>
+      )
+    }
   }
   const cancelButton = () => {
     const handleCancelButton = () => {
@@ -76,6 +93,9 @@ export default function EditOrAddRecipePageTemplate(props) {
           <p className='center'>Delete Recipe</p>
         </div>
       )
+    }
+    else {
+      return ''
     }
   }
   const resetCookedCountButton = () => {
@@ -166,13 +186,11 @@ export default function EditOrAddRecipePageTemplate(props) {
       setIngredientsInputArray(newIngredients);
       handleRecipeIngredientsChange(newIngredients)
       console.log('thing deleted', thing);
+      deletedIngredientsArray.push(thing);
       console.log(newIngredients);
     }
   }
   // End functions to deal with with entering ingredients
-
-  // console.log('ingredientsInputArray:', ingredientsInputArray);
-  // console.log('categories:', categories);
 
   if(
     inputs!== undefined
@@ -244,7 +262,6 @@ export default function EditOrAddRecipePageTemplate(props) {
             })}
             </tbody>
           </table>
-          {/* <br /> */}
           <button onClick={addNewIngredientLine} className='add'>Add New Line</button>
         </div>
         <div className='bottom-container'>
@@ -253,9 +270,6 @@ export default function EditOrAddRecipePageTemplate(props) {
               placeholder='Enter Recipe Here'
               value={inputs.recipeText}
               onChange={(e) => handleRecipeTextChange(e.target.value)}
-              // I want this to be dynamic, and stretch about 85% of the page if possible
-              // rows='5'
-              // cols='100'
             />
           </div>
           <div className='button-container'>

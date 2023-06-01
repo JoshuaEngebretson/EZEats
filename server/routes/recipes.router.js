@@ -667,8 +667,10 @@ router.delete( '/:id', rejectUnauthenticated, ( req, res ) => {
   const idToDelete = req.params.id
 
   const sqlText = `
-
+    DELETE FROM recipes
+    WHERE id = $1 AND user_id=$2
   `;
+  const sqlValues = [idToDelete, userId]
 
   pool
     .query( sqlText, sqlValues )

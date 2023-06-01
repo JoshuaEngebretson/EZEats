@@ -38,6 +38,14 @@ function* fetchCurrentRecipe(action) {
   }
 }
 
+function* deleteCurrentRecipe({payload: currentRecipeId}) {
+  try {
+    const response = yield axios.delete(`/api/recipes/${currentRecipeId}`)
+  } catch (error) {
+    console.log('DELETE currentRecipe request failed:', error);
+  }
+}
+
 function* increaseOnMenu(action) {
   try {
     const increaseNumber = {adjustment:'increaseNumber'} 
@@ -110,6 +118,8 @@ function* fetchAllIngredients() {
 
 export default function* recipesSaga() {
   yield takeLatest('FETCH_CURRENT_RECIPE', fetchCurrentRecipe)
+  yield takeLatest('DELETE_CURRENT_RECIPE', deleteCurrentRecipe)
+
   yield takeLatest('FETCH_MOST_COOKED', fetchMostCooked)
   yield takeLatest('FETCH_RECIPES', fetchRecipes)
 

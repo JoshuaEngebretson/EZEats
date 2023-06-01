@@ -191,8 +191,6 @@ export default function IngredientsInput({ index, recipeIngredient, handleIngred
                 </React.Fragment>
               );
             })}
-            <option value='' disabled>NEW INGREDIENT</option>
-            <option value='other'>Create New Ingredient</option>
           </select>
           <CreateIngredientModal />
           {showIngredientInput && (

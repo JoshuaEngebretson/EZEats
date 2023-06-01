@@ -29,7 +29,8 @@ else {
     pool = new pg.Pool({
         host: 'localhost',
         port: 5432,
-        database: 'EZEats',   // 	💥 Change this to the name of your database!
+        database: 'v2 test EZEats',   // 	💥 Change this to the name of your database!
+        // database: 'EZEats',   // 	💥 Change this to the name of your database!
     });
 }
 
