@@ -65,8 +65,6 @@ export default function AddRecipePage() {
 
     return (
       <>
-        <h1>Inside Edit Page view</h1>
-        <h2>We would be editing the recipe with id = {id}</h2>
         <EditOrAddRecipePageTemplate 
           inputs={inputs}
           id={id}

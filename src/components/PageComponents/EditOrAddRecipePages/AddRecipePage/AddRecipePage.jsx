@@ -95,7 +95,6 @@ export default function AddRecipePage() {
 
   return (
     <>
-      <h1>Inside Add Recipe Page view</h1>
       <EditOrAddRecipePageTemplate
         inputs={inputs}
         handleImageChange={handleImageChange}
