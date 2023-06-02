@@ -4,14 +4,15 @@ import './LandingPage.css';
 
 // CUSTOM COMPONENTS
 import RegisterForm from '../LoginAndRegisterPages/RegisterPage/RegisterForm/RegisterForm';
+import LoginForm from '../LoginAndRegisterPages/LoginPage/LoginForm/LoginForm';
 
 function LandingPage() {
   const [heading, setHeading] = useState('Welcome to EZEats!');
   const history = useHistory();
 
-  const onLogin = (event) => {
-    history.push('/login');
-  };
+  const registration = (event) => {
+    history.push('/registration')
+  }
 
   return (
     <div className="container">
@@ -56,12 +57,13 @@ function LandingPage() {
         </p>
         </div>
         <div className="grid-col grid-col_4">
-          <RegisterForm />
+          <LoginForm />
+          
 
           <center>
-            <h4>Already a Member?</h4>
-            <button className="btn btn_sizeSm" onClick={onLogin}>
-              Login
+            <h4>Not a Member?</h4>
+            <button className="btn btn_sizeSm" onClick={registration}>
+              Register
             </button>
           </center>
         </div>

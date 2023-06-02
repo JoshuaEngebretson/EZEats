@@ -1,30 +1,24 @@
+import './App.css';
 import React, { useEffect } from 'react';
 import {
-  HashRouter as Router,
-  Redirect,
-  Route,
-  Switch,
+  HashRouter as Router, Redirect, Route, Switch,
 } from 'react-router-dom';
-
 import { useDispatch, useSelector } from 'react-redux';
-
 import Nav from '../Nav/Nav';
 import Footer from '../Footer/Footer';
-
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
-
+// Import Page components
 import AboutPage from '../PageComponents/AboutPage/AboutPage';
 import UserPage from '../PageComponents/UserPage/UserPage';
 import InfoPage from '../PageComponents/InfoPage/InfoPage';
 import LandingPage from '../PageComponents/LandingPage/LandingPage';
 import LoginPage from '../PageComponents/LoginAndRegisterPages/LoginPage/LoginPage';
 import RegisterPage from '../PageComponents/LoginAndRegisterPages/RegisterPage/RegisterPage';
-import EditOrAddRecipePage from '../PageComponents/EditOrAddRecipePage/EditOrAddRecipePage';
 import ShoppingListPage from '../PageComponents/ShoppingListPage/ShoppingListPage';
 import ViewRecipePage from '../PageComponents/ViewRecipePage/ViewRecipePage';
 import HomePage from '../PageComponents/HomePage/HomePage';
-
-import './App.css';
+import AddRecipePage from '../PageComponents/EditOrAddRecipePages/AddRecipePage/AddRecipePage';
+import EditRecipePage from '../PageComponents/EditOrAddRecipePages/EditRecipePage/EditRecipePage';
 
 function App() {
   const dispatch = useDispatch();
@@ -130,12 +124,26 @@ function App() {
 
           <Route
             exact
-            path="/add-or-edit-recipe/:id?"
+            path="/add-recipe"
           >
             {user.id ?
               // If the user is already logged in, 
-              // show them the EditOrAddRecipePage
-              <EditOrAddRecipePage />
+              // show them the AddRecipePage
+              <AddRecipePage />
+              :
+              // Otherwise, show the LandingPage
+              <LandingPage />
+            }
+          </Route>
+
+          <Route
+            exact
+            path="/edit-recipe/:id"
+          >
+            {user.id ?
+              // If the user is already logged in, 
+              // show them the EditRecipePage
+              <EditRecipePage />
               :
               // Otherwise, show the LandingPage
               <LandingPage />

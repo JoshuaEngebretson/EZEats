@@ -50,7 +50,7 @@ export default function PlannedMealCard({recipe}) {
         <button onClick={decreaseOnMenu} className='subtract inline'>-</button>
         <p className='inline'>{recipe.on_menu}</p>
         <button onClick={increaseOnMenu} className='add inline'>+</button>
-        <button onClick={removeFromMenu} className='delete inline'>❌</button>
+        <button onClick={removeFromMenu} className='inline'>❌</button>
       </div>
     </div>
   )

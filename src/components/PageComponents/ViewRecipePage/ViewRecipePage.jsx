@@ -10,7 +10,7 @@ import CompletedRecipeButton from './ViewRecipeButtons/CompletedRecipeButton/Com
 export default function ViewRecipePage() {
   const dispatch = useDispatch();
   const {id} = useParams();
-  const currentRecipe = useSelector(store => store.recipes.currentRecipe[0])
+  const currentRecipe = useSelector(store => store.recipes.currentRecipe)
 
   useEffect(() => {
     dispatch({
@@ -21,7 +21,7 @@ export default function ViewRecipePage() {
 
   // confirm currentRecipe is defined, then render information
   //  This ensures that the page will load
-  if (currentRecipe != undefined){
+  if (currentRecipe != undefined && currentRecipe.recipe_text){
     // This separates out the recipe into an array an allows for
     // the recipe to be viewed on multipe lines
     let recipeAsParagraph = currentRecipe.recipe_text.split('\n')
@@ -51,18 +51,18 @@ export default function ViewRecipePage() {
           <div>
           <ul>
             {
-              currentRecipe.ingredients.map(ingredient => {
-                if (!ingredient.forWhichPart){
-                  if (ingredient.method) {
+              currentRecipe.ingredients.map(i => {
+                if (!i.forWhichPart){
+                  if (i.method) {
                     return (
-                      <li key={ingredient.recipeIngredientId}>
-                        {ingredient.quantity} {ingredient.unit} {ingredient.ingredient} - {ingredient.method}
+                      <li key={i.ingredient.id}>
+                        {i.quantity} {i.unit.name} {i.ingredient.name} - {i.method}
                       </li>
                     )
                   }
                   return (
-                    <li key={ingredient.recipeIngredientId}>
-                      {ingredient.quantity} {ingredient.unit} {ingredient.ingredient}
+                    <li key={i.recipeIngredientId}>
+                      {i.quantity} {i.unit.name} {i.ingredient.name}
                     </li>
                   )
                 }
@@ -83,11 +83,18 @@ export default function ViewRecipePage() {
                     {
                       // Only show the ingredients that match with the current part
                       // that has been mapped
-                      currentRecipe.ingredients.map(ingredient => {
-                        if (ingredient.forWhichPart === part){
+                      currentRecipe.ingredients.map(i => {
+                        if (i.forWhichPart === part){
+                          if (i.method) {
+                            return (
+                              <li key={i.ingredient.id}>
+                                {i.quantity} {i.unit.name} {i.ingredient.name} - {i.method}
+                              </li>
+                            )
+                          }
                           return (
-                            <li key={ingredient.recipeIngredientId}>
-                              {ingredient.quantity} {ingredient.unit} {ingredient.ingredient} {ingredient.method}
+                            <li key={i.recipeIngredientId}>
+                              {i.quantity} {i.unit.name} {i.ingredient.name}
                             </li>
                           )
                         }

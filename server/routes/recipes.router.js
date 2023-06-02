@@ -4,6 +4,8 @@ const { rejectUnauthenticated } = require('../modules/authentication-middleware'
 const router = express.Router();
 const { convertUnitToSmallest, convertSmallestToLargestUsMeasurement } = require('../modules/unit-conversion');
 
+/* Routes */
+
 // GET all recipes route
 router.get( '/', rejectUnauthenticated, ( req, res ) => {
   const userId = req.user.id
@@ -92,6 +94,7 @@ router.get( '/most-cooked', rejectUnauthenticated, ( req, res ) => {
   
 }) // End GET most cooked recipes route
 
+// GET shopping list route
 router.get( '/shopping-list', rejectUnauthenticated, ( req, res ) => {
   const userId = req.user.id
   const shoppingListCardsQuery = `
@@ -251,6 +254,66 @@ router.get( '/shopping-list', rejectUnauthenticated, ( req, res ) => {
       res.sendStatus( 500 );
       console.log( 'Error in GET shoppingList route:', dbErr );
     })
+}) // End GET shopping list route
+
+// GET units of measurement route
+router.get( '/units-of-measurement', rejectUnauthenticated, ( req, res ) => {
+  pool
+    .query(`SELECT * FROM units_of_measurement ORDER BY conversion_category, unit;`)
+    .then(result => {
+      const unitsofMeasurement = result.rows
+      res.send(unitsofMeasurement)
+    })
+    .catch(dbErr => {
+      // If unable to process request,
+      // send "Internal Server Error" message to client
+      res.sendStatus( 500 );
+      console.log( 'Error in GET units of measurement route:', dbErr );
+    })
+}) // End GET units of measurement route
+
+// GET all ingredients route
+router.get('/all-ingredients', rejectUnauthenticated,  ( req, res ) => {
+  const allFoodCategoriesQuery = `
+    SELECT
+      id,
+      food_category_name AS name
+    FROM food_categories;
+  `;
+  pool
+    .query(allFoodCategoriesQuery)
+    .then(result => {
+      const foodCategories = result.rows
+      const allIngredientsQuery = `
+        SELECT
+          JSON_AGG(
+            JSON_BUILD_OBJECT(
+              'id', ingredients.id,
+              'name', ingredients.ingredient_name,
+              'foodCategory', food_categories.food_category_name,
+              'foodCategoryId', food_categories.id
+            )
+          ) AS ingredients
+        FROM ingredients
+        JOIN food_categories on food_categories.id = ingredients.food_category_id;
+      `;
+      pool
+        .query(allIngredientsQuery)
+        .then(result => {
+          const ingredients = result.rows[0].ingredients
+          const allIngredients = {
+            foodCategories,
+            ingredients
+          }
+          res.send(allIngredients)
+        })
+        .catch(dbErr => {
+          // If unable to process request,
+          // send "Internal Server Error" message to client
+          res.sendStatus(500)
+          console.log('Error inside GET all-ingredients route:', dbErr);
+        })
+    })
 })
 
 // GET specific recipe route
@@ -261,26 +324,30 @@ router.get( '/:id', rejectUnauthenticated, ( req, res ) => {
     Show this recipe for if the current user is associated
     this has been formatted to be an array of objects that have 
     the following formatting
-    [
-      {
-        id: number,
-        name: string,
-        image: string,
-        recipe_text: string,
-        ingredients: array of objects [
-          {
-            recipeIngredientId: number,
-            quantity: number,
-            unit: string,
-            ingredient: string,
-            method: string,
-            foodCategory: string,
-            forWhichPart: string
-          }
-        ],
-        category: string
-      }
-    ]
+    [{
+      id: number,
+      name: string,
+      image: string,
+      recipe_text: string,
+      ingredients: array of objects [
+        {
+          quantity: number,
+          unit: {
+            id: number,
+            unitName: string,
+            conversion_category: string
+          },
+          ingredient: {
+            id: number,
+            ingredientName: string,
+            foodCategory: string
+          },
+          method: string,
+          forWhichPart: string
+        }
+      ],
+      category: string
+    }]
   */
   const sqlText = `
     SELECT 
@@ -290,14 +357,25 @@ router.get( '/:id', rejectUnauthenticated, ( req, res ) => {
       recipes.recipe_text,
       JSON_AGG(
         JSON_BUILD_OBJECT(
-          'recipeIngredientId', recipe_ingredients.id, 'quantity', recipe_ingredients.quantity, 'unit', units_of_measurement.unit,
-          'ingredient', ingredients.ingredient_name, 'method', recipe_ingredients.method,
-          'foodCategory', food_categories.food_category_name, 'forWhichPart', recipe_ingredients.for_which_part
-        )
+          'quantity', recipe_ingredients.quantity, 
+          'unit', JSON_BUILD_OBJECT(
+            'id', units_of_measurement.id,
+            'name', units_of_measurement.unit,
+            'conversionCategory', units_of_measurement.conversion_category
+          ),
+          'ingredient', JSON_BUILD_OBJECT(
+            'id', recipe_ingredients.id,
+            'name', ingredients.ingredient_name,
+            'foodCategory', food_categories.food_category_name
+          ), 
+          'method', recipe_ingredients.method, 
+          'forWhichPart', recipe_ingredients.for_which_part
+        ) ORDER BY recipe_ingredients.id
       ) AS ingredients,
       recipes.on_menu,
       recipes.times_cooked,
       category.name AS category,
+      category.id AS "categoryId",
       JSON_AGG(recipe_ingredients.for_which_part) AS "forWhichPart"
     FROM recipes
     JOIN "user" ON recipes.user_id="user".id
@@ -310,13 +388,14 @@ router.get( '/:id', rejectUnauthenticated, ( req, res ) => {
     GROUP BY
       recipes.id, recipes.recipe_name, recipes.image_of_recipe,
       recipes.recipe_text, category.name, recipes.on_menu,
-      recipes.times_cooked;
+      recipes.times_cooked, category.id;
   `;
 
   pool
     .query( sqlText, [ userId, recipeID ] )
     .then( result => {
-      const recipe = result.rows
+      const recipe = result.rows[0]
+      console.log('recipe:', recipe);
       res.send( recipe )
     })
     .catch( dbErr => {
@@ -328,11 +407,16 @@ router.get( '/:id', rejectUnauthenticated, ( req, res ) => {
 }) // End Get specific recipe route
 
 // POST new recipe route
-router.post( '/', rejectUnauthenticated, ( req, res ) => {
+router.post( '/', rejectUnauthenticated, async ( req, res ) => {
   const userId = req.user.id
   const newRecipe = req.body
-  const ingredients = newRecipe.ingredients
+  const ingredients = newRecipe.recipeIngredients
 
+  console.log( '******' );
+  console.log( 'newRecipe within POST', newRecipe );
+  console.log( 'ingredients within POST', ingredients );
+  console.log( '******' );
+  
   const newRecipeNameQuery = `
   INSERT INTO recipes
   (recipe_name, recipe_text, image_of_recipe, user_id, category_id)
@@ -341,75 +425,190 @@ router.post( '/', rejectUnauthenticated, ( req, res ) => {
   `;
 
   const newRecipeNameValues = [
-    newRecipe.name,
-    newRecipe.recipe_text,
-    newRecipe.image_of_recipe,
+    newRecipe.recipeName,
+    newRecipe.recipeText,
+    newRecipe.image,
     userId,
-    newRecipe.category_id
+    newRecipe.categoryInput
   ]
 
-  // FIRST QUERY MAKES THE RECIPE
+  ////////////////////////////////////////////////
+  // EXECUTE THE SQL TRANSACTION
+  ////////////////////////////////////////////////
+  const connection = await pool.connect();
+  try {
+    await connection.query( 'BEGIN' );
+
+    // FIRST QUERY MAKES THE RECIPE
+    const response = await connection.query( newRecipeNameQuery, newRecipeNameValues )
+    const newRecipeId = response.rows[ 0 ].id
+    console.log( 'new recipe id:', newRecipeId );
+
+    /* 
+    * Now loop through the ingredients array and add an ingredient
+    * to the recipe_ingredients table for each item of the array
+    * all while referencing the createdRecipeId
+    */
+    ingredients.map( i => {
+      let newRecipeIngredientQuery;
+      if ( i.forWhichPart ) {
+        newRecipeIngredientQuery= `
+          INSERT INTO recipe_ingredients
+            (quantity, converted_quantity, converted_unit, unit_id, ingredients_id, method, recipe_id, for_which_part)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8);
+        `;
+      }
+      else {
+        newRecipeIngredientQuery=`
+          INSERT INTO recipe_ingredients
+            (quantity, converted_quantity, converted_unit, unit_id, ingredients_id, method, recipe_id)
+          VALUES ($1, $2, $3, $4, $5, $6, $7);
+        `;
+      }
+      const converted_quantity = convertUnitToSmallest( i.quantity, i.unit.name, i.unit.conversion_category )
+      let converted_unit;
+      switch (  i.unit.conversion_category  ){
+        case 'volume':
+          converted_unit = 'tsp';
+          break;
+        case 'mass':
+          converted_unit = 'g';
+          break;
+        default:
+          converted_unit = null;
+      }
+
+      const newRecipeIngredientValues = [
+        i.quantity,
+        converted_quantity,
+        converted_unit,
+        i.unit.id,
+        i.ingredient.id,
+        i.method,
+        newRecipeId,
+        // If for_which_part exists, add it to the array, otherwise it
+        //  should be left off
+        ... i.forWhichPart ? [ i.forWhichPart ] : [] 
+      ];
+      console.log( '*****' );
+      console.log( `for ingredient with id:${ i.ingredient.id } and name:${ i.ingredient.name }` );
+      console.log( 'newRecipeIngredientQuery:', newRecipeIngredientQuery );
+      console.log( 'newRecipeIngredientValues:', newRecipeIngredientValues );
+      // Nth Query ADDS AN INGREDIENT FOR THAT NEW RECIPE
+      //  This is added to the recipe_ingredients table
+      connection.query( newRecipeIngredientQuery, newRecipeIngredientValues )
+    }) // End ingredients.map
+
+    await connection.query( 'COMMIT' );
+
+    res.sendStatus( 201 )
+  } catch ( dbErr ) {
+    // Roll back the transaction, as at least one of the
+    // queries caused an error:
+    await connection.query( 'ROLLBACK' )
+    console.log( 'Error in New Recipe POST:', dbErr );
+    res.sendStatus( 500 )
+  }
+
+
+  //   // .query( newRecipeNameQuery, newRecipeNameValues )
+  //   .query( 'SELECT * FROM recipes;' )
+  //   .then( result => {
+  //     // const createdRecipeId = result.rows[ 0 ].id
+
+
+  //     // // Now that all portions of adding a recipe are completed, send the
+  //     // // "Created" status 
+  //     res.sendStatus( 201 )
+  //   })
+  //   .catch( dbErr => {
+  //     // If unable to process request,
+  //     // send "Internal Server Error" message to client
+  //     res.sendStatus( 500 );
+  //     console.log( 'Error in POST /new-recipe route:', dbErr );
+  //   })
+}); // End POST new recipe route
+
+router.post( '/recipe-categories', rejectUnauthenticated, ( req, res ) => {
+  const newCategory = req.body.data
+  console.log('newCategory at start of post:', newCategory);
+  const sqlQuery = `
+    INSERT INTO category (name)
+    VALUES ($1)
+    RETURNING id;
+  `;
   pool
-    .query( newRecipeNameQuery, newRecipeNameValues )
+    .query( sqlQuery, [ newCategory ] )
     .then( result => {
-      const createdRecipeId = result.rows[ 0 ].id
-      
-      /* 
-        Now loop through the ingredients array and add an ingredient
-        to the recipe_ingredients table for each item of the array
-        all while referencing the createdRecipeId
-      */
-      ingredients.map( ingredient => {
-        let newRecipeIngredientQuery;
-        if ( ingredient.for_which_part ) {
-          newRecipeIngredientQuery= `
-            INSERT INTO recipe_ingredients
-              (quantity, unit, ingredients_id, method, recipe_id, for_which_part)
-            VALUES ($1, $2, $3, $4, $5, $6);
-          `;
-        }
-        else {
-          newRecipeIngredientQuery=`
-            INSERT INTO recipe_ingredients
-              (quantity, unit, ingredients_id, method, recipe_id)
-            VALUES ($1, $2, $3, $4, $5);
-          `;
-        }
-        const newRecipeIngredientValues = [
-          ingredient.quantity,
-          ingredient.unit,
-          ingredient.ingredients_id,
-          ingredient.method,
-          createdRecipeId,
-          // If for_which_part exists, add it to the array, otherwise it
-          //  should be left off
-          ... ingredient.for_which_part ? [ ingredient.for_which_part ] : [] 
-        ];
-
-        // Nth Query ADDS AN INGREDIENT FOR THAT NEW RECIPE
-        pool
-          .query( newRecipeIngredientQuery, newRecipeIngredientValues )
-          .catch( error => {
-            // Catch for Nth query
-            console.log(
-              `Error while adding an ingredient to the recipe_ingredients table:`,
-              error
-            );
-            res.sendStatus( 500 );
-          })
-      }) // End ingredients.map
-
-      // Now that all portions of adding a recipe are completed, send the
-      // "Created" status 
-      res.sendStatus( 201 )
+      console.log( 'new category id:', result.rows[0].id ); // uncover where id is located.
+      const newCategoryId = { id: result.rows[0].id } 
+      res.send( newCategoryId )
     })
     .catch( dbErr => {
       // If unable to process request,
       // send "Internal Server Error" message to client
       res.sendStatus( 500 );
-      console.log( 'Error in POST /new-recipe route:', dbErr );
+      console.log( 'Error in POST new category route:', dbErr );
     })
-}); // End POST new recipe route
+})
+
+router.post( '/units-of-measurement', rejectUnauthenticated, ( req, res ) => {
+  const newUnit = req.body.data
+  console.log('newUnit in server:', newUnit);
+  const sqlQuery = `
+    INSERT INTO units_of_measurement (unit, conversion_category)
+    VALUES ($1, 'other')
+    RETURNING id;
+  `;
+  pool
+    .query(sqlQuery, [newUnit])
+    .then( result => {
+      const newUnitId = { id: result.rows[0].id }
+      res.send( newUnitId )
+    })
+    .catch( dbErr => {
+      res.sendStatus( 500 );
+      console.log( 'Error in POST new units-of-measurement route:', dbErr );
+    })
+})
+
+router.post( '/food-categories', rejectUnauthenticated, ( req, res ) => {
+  const newFoodCategory = req.body.data
+  console.log('newFoodCategory in server:', newFoodCategory);
+  const sqlQuery = `
+    INSERT INTO food_categories (food_category_name)
+    VALUES ($1)
+    RETURNING id;
+  `;
+  pool
+    .query(sqlQuery, [newFoodCategory])
+    .then( result => {
+      const newFoodCategoryId = { id: result.rows[0].id }
+      res.send( newFoodCategoryId )
+    })
+    .catch( dbErr => {
+      res.sendStatus( 500 );
+      console.log( 'Error in POST new food-categories route:', dbErr );
+    })
+})
+
+router.post( '/ingredients', rejectUnauthenticated, ( req, res ) => {
+  const newIngredient = req.body.data
+  console.log('newIngredient in server:', newIngredient);
+  const sqlQuery = `
+    INSERT INTO ingredients (ingredient_name, food_category_id)
+    VALUES ($1, $2);
+  `;
+  pool
+    .query(sqlQuery, [newIngredient.ingredientName, newIngredient.foodCategory])
+    .then( result => {
+      res.sendStatus( 201 )
+    })
+    .catch( dbErr => {
+      res.sendStatus( 500 );
+      console.log( 'Error in POST new ingredient route:', dbErr );
+    })
+})
 
 // PUT recipe route
 router.put( '/:id', rejectUnauthenticated, ( req, res ) => {
@@ -473,8 +672,8 @@ router.put( '/adjust-on-menu/:id', rejectUnauthenticated, ( req, res ) => {
     })
 })
 
-// PUT increase-times-cooked route
-router.put( '/increase-times-cooked/:id', rejectUnauthenticated, ( req, res ) => {
+// PUT times-cooked route
+router.put( '/times-cooked/:id', rejectUnauthenticated, ( req, res ) => {
   const userId = req.user.id
   const idToUpdate = req.params.id
 
@@ -501,8 +700,10 @@ router.delete( '/:id', rejectUnauthenticated, ( req, res ) => {
   const idToDelete = req.params.id
 
   const sqlText = `
-
+    DELETE FROM recipes
+    WHERE id = $1 AND user_id=$2
   `;
+  const sqlValues = [idToDelete, userId]
 
   pool
     .query( sqlText, sqlValues )
