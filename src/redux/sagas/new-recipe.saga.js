@@ -19,7 +19,7 @@ function* createNewRecipe({payload: newRecipe}) {
       }
     }
     console.log('newRecipe within post creations saga:', {...newRecipe});
-    // const response = yield axios.post('/api/recipes/', newRecipe)
+    const response = yield axios.post('/api/recipes/', newRecipe)
     // yield put({type: 'FETCH_RECIPES'})
     // yield put({type: 'FETCH_NEW_RECIPE'})
   } catch (error) {

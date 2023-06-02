@@ -4,6 +4,8 @@ const { rejectUnauthenticated } = require('../modules/authentication-middleware'
 const router = express.Router();
 const { convertUnitToSmallest, convertSmallestToLargestUsMeasurement } = require('../modules/unit-conversion');
 
+/* Routes */
+
 // GET all recipes route
 router.get( '/', rejectUnauthenticated, ( req, res ) => {
   const userId = req.user.id
@@ -410,9 +412,19 @@ router.post( '/', rejectUnauthenticated, async ( req, res ) => {
   const newRecipe = req.body
   const ingredients = newRecipe.recipeIngredients
 
-  let newRecipeNameValues;
+  console.log( '******' );
+  console.log( 'newRecipe within POST', newRecipe );
+  console.log( 'ingredients within POST', ingredients );
+  console.log( '******' );
   
-  newRecipeNameValues = [
+  const newRecipeNameQuery = `
+  INSERT INTO recipes
+  (recipe_name, recipe_text, image_of_recipe, user_id, category_id)
+  VALUES ($1, $2, $3, $4, $5)
+  RETURNING id;
+  `;
+
+  const newRecipeNameValues = [
     newRecipe.recipeName,
     newRecipe.recipeText,
     newRecipe.image,
@@ -420,80 +432,101 @@ router.post( '/', rejectUnauthenticated, async ( req, res ) => {
     newRecipe.categoryInput
   ]
 
-  console.log('******');
-  console.log('newRecipe within POST', newRecipe);
-  console.log('ingredients within POST', ingredients);
-  console.log('******');
+  ////////////////////////////////////////////////
+  // EXECUTE THE SQL TRANSACTION
+  ////////////////////////////////////////////////
+  const connection = await pool.connect();
+  try {
+    await connection.query( 'BEGIN' );
+
+    // FIRST QUERY MAKES THE RECIPE
+    const response = await connection.query( newRecipeNameQuery, newRecipeNameValues )
+    const newRecipeId = response.rows[ 0 ].id
+    console.log( 'new recipe id:', newRecipeId );
+
+    /* 
+    * Now loop through the ingredients array and add an ingredient
+    * to the recipe_ingredients table for each item of the array
+    * all while referencing the createdRecipeId
+    */
+    ingredients.map( i => {
+      let newRecipeIngredientQuery;
+      if ( i.forWhichPart ) {
+        newRecipeIngredientQuery= `
+          INSERT INTO recipe_ingredients
+            (quantity, converted_quantity, converted_unit, unit_id, ingredients_id, method, recipe_id, for_which_part)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8);
+        `;
+      }
+      else {
+        newRecipeIngredientQuery=`
+          INSERT INTO recipe_ingredients
+            (quantity, converted_quantity, converted_unit, unit_id, ingredients_id, method, recipe_id)
+          VALUES ($1, $2, $3, $4, $5, $6, $7);
+        `;
+      }
+      const converted_quantity = convertUnitToSmallest( i.quantity, i.unit.name, i.unit.conversion_category )
+      let converted_unit;
+      switch (  i.unit.conversion_category  ){
+        case 'volume':
+          converted_unit = 'tsp';
+          break;
+        case 'mass':
+          converted_unit = 'g';
+          break;
+        default:
+          converted_unit = null;
+      }
+
+      const newRecipeIngredientValues = [
+        i.quantity,
+        converted_quantity,
+        converted_unit,
+        i.unit.id,
+        i.ingredient.id,
+        i.method,
+        newRecipeId,
+        // If for_which_part exists, add it to the array, otherwise it
+        //  should be left off
+        ... i.forWhichPart ? [ i.forWhichPart ] : [] 
+      ];
+      console.log( '*****' );
+      console.log( `for ingredient with id:${ i.ingredient.id } and name:${ i.ingredient.name }` );
+      console.log( 'newRecipeIngredientQuery:', newRecipeIngredientQuery );
+      console.log( 'newRecipeIngredientValues:', newRecipeIngredientValues );
+      // Nth Query ADDS AN INGREDIENT FOR THAT NEW RECIPE
+      //  This is added to the recipe_ingredients table
+      connection.query( newRecipeIngredientQuery, newRecipeIngredientValues )
+    }) // End ingredients.map
+
+    await connection.query( 'COMMIT' );
+
+    res.sendStatus( 201 )
+  } catch ( dbErr ) {
+    // Roll back the transaction, as at least one of the
+    // queries caused an error:
+    await connection.query( 'ROLLBACK' )
+    console.log( 'Error in New Recipe POST:', dbErr );
+    res.sendStatus( 500 )
+  }
 
 
-  const newRecipeNameQuery = `
-    INSERT INTO recipes
-    (recipe_name, recipe_text, image_of_recipe, user_id, category_id)
-    VALUES ($1, $2, $3, $4, $5)
-    RETURNING id;
-    `;
-  // FIRST QUERY MAKES THE RECIPE
-  pool
-    // .query( newRecipeNameQuery, newRecipeNameValues )
-    .query( 'SELECT * FROM recipes;' )
-    .then( result => {
-      // const createdRecipeId = result.rows[ 0 ].id
-      
-      // /* 
-      //   Now loop through the ingredients array and add an ingredient
-      //   to the recipe_ingredients table for each item of the array
-      //   all while referencing the createdRecipeId
-      // */
-      // ingredients.map( ingredient => {
-      //   let newRecipeIngredientQuery;
-      //   if ( ingredient.for_which_part ) {
-      //     newRecipeIngredientQuery= `
-      //       INSERT INTO recipe_ingredients
-      //         (quantity, unit, ingredients_id, method, recipe_id, for_which_part)
-      //       VALUES ($1, $2, $3, $4, $5, $6);
-      //     `;
-      //   }
-      //   else {
-      //     newRecipeIngredientQuery=`
-      //       INSERT INTO recipe_ingredients
-      //         (quantity, unit, ingredients_id, method, recipe_id)
-      //       VALUES ($1, $2, $3, $4, $5);
-      //     `;
-      //   }
-      //   const newRecipeIngredientValues = [
-      //     ingredient.quantity,
-      //     ingredient.unit,
-      //     ingredient.ingredients_id,
-      //     ingredient.method,
-      //     createdRecipeId,
-      //     // If for_which_part exists, add it to the array, otherwise it
-      //     //  should be left off
-      //     ... ingredient.for_which_part ? [ ingredient.for_which_part ] : [] 
-      //   ];
+  //   // .query( newRecipeNameQuery, newRecipeNameValues )
+  //   .query( 'SELECT * FROM recipes;' )
+  //   .then( result => {
+  //     // const createdRecipeId = result.rows[ 0 ].id
 
-      //   // Nth Query ADDS AN INGREDIENT FOR THAT NEW RECIPE
-      //   pool
-      //     .query( newRecipeIngredientQuery, newRecipeIngredientValues )
-      //     .catch( error => {
-      //       // Catch for Nth query
-      //       console.log(
-      //         `Error while adding an ingredient to the recipe_ingredients table:`,
-      //         error
-      //       );
-      //       res.sendStatus( 500 );
-      //     })
-      // }) // End ingredients.map
 
-      // // Now that all portions of adding a recipe are completed, send the
-      // // "Created" status 
-      res.sendStatus( 201 )
-    })
-    .catch( dbErr => {
-      // If unable to process request,
-      // send "Internal Server Error" message to client
-      res.sendStatus( 500 );
-      console.log( 'Error in POST /new-recipe route:', dbErr );
-    })
+  //     // // Now that all portions of adding a recipe are completed, send the
+  //     // // "Created" status 
+  //     res.sendStatus( 201 )
+  //   })
+  //   .catch( dbErr => {
+  //     // If unable to process request,
+  //     // send "Internal Server Error" message to client
+  //     res.sendStatus( 500 );
+  //     console.log( 'Error in POST /new-recipe route:', dbErr );
+  //   })
 }); // End POST new recipe route
 
 router.post( '/recipe-categories', rejectUnauthenticated, ( req, res ) => {
@@ -639,8 +672,8 @@ router.put( '/adjust-on-menu/:id', rejectUnauthenticated, ( req, res ) => {
     })
 })
 
-// PUT increase-times-cooked route
-router.put( '/increase-times-cooked/:id', rejectUnauthenticated, ( req, res ) => {
+// PUT times-cooked route
+router.put( '/times-cooked/:id', rejectUnauthenticated, ( req, res ) => {
   const userId = req.user.id
   const idToUpdate = req.params.id
 
