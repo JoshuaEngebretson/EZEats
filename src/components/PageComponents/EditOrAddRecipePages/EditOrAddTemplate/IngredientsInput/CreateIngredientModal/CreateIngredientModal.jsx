@@ -84,7 +84,7 @@ export default function CreateIngredientModal() {
         className="add"
         onClick={toggleModal}
       >
-        Create New Ingredient
+        New Ingredient
       </button>
 
       {showCreateIngredient && (

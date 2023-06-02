@@ -364,7 +364,7 @@ router.get( '/:id', rejectUnauthenticated, ( req, res ) => {
             'conversionCategory', units_of_measurement.conversion_category
           ),
           'ingredient', JSON_BUILD_OBJECT(
-            'id', recipe_ingredients.id,
+            'id', ingredients.id,
             'name', ingredients.ingredient_name,
             'foodCategory', food_categories.food_category_name
           ), 

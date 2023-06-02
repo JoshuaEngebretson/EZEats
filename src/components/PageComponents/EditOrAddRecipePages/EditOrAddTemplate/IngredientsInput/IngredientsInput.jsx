@@ -96,9 +96,6 @@ export default function IngredientsInput({ index, recipeIngredient, handleIngred
     handleIngredientChange(index, 'ingredient', selectedIngredient);
   };
 
-
-
-
   if (
     unitsOfMeasurement.length > 0 &&
     allIngredients && allIngredients.foodCategories &&

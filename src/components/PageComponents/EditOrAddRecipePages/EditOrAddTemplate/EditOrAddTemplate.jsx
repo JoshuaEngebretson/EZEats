@@ -200,87 +200,89 @@ export default function EditOrAddRecipePageTemplate(props) {
     ingredientsInputArray.length > 0
   ) {
     return (
-    <>
-      <div>
-        {/* Recipe Image Input */}
-        <input 
-          type='text'
-          placeholder='image url'
-          value={inputs.image}
-          onChange={e => handleImageChange(e.target.value)}
-        />
-        <img src={inputs.image} className='square-image-small'/>
-        {/*Recipe Name Input */}
-        <input 
-          type='text'
-          placeholder='Recipe Name'
-          value={inputs.recipeName}
-          onChange={e => handleRecipeNameChange(e.target.value)}
-        />
-        {/* Category Input */}
-        <label htmlFor='category-select'>Select a category: </label>
-        <select
-          name='category-select'
-          id='category-select'
-          onChange={e => categoryChange(e.target.value)}
-          value={inputs.categoryId}>
-          <option value='' default>--Please select a category--</option>
-          {categories.map(category => {
+    <div className='page-margin'>
+      {/* Recipe Image Input */}
+      <label>Image Url:</label>
+      <input 
+        type='text'
+        placeholder='image url'
+        value={inputs.image}
+        onChange={e => handleImageChange(e.target.value)}
+      />
+      <img src={inputs.image} className='square-image-small'/>
+      {/*Recipe Name Input */}
+      <label>Recipe Name:</label>
+      <input 
+        type='text'
+        placeholder='Recipe Name'
+        value={inputs.recipeName}
+        onChange={e => handleRecipeNameChange(e.target.value)}
+      />
+      {/* Category Input */}
+      <label htmlFor='category-select'>Select a category: </label>
+      <select
+        name='category-select'
+        id='category-select'
+        onChange={e => categoryChange(e.target.value)}
+        value={inputs.categoryId}>
+        <option value='' default>--Please select a category--</option>
+        {categories.map(category => {
+          return (
+            <option key={category.id} value={category.id}>{category.name}</option>
+          )
+        })}
+        <option value='other'>Other</option>
+      </select>
+      {otherCategory()}
+      <br />
+      <div className='ingredients-form'>
+        <h3 className='table-title center'>Enter Ingredients</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Quantity</th>
+              <th>Units of Measurement</th>
+              <th>Ingredient Name</th>
+              <th>Optional:<br/> Prepared Method (e.g., sliced, minced)</th>
+              <th>
+                Optional: <br/> For which part of the recipe? (e.g., sauce, garnish)
+              </th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+          {ingredientsInputArray.map((recipeIngredient, index) => {
+            // console.log('recipeIngredient during mapping in EditOrAddTemp:', recipeIngredient);
             return (
-              <option key={category.id} value={category.id}>{category.name}</option>
+              <IngredientsInput 
+                key={index}
+                recipeIngredient={recipeIngredient}
+                index={index}
+                handleIngredientChange={handleIngredientChange}
+                handleDeleteLine={handleDeleteLine}
+              />
             )
           })}
-          <option value='other'>Other</option>
-        </select>
-        {otherCategory()}
-        <br />
-        <div className='ingredients-form'>
-          <h3 className='table-title center'>Enter Ingredients</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Quantity</th>
-                <th>Units of Measurement</th>
-                <th>Ingredient Name</th>
-                <th>Optional: Prepared Method (e.g., sliced, minced)</th>
-                <th>Optional: For which part of the recipe? (e.g., sauce, garnish)</th>
-                <th>Remove Line</th>
-              </tr>
-            </thead>
-            <tbody>
-            {ingredientsInputArray.map((recipeIngredient, index) => {
-              // console.log('recipeIngredient during mapping in EditOrAddTemp:', recipeIngredient);
-              return (
-                <IngredientsInput 
-                  key={index}
-                  recipeIngredient={recipeIngredient}
-                  index={index}
-                  handleIngredientChange={handleIngredientChange}
-                  handleDeleteLine={handleDeleteLine}
-                />
-              )
-            })}
-            </tbody>
-          </table>
-          <button onClick={addNewIngredientLine} className='add'>Add New Line</button>
+          </tbody>
+        </table>
+        <button onClick={addNewIngredientLine} className='add'>Add New Line</button>
+      </div>
+      <div className='bottom-container'>
+        <div className='textarea-container'>
+          <textarea
+            placeholder='Enter Recipe Here'
+            value={inputs.recipeText}
+            onChange={(e) => handleRecipeTextChange(e.target.value)}
+          />
         </div>
-        <div className='bottom-container'>
-          <div className='textarea-container'>
-            <textarea
-              placeholder='Enter Recipe Here'
-              value={inputs.recipeText}
-              onChange={(e) => handleRecipeTextChange(e.target.value)}
-            />
-          </div>
-          <div className='button-container'>
-          {resetCookedCountButton()}
-          {deleteRecipeButton()}
-          {cancelButton()}
-          {saveRecipeButton()}
-          </div>
+        <div className='button-container'>
+        {resetCookedCountButton()}
+        {deleteRecipeButton()}
+        {cancelButton()}
+        {saveRecipeButton()}
         </div>
       </div>
-    </>
+    </div>
   )}
 
 }

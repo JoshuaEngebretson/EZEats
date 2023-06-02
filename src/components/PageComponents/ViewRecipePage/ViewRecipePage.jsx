@@ -38,7 +38,7 @@ export default function ViewRecipePage() {
     }
 
     return (
-      <div className=''>
+      <div className='page-margin'>
         <img 
           className='square-image-medium'
           src={currentRecipe.image}
@@ -126,7 +126,7 @@ export default function ViewRecipePage() {
   }
   else {
     return (
-      <div className=''>
+      <div className='page-margin'>
         <h1>404</h1>
         <h2>you do not have a recipe at this address</h2>
       </div>

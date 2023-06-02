@@ -1,11 +1,12 @@
 .ingredients-form {
   background-color: rgb(204, 204, 204);
-  width: 66.67%;
+  width: 70%;
   height: 500px;
   overflow-y: auto;
   margin: auto;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .ingredients-input {
@@ -71,12 +72,12 @@ textarea {
 .cancel:hover {
   background-color: rgb(190, 190, 190);
 }
-
 .table-title {
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 1.5%;
   margin-top: 1.5%;
+  background-color: rgb(204, 204, 204);
 }
 
 table {
@@ -96,6 +97,9 @@ th, td {
 thead {
   background: #f7f7f7;
   color: #000000;
+  position:sticky;
+  top: 0;
+  box-shadow: 0 0 1em rgb(204, 204, 204);
 }
 tbody tr:nth-child(odd){
   background: #FCFCFC;

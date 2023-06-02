@@ -19,7 +19,7 @@ export default function ShoppingListPage() {
     console.log('combinedIngredients inside ShoppingListPage:', combinedIngredients);
     const foodCategories = shoppingList.foodCategories
     return (
-      <>
+      <div className='page-margin'>
         <h2>Planned Meals</h2>
         <div className='grid'>
           {recipeCards.map(recipe => {
@@ -36,7 +36,7 @@ export default function ShoppingListPage() {
           foodCategories={foodCategories}
           combinedIngredients={combinedIngredients}
         />
-      </>
+      </div>
     )
   }
 }
