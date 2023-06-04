@@ -232,7 +232,8 @@ export default function EditOrAddRecipePageTemplate(props) {
           value={inputs.image}
           onChange={e => handleImageChange(e.target.value)}
         />
-        <img src={inputs.image} className='square-image-small'/>
+        {/* If an image exists, show it as a 'small' square image alongside the input */}
+        {inputs.image && ( <img src={inputs.image} className='square-image-small'/> )}
         {/*Recipe Name Input */}
         <label>Recipe Name:</label>
         <input 
