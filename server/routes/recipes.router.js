@@ -145,9 +145,6 @@ router.get( '/shopping-list', rejectUnauthenticated, ( req, res ) => {
         .query( shoppingListIngredientsQuery, [ userId ] )
         .then( result => {
           let unformattedIngredients = result.rows
-          console.log('*****');
-          console.log( 'unformattedIngredients:', unformattedIngredients );
-          console.log('*****');
           // Combine the unformattedIngredients array and start to format them
           let combinedIngredients = unformattedIngredients.reduce( ( result, item ) => {
             const {
@@ -235,9 +232,6 @@ router.get( '/shopping-list', rejectUnauthenticated, ( req, res ) => {
               foodCategories.push( foodCategory );
             }
           })
-          // console.log('*****');
-          // console.log( 'post conversions combinedIngredients:', combinedIngredients );
-          // console.log('*****');
           // Create an object that includes the recipes on the shoppingList and the
             // ingredients the user needs to make all those recipes
           let shoppingList = {
