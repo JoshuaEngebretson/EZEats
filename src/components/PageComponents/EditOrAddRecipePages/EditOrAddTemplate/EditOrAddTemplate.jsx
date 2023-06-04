@@ -197,39 +197,41 @@ export default function EditOrAddRecipePageTemplate(props) {
   ) {
     return (
     <div className='page-margin'>
-      {/* Recipe Image Input */}
-      <label>Image Url:</label>
-      <input 
-        type='text'
-        placeholder='image url'
-        value={inputs.image}
-        onChange={e => handleImageChange(e.target.value)}
-      />
-      <img src={inputs.image} className='square-image-small'/>
-      {/*Recipe Name Input */}
-      <label>Recipe Name:</label>
-      <input 
-        type='text'
-        placeholder='Recipe Name'
-        value={inputs.recipeName}
-        onChange={e => handleRecipeNameChange(e.target.value)}
-      />
-      {/* Category Input */}
-      <label htmlFor='category-select'>Select a category: </label>
-      <select
-        name='category-select'
-        id='category-select'
-        onChange={e => categoryChange(e.target.value)}
-        value={inputs.categoryId}>
-        <option value='' default>--Please select a category--</option>
-        {categories.map(category => {
-          return (
-            <option key={category.id} value={category.id}>{category.name}</option>
-          )
-        })}
-        <option value='other'>Other</option>
-      </select>
-      {otherCategory()}
+      <div className='center'>
+        {/* Recipe Image Input */}
+        <label>Recipe Image Url:</label>
+        <input 
+          type='text'
+          placeholder='Image Url'
+          value={inputs.image}
+          onChange={e => handleImageChange(e.target.value)}
+        />
+        <img src={inputs.image} className='square-image-small'/>
+        {/*Recipe Name Input */}
+        <label>Recipe Name:</label>
+        <input 
+          type='text'
+          placeholder='Recipe Name'
+          value={inputs.recipeName}
+          onChange={e => handleRecipeNameChange(e.target.value)}
+        />
+        {/* Category Input */}
+        <label htmlFor='category-select'>Select a category: </label>
+        <select
+          name='category-select'
+          id='category-select'
+          onChange={e => categoryChange(e.target.value)}
+          value={inputs.categoryId}>
+          <option value='' default>--Please select a category--</option>
+          {categories.map(category => {
+            return (
+              <option key={category.id} value={category.id}>{category.name}</option>
+            )
+          })}
+          <option value='other'>Other</option>
+        </select>
+        {otherCategory()}
+      </div>
       <br />
       <div className='ingredients-form'>
         <h3 className='table-title center'>Enter Ingredients</h3>

@@ -38,6 +38,7 @@ export default function CreateIngredientModal() {
     setShowCreateIngredient(!showCreateIngredient)
     setIngredientInput('')
     setFoodCategoryInput('')
+    setShowFoodCategoryInput(false)
   }
   const saveNewIngredient = () => {
     console.log('clicked save Ingredient');
@@ -100,20 +101,22 @@ export default function CreateIngredientModal() {
                 value={foodCategoryInput}
                 onChange={e => handleFoodCategorySelectChange(e)}
               >
-                <option value=''>--Please select the category--</option>
+                <option value=''>-- Select the category --</option>
                 {foodCategories.map(category => {
                   return (
                     <option key={category.id} value={category.id}>{category.name}</option>
                   )
                 })}
-                <option value='other'>Create New Food Category</option>
+                <option disabled value=''>Other</option>
+                <option value='other'>-- Create New Food Category --</option>
               </select>
             </label>
             {showFoodCategoryInput && (
               <>
                 <br />
-                <label> New Category:
+                <label htmlFor='food-category-input'>
                   <input 
+                    id='food-category-input'
                     placeholder='Enter New Food Category'
                     value={foodCategoryInput}
                     onChange={e => handleOtherFoodCategoryInput(e)}
