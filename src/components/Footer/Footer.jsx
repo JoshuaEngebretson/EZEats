@@ -7,7 +7,13 @@ import './Footer.css';
 // or even care what the redux state is, so it doesn't need 'connect()'
 
 function Footer() {
-  return <footer>&copy; EZEats</footer>;
+  return (
+    <footer>
+      &copy; EZEats
+      <br />
+      <a href="https://www.flaticon.com/free-icons/food" title="food icons">Food icons created by Smashicons - Flaticon</a>
+    </footer>
+  );
 }
 
 export default Footer;

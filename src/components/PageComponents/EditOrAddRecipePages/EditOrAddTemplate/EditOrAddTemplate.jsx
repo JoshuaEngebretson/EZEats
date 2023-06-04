@@ -53,24 +53,20 @@ export default function EditOrAddRecipePageTemplate(props) {
     }
   }
   const cancelButton = () => {
-    const handleCancelButton = () => {
-      // Maybe route to view recipe page if this was an edit?
-        // Unsure how to implement
-        // function could be passed down via the parent??
-      history.push('/home')
-    }
-    // If an id is present, we are editing a recipe and want to 'Cancel Edit'
     if (id) {
+      // If an id is present, we are editing a recipe and want to 'Cancel Edit'
+      //  This will take us back to that recipe's view-recipe page
       return (
-        <div className='stacked-buttons cancel' onClick={handleCancelButton}>
+        <div className='stacked-buttons cancel' onClick={() => history.push(`/view-recipe/${id}`)}>
           <p className='center'>Cancel Edit</p>
         </div>
       )
     }
-    // Else we are adding a recipe and want to 'Cancel Add'
     else {
+      // Else we are adding a recipe and want to 'Cancel Add'
+      //  Which would take us back to the home page
       return (
-        <div className='stacked-buttons cancel' onClick={handleCancelButton}>
+        <div className='stacked-buttons cancel' onClick={() => history.push(`/home`)}>
           <p className='center'>Cancel Add</p>
         </div>
       )

@@ -10,7 +10,7 @@ export default function RecipeImageCard({recipe}) {
 
   return (
     <Card 
-      sx= {{
+      sx={{
         width: 250, 
         height:300, 
         margin: 'auto', 
