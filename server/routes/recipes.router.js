@@ -292,7 +292,7 @@ router.get('/all-ingredients', rejectUnauthenticated,  ( req, res ) => {
               'name', ingredients.ingredient_name,
               'foodCategory', food_categories.food_category_name,
               'foodCategoryId', food_categories.id
-            )
+            ) ORDER BY ingredients.ingredient_name
           ) AS ingredients
         FROM ingredients
         JOIN food_categories on food_categories.id = ingredients.food_category_id;

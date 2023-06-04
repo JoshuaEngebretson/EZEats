@@ -87,8 +87,8 @@ export default function HomePage() {
             <AccordionSummary aria-controls={id} id={id}>
               <Typography>{category.name}</Typography>
             </AccordionSummary>
-            <AccordionDetails>
-              <Typography className='grid'>
+            <AccordionDetails className='grid'>
+              {/* <Typography className='grid'> */}
                 {recipes.map(recipe => {
                   if (recipe.category === category.name) {
                     return (
@@ -96,7 +96,7 @@ export default function HomePage() {
                     )
                   }
                 })}
-              </Typography>
+              {/* </Typography> */}
             </AccordionDetails>
           </Accordion>
         )
