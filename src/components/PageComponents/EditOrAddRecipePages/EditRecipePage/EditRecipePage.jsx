@@ -60,9 +60,10 @@ export default function AddRecipePage() {
       })
     }
     const handleSaveRecipe = () => {
-      // If successful would push to that recipes page
-        // Need to figure out how to grab the id of
-        history.push(`/view-recipe/${id}`)
+      // Look into confirming where the user wants to go after they save their recipe.
+      //  User should have choice between ViewRecipePage and HomePage
+      // Also provide user with confirmation that the recipe has been saved / updated
+      history.push(`/view-recipe/${id}`)
     }
 
     return (
