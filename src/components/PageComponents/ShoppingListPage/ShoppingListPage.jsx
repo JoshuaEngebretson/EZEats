@@ -1,3 +1,4 @@
+import './ShoppingListPage.css'
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux"
 import PlannedMealCard from "./PlannedMealCard/PlannedMealCard";
@@ -31,11 +32,15 @@ export default function ShoppingListPage() {
             ) 
           })}
         </div>
-        <h2>Shopping List</h2>
-        <DisplayShoppingListIngredients
-          foodCategories={foodCategories}
-          combinedIngredients={combinedIngredients}
-        />
+        <div className='shopping-list-container'>
+          <h2 className='center'>Shopping List</h2>
+          <div className='shopping-list'>
+            <DisplayShoppingListIngredients
+              foodCategories={foodCategories}
+              combinedIngredients={combinedIngredients}
+            />
+          </div>
+        </div>
       </div>
     )
   }
