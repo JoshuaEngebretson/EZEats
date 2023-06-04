@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux";
 import IngredientsInput from "./IngredientsInput/IngredientsInput";
+import Swal from 'sweetalert2';
 
 export default function EditOrAddRecipePageTemplate(props) {
   const history = useHistory();
@@ -77,9 +78,34 @@ export default function EditOrAddRecipePageTemplate(props) {
   const deleteRecipeButton = () => {
     if (id) {
       const handleDeleteRecipe = () => {
-        // On successful delete, route the user to the home page
-        history.push('/home')
-        dispatch({type: 'DELETE_CURRENT_RECIPE', payload: id})
+        // Confirm with the user they want to delete this recipe
+        Swal.fire({
+          icon: 'warning',
+          title: 'Delete Recipe Confirmation',
+          text: `Are you sure you want to remove ${inputs.recipeName} from the database?`,
+          showCancelButton: true,
+          confirmButtonText: `Yes, Delete ${inputs.recipeName}.`,
+          cancelButtonText: `No, I want to cancel!`,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // If confirmed, delete the recipe and let the user know it's been deleted
+            dispatch({type: 'DELETE_CURRENT_RECIPE', payload: id})
+            Swal.fire({
+              icon: 'success',
+              title: 'Deletion Complete',
+              text: `${inputs.recipeName} has been deleted from the database.`
+            })
+            // On successful delete, route the user to the home page
+            history.push('/home')
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            // Else if cancelled, let the user know the recipe still exists
+            Swal.fire({
+              icon: 'warning',
+              title: 'Deletion Cancelled',
+              text: `That was close, ${inputs.recipeName} is still in the database.`
+            })
+          }
+        })
       }
       return (
         <div
@@ -121,8 +147,7 @@ export default function EditOrAddRecipePageTemplate(props) {
       setToggleCategoryInput(true)
       setCategoryInput(value)
       handleCategoryIdChange(value)
-    }
-    else {
+    } else {
       setToggleCategoryInput(false)
       handleCategoryIdChange(Number(value))
     } 
@@ -176,7 +201,6 @@ export default function EditOrAddRecipePageTemplate(props) {
   }
   const handleDeleteLine = (index) => {
     const newIngredients = [...ingredientsInputArray];
-    
     if (newIngredients.length > 1) {
       let thing = newIngredients.splice(index, 1);
       setIngredientsInputArray(newIngredients);
@@ -198,6 +222,8 @@ export default function EditOrAddRecipePageTemplate(props) {
     return (
     <div className='page-margin'>
       <div className='center'>
+        {/* Show the Recipe name across the top of the page */}
+        <h1>{inputs.recipeName}</h1>
         {/* Recipe Image Input */}
         <label>Recipe Image Url:</label>
         <input 

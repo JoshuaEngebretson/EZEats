@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"
+import { useParams, useHistory } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux";
 import EditOrAddRecipePageTemplate from "../EditOrAddTemplate/EditOrAddTemplate";
 
 export default function AddRecipePage() {
   const dispatch = useDispatch();
+  const history = useHistory();
   const {id} = useParams();
-  const currentRecipe = useSelector(store => store.recipes.currentRecipe)
+  const currentRecipe = useSelector(store => store.recipes.currentRecipe);
   
   useEffect(() => {
     if (Number(id)) {
@@ -60,7 +61,8 @@ export default function AddRecipePage() {
     }
     const handleSaveRecipe = () => {
       // If successful would push to that recipes page
-        // Need to figure out how to grab the id of 
+        // Need to figure out how to grab the id of
+        history.push(`/view-recipe/${id}`)
     }
 
     return (
