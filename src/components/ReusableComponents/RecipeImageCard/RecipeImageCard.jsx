@@ -14,7 +14,8 @@ export default function RecipeImageCard({recipe}) {
         width: 250, 
         height:300, 
         margin: 'auto', 
-        mt:1
+        mt:1,
+        backgroundColor: '#dae2ed'
       }}
     >
       <CardActionArea
@@ -22,7 +23,7 @@ export default function RecipeImageCard({recipe}) {
       >
         {/* <CardHeader title={recipe.name} /> */}
         <CardMedia 
-          sx={{ width:200, height: 200, margin: 'auto', pt: 1 }}
+          sx={{ width: '90%', height: 200, margin: 'auto', pt: 1 }}
           component='img'
           image={recipe.image}
           alt={`An image of ${recipe.name}`}

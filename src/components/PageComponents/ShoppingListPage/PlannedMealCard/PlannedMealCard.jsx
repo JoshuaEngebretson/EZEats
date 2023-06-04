@@ -1,7 +1,6 @@
-import RecipeImageCard from "../../../ReusableComponents/RecipeImageCard/RecipeImageCard";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
-import AddToCartButtons from "../../../ReusableComponents/AddToCartButtons/AddToCartButtons";
+import { Card, CardActionArea, CardContent, CardHeader, CardMedia, Typography,  } from "@mui/material";
 
 export default function PlannedMealCard({recipe}) {
   const dispatch = useDispatch();
@@ -36,22 +35,49 @@ export default function PlannedMealCard({recipe}) {
   }
 
   return (
-    <div className='planned-meal-card'>
-      <div onClick={viewRecipe}>
-        <h5>{recipe.name}</h5>
-        <img 
-          src={recipe.image}
-          alt ={`An image of ${recipe.name}`}
-          className='square-image-small'
-        /> 
-      </div>
-      <div>
-        {/* <AddToCartButtons currentRecipe={recipe}/> */}
+    <Card 
+      sx={{
+        width: 250, 
+        height: 275, 
+        margin: 1, 
+        mt:1,
+        backgroundColor: '#dae2ed',
+        textAlign: 'center'
+      }}
+    >
+      <CardActionArea
+        onClick={viewRecipe}
+      >
+        <CardMedia 
+          sx={{ width: '90%', height: 150, margin: 'auto', pt: 1 }}
+          component='img'
+          image={recipe.image}
+          alt={`An image of ${recipe.name}`}
+        />
+      </CardActionArea>
+      <CardContent
+        sx={{ textAlign: 'center', padding: 'auto'}}
+      >
         <button onClick={decreaseOnMenu} className='subtract inline'>-</button>
         <p className='inline'>{recipe.on_menu}</p>
         <button onClick={increaseOnMenu} className='add inline'>+</button>
         <button onClick={removeFromMenu} className='inline'>❌</button>
-      </div>
-    </div>
+        <Typography variant='h6' component='div'>
+          {recipe.name}
+        </Typography>
+      </CardContent>
+    </Card>
+    // <div className='planned-meal-card'>
+    //   <div onClick={viewRecipe}>
+    //     <h5>{recipe.name}</h5>
+    //     <img 
+    //       src={recipe.image}
+    //       alt ={`An image of ${recipe.name}`}
+    //       className='square-image-small'
+    //     /> 
+    //   </div>
+    //   <div>
+    //   </div>
+    // </div>
   )
 }
