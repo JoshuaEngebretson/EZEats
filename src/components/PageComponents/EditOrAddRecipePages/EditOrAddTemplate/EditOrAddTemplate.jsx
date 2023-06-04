@@ -224,16 +224,13 @@ export default function EditOrAddRecipePageTemplate(props) {
       <div className='center'>
         {/* Show the Recipe name across the top of the page */}
         <h1>{inputs.recipeName}</h1>
-        {/* Recipe Image Input */}
-        <label>Recipe Image Url:</label>
-        <input 
-          type='text'
-          placeholder='Image Url'
-          value={inputs.image}
-          onChange={e => handleImageChange(e.target.value)}
-        />
-        {/* If an image exists, show it as a 'small' square image alongside the input */}
-        {inputs.image && ( <img src={inputs.image} className='square-image-small'/> )}
+        {/* If an image exists, show it as a 'small' square image below the recipe's name */}
+        {inputs.image && (
+          <>
+            <img src={inputs.image} className='square-image-small'/>
+            <br /> 
+          </>
+        )}
         {/*Recipe Name Input */}
         <label>Recipe Name:</label>
         <input 
@@ -241,6 +238,14 @@ export default function EditOrAddRecipePageTemplate(props) {
           placeholder='Recipe Name'
           value={inputs.recipeName}
           onChange={e => handleRecipeNameChange(e.target.value)}
+        />
+        {/* Recipe Image Input */}
+        <label>Recipe Image Url:</label>
+        <input 
+          type='text'
+          placeholder='Image Url'
+          value={inputs.image}
+          onChange={e => handleImageChange(e.target.value)}
         />
         {/* Category Input */}
         <label htmlFor='category-select'>Select a category: </label>
@@ -260,8 +265,8 @@ export default function EditOrAddRecipePageTemplate(props) {
         {otherCategory()}
       </div>
       <br />
+      <h3 className='table-title center'>Enter Ingredients</h3>
       <div className='ingredients-form'>
-        <h3 className='table-title center'>Enter Ingredients</h3>
         <table>
           <thead>
             <tr>
