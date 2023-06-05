@@ -85,6 +85,7 @@ export default function EditOrAddRecipePageTemplate(props) {
           text: `Are you sure you want to remove ${inputs.recipeName} from the database?`,
           showCancelButton: true,
           confirmButtonText: `Yes, Delete ${inputs.recipeName}.`,
+          confirmButtonColor: 'darkred',
           cancelButtonText: `No, I want to cancel!`,
         }).then((result) => {
           if (result.isConfirmed) {
@@ -100,9 +101,9 @@ export default function EditOrAddRecipePageTemplate(props) {
           } else if (result.dismiss === Swal.DismissReason.cancel) {
             // Else if cancelled, let the user know the recipe still exists
             Swal.fire({
-              icon: 'warning',
+              icon: 'info',
               title: 'Deletion Cancelled',
-              text: `That was close, ${inputs.recipeName} is still in the database.`
+              text: `${inputs.recipeName} is still in the database.`
             })
           }
         })

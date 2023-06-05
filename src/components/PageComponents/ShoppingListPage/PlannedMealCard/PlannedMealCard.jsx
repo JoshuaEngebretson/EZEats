@@ -1,6 +1,7 @@
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { Card, CardActionArea, CardContent, CardHeader, CardMedia, Typography,  } from "@mui/material";
+import Swal from "sweetalert2";
 
 export default function PlannedMealCard({recipe}) {
   const dispatch = useDispatch();
@@ -20,13 +21,28 @@ export default function PlannedMealCard({recipe}) {
   }
 
   const removeFromMenu = () => {
-    console.log('clicked removeFromMenu');
-    if (confirm(`Are you sure you want to completely remove ${recipe.name} from your shopping list?`)) {
-        console.log('you clicked okay');
+    Swal.fire({
+      icon: 'warning',
+      title: 'Remove from Shopping List',
+      text: `Do you want to completely remove ${recipe.name} from your shopping list?`,
+      showCancelButton: true,
+      confirmButtonText: `Remove - ${recipe.name}`,
+      confirmButtonColor: 'darkred',
+      cancelButtonText: `Don't remove - ${recipe.name}`
+    }).then((result) => {
+      if (result.isConfirmed) {
         dispatch({type: 'REMOVE_RECIPE_FROM_MENU', payload: recipe.id})
-    } else {
-      console.log('you clicked cancel');
-    }
+        Swal.fire({
+          icon: 'success',
+          text: `${recipe.name} has been removed from your shopping list.`
+        })
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          icon: 'info',
+          text: `${recipe.name} has not been removed.`
+        })
+      }
+    })
   }
 
   const viewRecipe = () => {
@@ -67,17 +83,5 @@ export default function PlannedMealCard({recipe}) {
         </Typography>
       </CardContent>
     </Card>
-    // <div className='planned-meal-card'>
-    //   <div onClick={viewRecipe}>
-    //     <h5>{recipe.name}</h5>
-    //     <img 
-    //       src={recipe.image}
-    //       alt ={`An image of ${recipe.name}`}
-    //       className='square-image-small'
-    //     /> 
-    //   </div>
-    //   <div>
-    //   </div>
-    // </div>
   )
 }
