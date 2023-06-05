@@ -25,8 +25,9 @@ function LandingPage() {
           
           <p>
             EZEats is a recipe application designed to simplify your meal planning
-            and accommodate dietary restrictions such as food allergies and celiac
-            disease. Upon signing up, users can easily add new recipes to their
+            {/* and accommodate dietary restrictions such as food allergies and celiac
+            disease.  */}
+            . Upon signing up, users can easily add new recipes to their
             profile and organize them into categories, such as entrees or desserts.
           </p>
           
@@ -51,8 +52,9 @@ function LandingPage() {
           
           <p>
             EZEats streamlines the process of planning meals, organizing recipes,
-            and generating comprehensive shopping lists. Whether you have specific
-            dietary needs or simply want a more efficient approach to meal prep,
+            and generating comprehensive shopping lists
+            {/*Whether you have specific dietary needs or simply */}
+            . If you want a more efficient approach to meal prep,
             EZEats is your go-to recipe app.
         </p>
         </div>
