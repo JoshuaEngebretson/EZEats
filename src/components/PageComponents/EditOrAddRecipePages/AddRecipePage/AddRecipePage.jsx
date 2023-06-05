@@ -81,12 +81,12 @@ export default function AddRecipePage() {
       // confirm we have received a newRecipeId from redux, then
       // the user to the newly created recipe
       
-      // if (newRecipeId !== undefined) {
-      //   history.push(`/view-recipe/${newRecipeId}`)
-      // }
-      // else {
-      //   history.push('/home')
-      // }
+      if (newRecipeId !== undefined) {
+        history.push(`/view-recipe/${newRecipeId}`)
+      }
+      else {
+        history.push('/home')
+      }
     }
     else {
       alert('please fill out the required fields')

@@ -96,9 +96,6 @@ export default function IngredientsInput({ index, recipeIngredient, handleIngred
     handleIngredientChange(index, 'ingredient', selectedIngredient);
   };
 
-
-
-
   if (
     unitsOfMeasurement.length > 0 &&
     allIngredients && allIngredients.foodCategories &&
@@ -130,7 +127,7 @@ export default function IngredientsInput({ index, recipeIngredient, handleIngred
             value={unitId}
             onChange={e => handleUnitSelectChange(e)}
           >
-            <option value=''>--Please select the units--</option>
+            <option value=''>-- Select Units --</option>
             <option value='' disabled>MASS</option>
             {unitsOfMeasurement.map(unit => {
               if (unit.conversion_category === 'mass') {
@@ -159,7 +156,7 @@ export default function IngredientsInput({ index, recipeIngredient, handleIngred
               return null;
             })}
             <option value='' disabled>NEW UNIT</option>
-            <option value='other'>Create New Unit</option>
+            <option value='other'>-- Create New Unit --</option>
           </select>
           {showUnitInput && (
             <input
@@ -174,7 +171,7 @@ export default function IngredientsInput({ index, recipeIngredient, handleIngred
             value={ingredientId}
             onChange={e => handleIngredientSelectChange(e)}
           >
-            <option value=''>--Please select the Ingredient--</option>
+            <option value=''>-- Select Ingredient --</option>
             {allIngredients.foodCategories.map(category => {
               const capitalizedCategory = category.name.toUpperCase();
               return (

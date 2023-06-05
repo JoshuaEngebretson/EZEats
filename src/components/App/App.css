@@ -118,3 +118,7 @@ Center
 .center {
   text-align: center;
 }
+
+.page-margin {
+  margin:2%;
+}

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux";
 import IngredientsInput from "./IngredientsInput/IngredientsInput";
+import Swal from 'sweetalert2';
 
 export default function EditOrAddRecipePageTemplate(props) {
   const history = useHistory();
@@ -53,24 +54,20 @@ export default function EditOrAddRecipePageTemplate(props) {
     }
   }
   const cancelButton = () => {
-    const handleCancelButton = () => {
-      // Maybe route to view recipe page if this was an edit?
-        // Unsure how to implement
-        // function could be passed down via the parent??
-      history.push('/home')
-    }
-    // If an id is present, we are editing a recipe and want to 'Cancel Edit'
     if (id) {
+      // If an id is present, we are editing a recipe and want to 'Cancel Edit'
+      //  This will take us back to that recipe's view-recipe page
       return (
-        <div className='stacked-buttons cancel' onClick={handleCancelButton}>
+        <div className='stacked-buttons cancel' onClick={() => history.push(`/view-recipe/${id}`)}>
           <p className='center'>Cancel Edit</p>
         </div>
       )
     }
-    // Else we are adding a recipe and want to 'Cancel Add'
     else {
+      // Else we are adding a recipe and want to 'Cancel Add'
+      //  Which would take us back to the home page
       return (
-        <div className='stacked-buttons cancel' onClick={handleCancelButton}>
+        <div className='stacked-buttons cancel' onClick={() => history.push(`/home`)}>
           <p className='center'>Cancel Add</p>
         </div>
       )
@@ -81,9 +78,35 @@ export default function EditOrAddRecipePageTemplate(props) {
   const deleteRecipeButton = () => {
     if (id) {
       const handleDeleteRecipe = () => {
-        // On successful delete, route the user to the home page
-        history.push('/home')
-        dispatch({type: 'DELETE_CURRENT_RECIPE', payload: id})
+        // Confirm with the user they want to delete this recipe
+        Swal.fire({
+          icon: 'warning',
+          title: 'Delete Recipe Confirmation',
+          text: `Are you sure you want to remove ${inputs.recipeName} from the database?`,
+          showCancelButton: true,
+          confirmButtonText: `Yes, Delete ${inputs.recipeName}.`,
+          confirmButtonColor: 'darkred',
+          cancelButtonText: `No, I want to cancel!`,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // If confirmed, delete the recipe and let the user know it's been deleted
+            dispatch({type: 'DELETE_CURRENT_RECIPE', payload: id})
+            Swal.fire({
+              icon: 'success',
+              title: 'Deletion Complete',
+              text: `${inputs.recipeName} has been deleted from the database.`
+            })
+            // On successful delete, route the user to the home page
+            history.push('/home')
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            // Else if cancelled, let the user know the recipe still exists
+            Swal.fire({
+              icon: 'info',
+              title: 'Deletion Cancelled',
+              text: `${inputs.recipeName} is still in the database.`
+            })
+          }
+        })
       }
       return (
         <div
@@ -125,8 +148,7 @@ export default function EditOrAddRecipePageTemplate(props) {
       setToggleCategoryInput(true)
       setCategoryInput(value)
       handleCategoryIdChange(value)
-    }
-    else {
+    } else {
       setToggleCategoryInput(false)
       handleCategoryIdChange(Number(value))
     } 
@@ -180,7 +202,6 @@ export default function EditOrAddRecipePageTemplate(props) {
   }
   const handleDeleteLine = (index) => {
     const newIngredients = [...ingredientsInputArray];
-    
     if (newIngredients.length > 1) {
       let thing = newIngredients.splice(index, 1);
       setIngredientsInputArray(newIngredients);
@@ -200,22 +221,32 @@ export default function EditOrAddRecipePageTemplate(props) {
     ingredientsInputArray.length > 0
   ) {
     return (
-    <>
-      <div>
-        {/* Recipe Image Input */}
-        <input 
-          type='text'
-          placeholder='image url'
-          value={inputs.image}
-          onChange={e => handleImageChange(e.target.value)}
-        />
-        <img src={inputs.image} className='square-image-small'/>
+    <div className='page-margin'>
+      <div className='center'>
+        {/* Show the Recipe name across the top of the page */}
+        <h1>{inputs.recipeName}</h1>
+        {/* If an image exists, show it as a 'small' square image below the recipe's name */}
+        {inputs.image && (
+          <>
+            <img src={inputs.image} className='square-image-small'/>
+            <br /> 
+          </>
+        )}
         {/*Recipe Name Input */}
+        <label>Recipe Name:</label>
         <input 
           type='text'
           placeholder='Recipe Name'
           value={inputs.recipeName}
           onChange={e => handleRecipeNameChange(e.target.value)}
+        />
+        {/* Recipe Image Input */}
+        <label>Recipe Image Url:</label>
+        <input 
+          type='text'
+          placeholder='Image Url'
+          value={inputs.image}
+          onChange={e => handleImageChange(e.target.value)}
         />
         {/* Category Input */}
         <label htmlFor='category-select'>Select a category: </label>
@@ -233,54 +264,56 @@ export default function EditOrAddRecipePageTemplate(props) {
           <option value='other'>Other</option>
         </select>
         {otherCategory()}
-        <br />
-        <div className='ingredients-form'>
-          <h3 className='table-title center'>Enter Ingredients</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Quantity</th>
-                <th>Units of Measurement</th>
-                <th>Ingredient Name</th>
-                <th>Optional: Prepared Method (e.g., sliced, minced)</th>
-                <th>Optional: For which part of the recipe? (e.g., sauce, garnish)</th>
-                <th>Remove Line</th>
-              </tr>
-            </thead>
-            <tbody>
-            {ingredientsInputArray.map((recipeIngredient, index) => {
-              // console.log('recipeIngredient during mapping in EditOrAddTemp:', recipeIngredient);
-              return (
-                <IngredientsInput 
-                  key={index}
-                  recipeIngredient={recipeIngredient}
-                  index={index}
-                  handleIngredientChange={handleIngredientChange}
-                  handleDeleteLine={handleDeleteLine}
-                />
-              )
-            })}
-            </tbody>
-          </table>
-          <button onClick={addNewIngredientLine} className='add'>Add New Line</button>
+      </div>
+      <br />
+      <h3 className='table-title center'>Enter Ingredients</h3>
+      <div className='ingredients-form'>
+        <table>
+          <thead>
+            <tr>
+              <th>Quantity</th>
+              <th>Units of Measurement</th>
+              <th>Ingredient Name</th>
+              <th>Optional:<br/> Prepared Method (e.g., sliced, minced)</th>
+              <th>
+                Optional: <br/> For which part of the recipe? (e.g., sauce, garnish)
+              </th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+          {ingredientsInputArray.map((recipeIngredient, index) => {
+            // console.log('recipeIngredient during mapping in EditOrAddTemp:', recipeIngredient);
+            return (
+              <IngredientsInput 
+                key={index}
+                recipeIngredient={recipeIngredient}
+                index={index}
+                handleIngredientChange={handleIngredientChange}
+                handleDeleteLine={handleDeleteLine}
+              />
+            )
+          })}
+          </tbody>
+        </table>
+        <button onClick={addNewIngredientLine} className='add'>Add New Line</button>
+      </div>
+      <div className='bottom-container'>
+        <div className='textarea-container'>
+          <textarea
+            placeholder='Enter Recipe Here'
+            value={inputs.recipeText}
+            onChange={(e) => handleRecipeTextChange(e.target.value)}
+          />
         </div>
-        <div className='bottom-container'>
-          <div className='textarea-container'>
-            <textarea
-              placeholder='Enter Recipe Here'
-              value={inputs.recipeText}
-              onChange={(e) => handleRecipeTextChange(e.target.value)}
-            />
-          </div>
-          <div className='button-container'>
-          {resetCookedCountButton()}
-          {deleteRecipeButton()}
-          {cancelButton()}
-          {saveRecipeButton()}
-          </div>
+        <div className='button-container'>
+        {resetCookedCountButton()}
+        {deleteRecipeButton()}
+        {cancelButton()}
+        {saveRecipeButton()}
         </div>
       </div>
-    </>
+    </div>
   )}
 
 }

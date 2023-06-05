@@ -147,17 +147,17 @@ function convertSmallestToLargestUsMeasurement (quantity, volumeOrMass, category
       switch (true){
         // stop at the first case the quantity is greater than, then convert
         // to that a number of those units
-        case quantity>=conversion.usTeaspoonsInUsGallon && category === 'liquids':
+        case quantity >= (conversion.usTeaspoonsInUsGallon*.75) && (category === 'liquids' || category === 'oil' || category === 'alcohol' || category === 'Soups or Broths'):
           return convertQuantity(quantity, conversion.usTeaspoonsInUsGallon, 'gallon');
-        case quantity>=conversion.usTeaspoonsInUsQuart && category === 'liquids':
+        case quantity >= (conversion.usTeaspoonsInUsQuart*.75) && (category === 'liquids' || category === 'oil' || category === 'alcohol' || category === 'Soups or Broths'):
           return convertQuantity(quantity, conversion.usTeaspoonsInUsQuart, 'quart');
-        case quantity>=conversion.usTeaspoonsInUsPint && category === 'liquids':
+        case quantity >= (conversion.usTeaspoonsInUsPint*.75) && (category === 'liquids' || category === 'oil' || category === 'alcohol' || category === 'Soups or Broths'):
           return convertQuantity(quantity, conversion.usTeaspoonsInUsPint, 'pint');
-        case quantity>=conversion.usTeaspoonsInUsCup:
+        case quantity >= (conversion.usTeaspoonsInUsCup*.5):
           return convertQuantity(quantity, conversion.usTeaspoonsInUsCup, 'cup');
-        case quantity>=conversion.usTeaspoonsInUsFluidOunce && category === 'liquids':
+        case quantity >= (conversion.usTeaspoonsInUsFluidOunce*.75) && (category === 'liquids' || category === 'oil' || category === 'alcohol' || category === 'Soups or Broths'):
           return convertQuantity(quantity, conversion.usTeaspoonsInUsFluidOunce, 'fluid ounce');
-        case quantity>=conversion.usTeaspoonsInUsTablespoon:
+        case quantity >= conversion.usTeaspoonsInUsTablespoon:
           return convertQuantity(quantity, conversion.usTeaspoonsInUsTablespoon, 'tablespoon');
         default:
           return convertQuantity(quantity, conversion.usTeaspoonsInUsTeaspoon, 'teaspoon')
@@ -165,7 +165,7 @@ function convertSmallestToLargestUsMeasurement (quantity, volumeOrMass, category
     case 'mass':
       conversion = massConversionsTograms;
       switch (true){
-        case quantity>=conversion.gramsInPound:
+        case quantity >= conversion.gramsInPound:
           return convertQuantity(quantity, conversion.gramsInPound, 'pound');
         default:
           // Can get less than 1 ounce of an item

@@ -11,6 +11,7 @@ export default function CreateIngredientModal() {
   const [foodCategoryInput, setFoodCategoryInput] = useState('')
 
   useEffect(() => {
+    // Set up ability to click escape key to close out of the modal
     const handleKeyDown = event => {
       if (event.key === 'Escape') {
         toggleModal()
@@ -18,12 +19,12 @@ export default function CreateIngredientModal() {
     }
     if (showCreateIngredient) {
       document.addEventListener('keydown', handleKeyDown)
-    }
-    else {
+    } else {
       document.removeEventListener('keydown', handleKeyDown)
     }
   }, [showCreateIngredient])
 
+  // If the modal is open, don't allow the user to scroll within the page behind
   if (showCreateIngredient) {
     document.body.classList.add('active-modal');
   } else {
@@ -37,31 +38,21 @@ export default function CreateIngredientModal() {
     setShowCreateIngredient(!showCreateIngredient)
     setIngredientInput('')
     setFoodCategoryInput('')
+    setShowFoodCategoryInput(false)
   }
-  const saveNewIngredient = async () => {
+  const saveNewIngredient = () => {
     console.log('clicked save Ingredient');
-    if (ingredientInput !== '' &&
-    foodCategoryInput !== ''
-    ) {
+    if (ingredientInput !== '' && foodCategoryInput !== '') {
       const newIngredient = {
         ingredientName:ingredientInput,
         foodCategory: foodCategoryInput
       }
-      console.log('newIngredient:', newIngredient);
-      dispatch({
-        type: 'CREATE_NEW_INGREDIENT',
-        payload: newIngredient
-      })
+      dispatch({ type: 'CREATE_NEW_INGREDIENT', payload: newIngredient })
       toggleModal()
       setShowFoodCategoryInput(false)
-    }
-    else {
+    } else {
       alert('Please ensure both fields are filled in')
     }
-  }
-  const cancelNewIngredient = () => {
-    console.log('clicked cancelNewIngredient');
-    toggleModal()
   }
 
   const handleFoodCategorySelectChange = (e) => {
@@ -84,17 +75,17 @@ export default function CreateIngredientModal() {
         className="add"
         onClick={toggleModal}
       >
-        Create New Ingredient
+        New Ingredient
       </button>
 
       {showCreateIngredient && (
         <div className="modal">
         <div 
-          onClick={cancelNewIngredient}
+          onClick={toggleModal}
           className="overlay"></div>
         <div className="modal-content">
           <h2>Create A New Ingredient</h2>
-          <label htmlFor='new-ingredient-input'>
+          <label htmlFor='new-ingredient-input'> New Ingredient:
             <input 
               placeholder='Enter New Ingredient'
               type='text'
@@ -103,28 +94,34 @@ export default function CreateIngredientModal() {
             />
           </label>
           <div>
-            <select
-              name='food-category-select'
-              id='food-category-select'
-              value={foodCategoryInput}
-              onChange={e => handleFoodCategorySelectChange(e)}
-            >
-              <option value=''>--Please select the units--</option>
-              {foodCategories.map(category => {
-                return (
-                  <option key={category.id} value={category.id}>{category.name}</option>
-                )
-              })}
-              <option value='other'>Create New Food Category</option>
-            </select>
+            <label> Select Food Category:
+              <select
+                name='food-category-select'
+                id='food-category-select'
+                value={foodCategoryInput}
+                onChange={e => handleFoodCategorySelectChange(e)}
+              >
+                <option value=''>-- Select the category --</option>
+                {foodCategories.map(category => {
+                  return (
+                    <option key={category.id} value={category.id}>{category.name}</option>
+                  )
+                })}
+                <option disabled value=''>Other</option>
+                <option value='other'>-- Create New Food Category --</option>
+              </select>
+            </label>
             {showFoodCategoryInput && (
               <>
                 <br />
-                <input 
-                  placeholder='Enter New Food Category'
-                  value={foodCategoryInput}
-                  onChange={e => handleOtherFoodCategoryInput(e)}
-                />
+                <label htmlFor='food-category-input'>
+                  <input 
+                    id='food-category-input'
+                    placeholder='Enter New Food Category'
+                    value={foodCategoryInput}
+                    onChange={e => handleOtherFoodCategoryInput(e)}
+                  />
+                </label>
               </>
             )}
           </div>
@@ -137,7 +134,7 @@ export default function CreateIngredientModal() {
           </button>
           <button
             className='close-modal'
-            onClick={cancelNewIngredient}
+            onClick={toggleModal}
           >
             ❌
           </button>
