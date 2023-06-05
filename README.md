@@ -57,7 +57,7 @@ Once you've selected your desired meals, EZEats takes charge of creating a compr
     1. Inside you will need to enter `SERVER_SESSION_SECRET=(your secret here)`
         -  I recommend a random string of characters
 
-3. You will need two terminals to operate the app properly.
+4. You will need two terminals to operate the app properly.
     1. The first you will run the command `npm run server`
         - This will host the server on [localhost:5000](http://localhost:5000/)
     2. The second you will run the command `npm run client`
@@ -70,7 +70,7 @@ How do I use your project -->
 ## Acknowledgements
 
 - Thanks to [Prime Digital Academy](www.primeacademy.io) who taught me what I needed to know to make this application a reality.
-- Thanks to my wonderful partner, you support really helped me be able to get this app working. 
+- Thanks to my wonderful partner, your support really helped me be able to get this app working. 
 
 ## Contacts
 
