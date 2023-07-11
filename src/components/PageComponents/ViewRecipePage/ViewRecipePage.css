@@ -1,9 +1,5 @@
-
 .square-image-medium {
-  height: 300px;
-  /* max-width: 400px; */
-  width: 300px;
-  margin: auto;
-  /* grid-column-start: col1-start;
-  grid-column-end: span col2-end; */
+	height: 300px;
+	width: 300px;
+	margin: auto;
 }
