@@ -40,9 +40,10 @@ export default function ViewRecipePage() {
 
 		return (
 			<Box sx={{ flexGrow: 1 }}>
-				<Grid container className="page-margin">
+				<Grid container className="page-margin" columnGap={7}>
 					{/* Image square */}
-					<Grid item xs={3} align="center">
+					<Grid item xs={4.5} align="center">
+						<br />
 						<img
 							className="square-image-medium"
 							src={currentRecipe.image}
@@ -51,9 +52,9 @@ export default function ViewRecipePage() {
 					</Grid>
 
 					{/* Name and Ingredients area */}
-					<Grid item xs={6}>
+					<Grid item xs={7}>
 						<Grid container>
-							<Grid item xs={12} align="center">
+							<Grid item xs={12}>
 								<h1>{currentRecipe.name}</h1>
 								<h2>{currentRecipe.category}</h2>
 							</Grid>
@@ -66,9 +67,11 @@ export default function ViewRecipePage() {
 									recipeParts={recipeParts}
 								/>
 							</Grid>
-							<EditButton currentRecipe={currentRecipe} />
-							<AddToCartButtons currentRecipe={currentRecipe} />
-							<GoToShoppingListButton />
+							<Grid container>
+								<EditButton currentRecipe={currentRecipe} />
+								<AddToCartButtons currentRecipe={currentRecipe} />
+								<GoToShoppingListButton />
+							</Grid>
 						</Grid>
 					</Grid>
 
