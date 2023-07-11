@@ -1,39 +1,37 @@
 .subtract {
-  background-color: #D98787;
+	background-color: #d98787;
 }
 .subtract:hover {
-  background-color: #c37878;
+	background-color: #c37878;
 }
 
 .add {
-  background-color: #67CE65;
+	background-color: #67ce65;
 }
-.add:hover{
-  background-color: #57b356;
+.add:hover {
+	background-color: #57b356;
 }
 
 .inline {
-  display: inline;
-  height:30px;
-  width: 30px;
-  margin: auto;
-  text-align: center;
-  font-weight: bold;
-  margin: -3px 3% 3% 3%;
-} 
-
-.list-btns {
-  background-color: rgb(175, 175, 175);
-  width: 200px;
-  height: 100px;
-  border: solid 2px black;
-  font-weight: bold;
+	display: inline;
+	height: 30px;
+	width: 30px;
+	margin: auto;
+	text-align: center;
+	font-weight: bold;
+	margin: -3px 3% 3% 3%;
 }
 
-.list-btns:hover {
-  background-color: gray;
+.list-btns {
+	background-color: rgb(175, 175, 175);
+	width: 200px;
+	height: 100px;
+	border: solid 2px black;
+	font-weight: bold;
+	margin-left: 1px;
+	margin-right: 1px;
 }
 
 .text {
-  padding-top: 12%;
+	padding-top: 12%;
 }

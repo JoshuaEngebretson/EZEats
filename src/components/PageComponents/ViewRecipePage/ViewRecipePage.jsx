@@ -41,16 +41,19 @@ export default function ViewRecipePage() {
 		return (
 			<Box sx={{ flexGrow: 1 }}>
 				<Grid container className="page-margin">
-					<Grid item xs={3}>
+					{/* Image square */}
+					<Grid item xs={3} align="center">
 						<img
 							className="square-image-medium"
 							src={currentRecipe.image}
 							alt={`An image of ${currentRecipe.name}`}
 						/>
 					</Grid>
-					<Grid item xs={8}>
+
+					{/* Name and Ingredients area */}
+					<Grid item xs={6}>
 						<Grid container>
-							<Grid item xs={12}>
+							<Grid item xs={12} align="center">
 								<h1>{currentRecipe.name}</h1>
 								<h2>{currentRecipe.category}</h2>
 							</Grid>
@@ -68,9 +71,14 @@ export default function ViewRecipePage() {
 							<GoToShoppingListButton />
 						</Grid>
 					</Grid>
-					<Box sx={{ justifyContent: "center", alignItems: "center" }}>
-						<Grid container>
-							<Grid item xs={10}>
+
+					{/* Preparation area */}
+					<Box>
+						<Grid
+							container
+							// sx={{ justifyContent: "center", alignItems: "center" }}
+						>
+							<Grid item xs={8}>
 								<h3>Preparation</h3>
 								<ol>
 									{recipeAsParagraph.map((paragraph) => {
@@ -78,8 +86,10 @@ export default function ViewRecipePage() {
 									})}
 								</ol>
 							</Grid>
-							<Grid item xs={12}>
-								<CompletedRecipeButton currentRecipe={currentRecipe} />
+							<Grid item xs={8} align="center">
+								<div className="centered-div">
+									<CompletedRecipeButton currentRecipe={currentRecipe} />
+								</div>
 							</Grid>
 						</Grid>
 					</Box>

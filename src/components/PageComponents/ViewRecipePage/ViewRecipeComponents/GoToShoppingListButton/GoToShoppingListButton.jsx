@@ -1,15 +1,15 @@
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import ViewRecipeStyledButton from "../ViewRecipeStyledButton/ViewRecipeStyledButton";
 
 export default function GoToShoppingListButton() {
-  const history = useHistory();
+	const history = useHistory();
 
-  const goToShoppingList = () => {
-    history.push(`/shopping-list`)
-  }
-
-  return (
-    <div className='list-btns' onClick={goToShoppingList}>
-      <p className='center text'>Go To Shopping List</p>
-    </div>
-  )
+	return (
+		<ViewRecipeStyledButton
+			onClick={() => history.push(`/shopping-list`)}
+			variant="contained"
+		>
+			Go To <br /> Shopping List
+		</ViewRecipeStyledButton>
+	);
 }
