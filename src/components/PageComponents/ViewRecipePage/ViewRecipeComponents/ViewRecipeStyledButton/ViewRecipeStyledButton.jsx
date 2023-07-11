@@ -4,7 +4,7 @@ import styled from "@emotion/styled";
 export default styled(Button)(() => ({
 	color: "black",
 	backgroundColor: "rgb(175, 175, 175)",
-	width: "200px",
+	width: "150px",
 	height: "104px",
 	border: "solid 2px black",
 	fontWeight: "bold",
