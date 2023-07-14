@@ -6,7 +6,7 @@ import AddToCartButtons from "../../ReusableComponents/AddToCartButtons/AddToCar
 import EditButton from "./ViewRecipeComponents/EditButton/EditButton";
 import GoToShoppingListButton from "./ViewRecipeComponents/GoToShoppingListButton/GoToShoppingListButton";
 import CompletedRecipeButton from "./ViewRecipeComponents/CompletedRecipeButton/CompletedRecipeButton";
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Paper } from "@mui/material";
 import RenderIngredients from "./ViewRecipeComponents/RenderIngredients/RenderIngredients";
 
 export default function ViewRecipePage() {
@@ -40,7 +40,7 @@ export default function ViewRecipePage() {
 
 		return (
 			<Box sx={{ flexGrow: 1 }}>
-				<Grid container className="page-margin" columnGap={7}>
+				<Grid container className="page-margin" columnGap={2}>
 					{/* Image square */}
 					<Grid item xs={4.5} align="center">
 						<br />
@@ -52,25 +52,37 @@ export default function ViewRecipePage() {
 					</Grid>
 
 					{/* Name and Ingredients area */}
-					<Grid item xs={7}>
-						<Grid container>
-							<Grid item xs={12}>
+					<Grid item xs={5.5}>
+						<Grid container center>
+							<Grid item xs={12} align="center">
 								<h1>{currentRecipe.name}</h1>
 								<h2>{currentRecipe.category}</h2>
 							</Grid>
 							<Grid container>
-								<Grid item xs={12}>
+								<Paper
+									elevation={5}
+									sx={{
+										margin: "auto",
+										marginBottom: 2,
+										paddingLeft: 2,
+										paddingRight: 2,
+										width: "100%",
+									}}
+								>
 									<h3>Ingredients</h3>
+									<RenderIngredients
+										currentRecipe={currentRecipe}
+										recipeParts={recipeParts}
+									/>
+								</Paper>
+								<Grid
+									container
+									sx={{ justifyContent: "center", marginBottom: 2 }}
+								>
+									<EditButton currentRecipe={currentRecipe} />
+									<AddToCartButtons currentRecipe={currentRecipe} />
+									<GoToShoppingListButton />
 								</Grid>
-								<RenderIngredients
-									currentRecipe={currentRecipe}
-									recipeParts={recipeParts}
-								/>
-							</Grid>
-							<Grid container>
-								<EditButton currentRecipe={currentRecipe} />
-								<AddToCartButtons currentRecipe={currentRecipe} />
-								<GoToShoppingListButton />
 							</Grid>
 						</Grid>
 					</Grid>
