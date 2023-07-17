@@ -58,31 +58,29 @@ export default function ViewRecipePage() {
 								<h1>{currentRecipe.name}</h1>
 								<h2>{currentRecipe.category}</h2>
 							</Grid>
-							<Grid container>
-								<Paper
-									elevation={5}
-									sx={{
-										margin: "auto",
-										marginBottom: 2,
-										paddingLeft: 2,
-										paddingRight: 2,
-										width: "100%",
-									}}
-								>
-									<h3>Ingredients</h3>
-									<RenderIngredients
-										currentRecipe={currentRecipe}
-										recipeParts={recipeParts}
-									/>
-								</Paper>
-								<Grid
-									container
-									sx={{ justifyContent: "center", marginBottom: 2 }}
-								>
-									<EditButton currentRecipe={currentRecipe} />
-									<AddToCartButtons currentRecipe={currentRecipe} />
-									<GoToShoppingListButton />
-								</Grid>
+							<Paper
+								elevation={5}
+								sx={{
+									margin: "auto",
+									marginBottom: 2,
+									paddingLeft: 2,
+									paddingRight: 2,
+									width: "100%",
+								}}
+							>
+								<h3>Ingredients</h3>
+								<RenderIngredients
+									currentRecipe={currentRecipe}
+									recipeParts={recipeParts}
+								/>
+							</Paper>
+							<Grid
+								container
+								sx={{ justifyContent: "center", marginBottom: 2 }}
+							>
+								<EditButton currentRecipe={currentRecipe} />
+								<AddToCartButtons currentRecipe={currentRecipe} />
+								<GoToShoppingListButton />
 							</Grid>
 						</Grid>
 					</Grid>
