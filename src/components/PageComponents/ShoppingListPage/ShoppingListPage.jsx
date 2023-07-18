@@ -22,14 +22,21 @@ export default function ShoppingListPage() {
 		const foodCategories = shoppingList.foodCategories;
 		return (
 			<div className="page-margin">
-				<h2>Planned Meals</h2>
-				{/* <Grid container>
-					{recipeCards.map((recipe) => {
-						return <PlannedMealCard key={recipe.id} recipe={recipe} />;
-					})}
-				</Grid> */}
-				<RecipeCardCarousel recipeCards={recipeCards} />
-				<Paper elevation={3}>
+				<Paper elevation={2} sx={{ paddingBottom: 1 }}>
+					<h2 style={{ marginLeft: 5, paddingTop: 5, marginBottom: 2 }}>
+						Planned Meals
+					</h2>
+					<RecipeCardCarousel
+						recipeCards={recipeCards}
+						show={5}
+						infiniteLoop={true}
+					>
+						{recipeCards.map((recipe) => {
+							return <PlannedMealCard key={recipe.id} recipe={recipe} />;
+						})}
+					</RecipeCardCarousel>
+				</Paper>
+				<Paper elevation={2}>
 					<div className="shopping-list-container">
 						<h2 className="center">Shopping List</h2>
 						<div className="shopping-list">
