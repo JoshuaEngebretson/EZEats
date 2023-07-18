@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import "./RecipeCardCarousel.css";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 export default function RecipeCardCarousel(props) {
 	const { children, show, infiniteLoop } = props;
@@ -92,7 +94,7 @@ export default function RecipeCardCarousel(props) {
 	const transitionDuration = 300; // Adjust the duration as needed
 
 	const transitionStyle = {
-		transform: `translateX(-${currentIndex * (100 / show)}%)`,
+		transform: `translateX(-${(currentIndex + show) * (100 / show)}%)`,
 		transition: transitionEnabled
 			? `transform ${transitionDuration}ms ease-in-out`
 			: "none",
@@ -108,7 +110,7 @@ export default function RecipeCardCarousel(props) {
 				>
 					{(isRepeating || currentIndex > 0) && (
 						<button className="left-arrow" onClick={prev}>
-							&lt;
+							<ArrowBackIosIcon />
 						</button>
 					)}
 					<div
@@ -122,7 +124,7 @@ export default function RecipeCardCarousel(props) {
 					</div>
 					{(isRepeating || currentIndex < length - show) && (
 						<button className="right-arrow" onClick={next}>
-							&gt;
+							<ArrowForwardIosIcon />
 						</button>
 					)}
 				</div>
