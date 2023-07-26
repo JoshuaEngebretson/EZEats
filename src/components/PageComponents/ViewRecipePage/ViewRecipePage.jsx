@@ -78,7 +78,8 @@ export default function ViewRecipePage() {
 								container
 								sx={{ justifyContent: "center", marginBottom: 2 }}
 							>
-								<EditButton currentRecipe={currentRecipe} />
+								{/* Commenting out the Edit Button within the main branch until edit feature works */}
+								{/* <EditButton currentRecipe={currentRecipe} /> */}
 								<AddToCartButtons currentRecipe={currentRecipe} />
 								<GoToShoppingListButton />
 							</Grid>
