@@ -23,6 +23,16 @@ export default function ShoppingListPage() {
 		const recipeCards = shoppingList.recipeCards;
 		const combinedIngredients = shoppingList.combinedIngredients;
 		const foodCategories = shoppingList.foodCategories;
+		const slidesCount = 5;
+
+		/**
+		 * - If there are more cards than slidesPerView
+		 * - - return true
+		 * - If there are less cards than slidesPerView
+		 * - - return false */
+		const cardNavigationToggle = () => {
+			return recipeCards.length > slidesCount ? true : false;
+		};
 
 		return (
 			<div className="page-margin">
@@ -30,24 +40,20 @@ export default function ShoppingListPage() {
 					elevation={2}
 					sx={{
 						paddingBottom: 1,
-						backgroundColor: "gray",
-						justifyContent: "center",
-						alignItems: "center",
-						display: "flex",
+						backgroundColor: "lightgray",
 						display: "row",
 					}}
 				>
 					<h2 style={{ textAlign: "center", paddingTop: 20 }}>Planned Meals</h2>
 					<Swiper
-						spaceBetween={10}
-						slidesPerView={3}
-						centeredSlides={true}
-						grabCursor={true}
-						loop={true}
-						navigation={true}
+						slidesPerView={slidesCount}
+						centeredSlides={cardNavigationToggle()}
+						grabCursor={cardNavigationToggle()}
+						navigation={cardNavigationToggle()}
 						pagination={{ clickable: true }}
 						modules={[Navigation, Pagination]}
-						className="mySwiper"
+						// Enable loop if there are twice as many cards as slidesPerView
+						loop={recipeCards.length >= slidesCount * 2}
 					>
 						{recipeCards.map((recipe) => {
 							return (
@@ -61,7 +67,9 @@ export default function ShoppingListPage() {
 				<br />
 				<Paper elevation={2}>
 					<div className="shopping-list-container">
-						<h2 className="center">Shopping List</h2>
+						<h2 style={{ textAlign: "center", paddingTop: 20 }}>
+							Shopping List
+						</h2>
 						<div className="shopping-list">
 							<DisplayShoppingListIngredients
 								foodCategories={foodCategories}
