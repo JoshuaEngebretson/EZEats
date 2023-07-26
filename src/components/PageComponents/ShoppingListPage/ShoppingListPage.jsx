@@ -16,26 +16,44 @@ export default function ShoppingListPage() {
 
 	if (shoppingList.recipeCards != undefined) {
 		const recipeCards = shoppingList.recipeCards;
+		const RenderPlannedMeals = () => {
+			recipeCards.map((recipe) => {
+				return <PlannedMealCard key={recipe.id} recipe={recipe} />;
+			});
+		};
 
 		const combinedIngredients = shoppingList.combinedIngredients;
 
 		const foodCategories = shoppingList.foodCategories;
 		return (
 			<div className="page-margin">
-				<Paper elevation={2} sx={{ paddingBottom: 1 }}>
+				<Paper
+					elevation={2}
+					sx={{
+						paddingBottom: 1,
+						backgroundColor: "gray",
+						justifyContent: "center",
+						alignItems: "center",
+						display: "flex",
+						flexDirection: "column",
+					}}
+				>
 					<h2 style={{ marginLeft: 5, paddingTop: 5, marginBottom: 2 }}>
 						Planned Meals
 					</h2>
-					<RecipeCardCarousel
-						recipeCards={recipeCards}
-						show={5}
-						infiniteLoop={true}
-					>
-						{recipeCards.map((recipe) => {
-							return <PlannedMealCard key={recipe.id} recipe={recipe} />;
-						})}
-					</RecipeCardCarousel>
+					{recipeCards.length > 5 ? (
+						<RecipeCardCarousel
+							recipeCards={recipeCards}
+							show={5}
+							infiniteLoop={true}
+						>
+							<RenderPlannedMeals />
+						</RecipeCardCarousel>
+					) : (
+						<RenderPlannedMeals />
+					)}
 				</Paper>
+				<br />
 				<Paper elevation={2}>
 					<div className="shopping-list-container">
 						<h2 className="center">Shopping List</h2>
