@@ -47,13 +47,14 @@ export default function ShoppingListPage() {
 					<h2 style={{ textAlign: "center", paddingTop: 20 }}>Planned Meals</h2>
 					<Swiper
 						slidesPerView={slidesCount}
-						centeredSlides={cardNavigationToggle()}
 						grabCursor={cardNavigationToggle()}
-						navigation={cardNavigationToggle()}
+						navigation={true}
 						pagination={{ clickable: true }}
 						modules={[Navigation, Pagination]}
 						// Enable loop if there are twice as many cards as slidesPerView
 						loop={recipeCards.length >= slidesCount * 2}
+						// Only center slides if there are less cards than slidesCount
+						centeredSlides={recipeCards.length < slidesCount}
 					>
 						{recipeCards.map((recipe) => {
 							return (
