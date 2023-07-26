@@ -3,8 +3,13 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PlannedMealCard from "./PlannedMealCard/PlannedMealCard";
 import DisplayShoppingListIngredients from "./DisplayShoppingListIngredients/DisplayShoppingListIngredients";
-import { Container, Grid, Paper } from "@mui/material";
-import RecipeCardCarousel from "./RecipeCardCarousel/RecipeCardCarousel";
+import { Paper } from "@mui/material";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
 
 export default function ShoppingListPage() {
 	const dispatch = useDispatch();
@@ -16,15 +21,9 @@ export default function ShoppingListPage() {
 
 	if (shoppingList.recipeCards != undefined) {
 		const recipeCards = shoppingList.recipeCards;
-		const RenderPlannedMeals = () => {
-			recipeCards.map((recipe) => {
-				return <PlannedMealCard key={recipe.id} recipe={recipe} />;
-			});
-		};
-
 		const combinedIngredients = shoppingList.combinedIngredients;
-
 		const foodCategories = shoppingList.foodCategories;
+
 		return (
 			<div className="page-margin">
 				<Paper
@@ -35,23 +34,32 @@ export default function ShoppingListPage() {
 						justifyContent: "center",
 						alignItems: "center",
 						display: "flex",
-						flexDirection: "column",
+						display: "row",
 					}}
 				>
 					<h2 style={{ marginLeft: 5, paddingTop: 5, marginBottom: 2 }}>
 						Planned Meals
 					</h2>
-					{recipeCards.length > 5 ? (
-						<RecipeCardCarousel
-							recipeCards={recipeCards}
-							show={5}
-							infiniteLoop={true}
-						>
-							<RenderPlannedMeals />
-						</RecipeCardCarousel>
-					) : (
-						<RenderPlannedMeals />
-					)}
+					<br />
+					<Swiper
+						spaceBetween={1}
+						slidesPerView={4}
+						centeredSlides={true}
+						grabCursor={true}
+						loop={true}
+						navigation={true}
+						pagination={{ clickable: true }}
+						modules={[Navigation, Pagination]}
+						className="mySwiper"
+					>
+						{recipeCards.map((recipe) => {
+							return (
+								<SwiperSlide>
+									<PlannedMealCard key={recipe.id} recipe={recipe} />
+								</SwiperSlide>
+							);
+						})}
+					</Swiper>
 				</Paper>
 				<br />
 				<Paper elevation={2}>
