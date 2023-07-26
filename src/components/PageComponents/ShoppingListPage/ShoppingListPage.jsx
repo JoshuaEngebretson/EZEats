@@ -37,10 +37,7 @@ export default function ShoppingListPage() {
 						display: "row",
 					}}
 				>
-					<h2 style={{ marginLeft: 5, paddingTop: 5, marginBottom: 2 }}>
-						Planned Meals
-					</h2>
-					<br />
+					<h2 style={{ textAlign: "center", paddingTop: 20 }}>Planned Meals</h2>
 					<Swiper
 						spaceBetween={10}
 						slidesPerView={3}

@@ -68,8 +68,7 @@ export default function PlannedMealCard({ recipe }) {
 			<CardContent
 				sx={{
 					textAlign: "right",
-					margin: -1,
-					marginBottom: -7.6,
+					margin: -0.75,
 					position: "absolute",
 					left: 200,
 					zIndex: 1,
