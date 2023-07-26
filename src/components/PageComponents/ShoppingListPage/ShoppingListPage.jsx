@@ -42,8 +42,8 @@ export default function ShoppingListPage() {
 					</h2>
 					<br />
 					<Swiper
-						spaceBetween={1}
-						slidesPerView={4}
+						spaceBetween={10}
+						slidesPerView={3}
 						centeredSlides={true}
 						grabCursor={true}
 						loop={true}

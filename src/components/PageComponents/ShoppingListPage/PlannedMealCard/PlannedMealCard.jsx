@@ -17,8 +17,6 @@ export default function PlannedMealCard({ recipe }) {
 	const decreaseOnMenu = () => {
 		if (recipe.on_menu > 1) {
 			dispatch({ type: "DECREASE_ON_MENU", payload: recipe.id });
-		} else {
-			console.log("clicked decrease but unable to go below 0");
 		}
 	};
 
@@ -52,7 +50,6 @@ export default function PlannedMealCard({ recipe }) {
 	};
 
 	const viewRecipe = () => {
-		console.log(`Clicked on ${recipe.name}`);
 		history.push(`/view-recipe/${recipe.id}`);
 	};
 
@@ -60,17 +57,31 @@ export default function PlannedMealCard({ recipe }) {
 		<Card
 			sx={{
 				width: 250,
-				height: 275,
-				marginBottom: 1,
+				height: 325,
+				marginBottom: 6,
 				mt: 1,
 				backgroundColor: "#dae2ed",
 				textAlign: "center",
 			}}
 			className="planned-meal-card"
 		>
+			<CardContent
+				sx={{
+					textAlign: "right",
+					margin: -1,
+					marginBottom: -7.6,
+					position: "absolute",
+					left: 200,
+					zIndex: 1,
+				}}
+			>
+				<button onClick={removeFromMenu} className="inline">
+					❌
+				</button>
+			</CardContent>
 			<CardActionArea onClick={viewRecipe}>
 				<CardMedia
-					sx={{ width: "90%", height: 150, margin: "auto", pt: 1 }}
+					sx={{ width: "90%", height: 175, margin: "auto", pt: 1 }}
 					component="img"
 					image={recipe.image}
 					alt={`An image of ${recipe.name}`}
@@ -83,9 +94,6 @@ export default function PlannedMealCard({ recipe }) {
 				<p className="inline">{recipe.on_menu}</p>
 				<button onClick={increaseOnMenu} className="add inline">
 					+
-				</button>
-				<button onClick={removeFromMenu} className="inline">
-					❌
 				</button>
 				<Typography variant="h6" component="div">
 					{recipe.name}
