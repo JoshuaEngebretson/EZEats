@@ -15,28 +15,50 @@ const {
 router.get("/", rejectUnauthenticated, (req, res) => {
 	const userId = req.user.id;
 	const seeDefaultRecipes = req.user.see_default_recipes;
+	console.log("seeDefaultRecipes:", seeDefaultRecipes);
 
 	/*
     Show the id, name, image, and category for all recipes
     associated with this user.
     */
-	const sqlText = `
-        SELECT 
-            recipes.id AS id,
-            recipes.recipe_name AS name,
-            recipes.image_of_recipe AS image,
-            category.name AS category
-        FROM recipes
-        JOIN "user"
-            ON recipes.user_id="user".id
-        JOIN category
-            ON category.id=recipes.category_id
-        WHERE
-            "user".id = $1
-        GROUP BY
-            recipes.id, recipes.recipe_name, recipes.image_of_recipe,
-            recipes.recipe_text, category.name;
-    `;
+	let sqlText;
+	if (seeDefaultRecipes) {
+		sqlText = `
+            SELECT 
+                recipes.id AS id,
+                recipes.recipe_name AS name,
+                recipes.image_of_recipe AS image,
+                category.name AS category
+            FROM recipes
+            JOIN "user"
+                ON recipes.user_id="user".id
+            JOIN category
+                ON category.id=recipes.category_id
+            WHERE
+                "user".id = $1 AND "user".id = 1
+            GROUP BY
+                recipes.id, recipes.recipe_name, recipes.image_of_recipe,
+                recipes.recipe_text, category.name;
+        `;
+	} else {
+		sqlText = `
+            SELECT 
+                recipes.id AS id,
+                recipes.recipe_name AS name,
+                recipes.image_of_recipe AS image,
+                category.name AS category
+            FROM recipes
+            JOIN "user"
+                ON recipes.user_id="user".id
+            JOIN category
+                ON category.id=recipes.category_id
+            WHERE
+                "user".id = $1
+            GROUP BY
+                recipes.id, recipes.recipe_name, recipes.image_of_recipe,
+                recipes.recipe_text, category.name;
+        `;
+	}
 
 	pool
 		.query(sqlText, [userId])
