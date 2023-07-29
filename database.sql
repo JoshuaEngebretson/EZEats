@@ -12,17 +12,15 @@ CREATE TABLE "user" (
 	id SERIAL PRIMARY KEY NOT NULL,
 	username VARCHAR NOT NULL UNIQUE,
 	password VARCHAR NOT NULL,
-	date_user_created DATE NOT NULL DEFAULT CURRENT_DATE,
-	see_default_recipes BOOLEAN DEFAULT TRUE
+	date_user_created DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
 -- Starter data for "user"
 INSERT INTO "user"
 	(username, password)
 VALUES
-	('defaultRecipes', '$2a$10$mvHgC4madG9DTnjLL1knS.3eGwr5ygKraosNCj//F/6MYml4aPcye'), -- password is test1
-	('test2', '$2a$10$Augs.V/Uv6N9Kdse.bhUveUL7.CSKK.3Zob0pGTwdvc66sepLI682'); -- password is test2
-	
+	('test1', '$2a$10$mvHgC4madG9DTnjLL1knS.3eGwr5ygKraosNCj//F/6MYml4aPcye'), -- password is test1
+
 
 ---------------------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------
@@ -204,7 +202,6 @@ VALUES
 	('test Appetizer recipe 5', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://images.eatsmarter.com/sites/default/files/styles/576x432/public/egg-salad-appetizers-613108.jpg', 1, 5),
 	('test Appetizer recipe 6', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://www.allrecipes.com/thmb/HypncxBKRjdHQShfJlCChJv3yBA=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/4303385-646d757e8a674a8caac7708533b1611d.jpg', 1, 5);
 
-
 ---------------------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------
@@ -227,7 +224,7 @@ CREATE TABLE recipe_ingredients (
 	for_which_part VARCHAR DEFAULT NULL
 );
 
--- Starter data for recipe_ingredients (real recipes)
+-- Starter data foor recipe_ingredients (real recipes)
 INSERT INTO recipe_ingredients
 	(quantity, converted_quantity, converted_unit, unit_id, ingredients_id, method, recipe_id, for_which_part)
 VALUES
@@ -247,7 +244,7 @@ VALUES
 	(0.25, 0.25, 'tsp', 1, 19, NULL, 2, NULL), (2, NULL, NULL, 27, 20, 'diced', 2, NULL), (2, NULL, NULL, 27, 21, 'cubed', 2, NULL),
 	(1, NULL, NULL, 32, 22, 'drained', 2, NULL), (4, NULL, NULL, 26, 8, NULL, 2, NULL), (0.25, 12.173, 'tsp', 5, 23, 'chopped', 2, NULL);
 
--- Starter data for recipe_ingredients (dummy data)
+-- Starter data foor recipe_ingredients (dummy data)
 INSERT INTO recipe_ingredients
 	(quantity, converted_quantity, converted_unit, unit_id, ingredients_id, method, recipe_id, for_which_part)
 VALUES
