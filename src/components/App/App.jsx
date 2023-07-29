@@ -12,7 +12,6 @@ import Footer from "../Footer/Footer";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 // Import Page components
 import UserPage from "../PageComponents/UserPage/UserPage";
-import InfoPage from "../PageComponents/InfoPage/InfoPage";
 import LandingPage from "../PageComponents/LandingPage/LandingPage";
 import LoginPage from "../PageComponents/LoginAndRegisterPages/LoginPage/LoginPage";
 import RegisterPage from "../PageComponents/LoginAndRegisterPages/RegisterPage/RegisterPage";
@@ -52,14 +51,6 @@ function App() {
 					path="/user"
 				>
 					<UserPage />
-				</ProtectedRoute>
-
-				<ProtectedRoute
-					// logged in shows InfoPage else shows LoginPage
-					exact
-					path="/info"
-				>
-					<InfoPage />
 				</ProtectedRoute>
 
 				<Route exact path="/login">

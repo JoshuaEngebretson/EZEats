@@ -12,7 +12,9 @@ import RenderIngredients from "./ViewRecipeComponents/RenderIngredients/RenderIn
 export default function ViewRecipePage() {
 	const dispatch = useDispatch();
 	const { id } = useParams();
-	const currentRecipe = useSelector((store) => store.recipes.currentRecipe);
+	const currentRecipe = useSelector(
+		(store) => store.recipes.currentRecipe
+	);
 
 	useEffect(() => {
 		// Fetch current recipe on component mount
@@ -76,11 +78,16 @@ export default function ViewRecipePage() {
 							</Paper>
 							<Grid
 								container
-								sx={{ justifyContent: "center", marginBottom: 2 }}
+								sx={{
+									justifyContent: "center",
+									marginBottom: 2,
+								}}
 							>
 								{/* Commenting out the Edit Button within the main branch until edit feature works */}
 								{/* <EditButton currentRecipe={currentRecipe} /> */}
-								<AddToCartButtons currentRecipe={currentRecipe} />
+								<AddToCartButtons
+									currentRecipe={currentRecipe}
+								/>
 								<GoToShoppingListButton />
 							</Grid>
 						</Grid>
@@ -95,14 +102,22 @@ export default function ViewRecipePage() {
 							<Grid item xs={8}>
 								<h3>Preparation</h3>
 								<ol>
-									{recipeAsParagraph.map((paragraph) => {
-										return <li key={paragraph}>{paragraph}</li>;
-									})}
+									{recipeAsParagraph.map(
+										(paragraph) => {
+											return (
+												<li key={paragraph}>
+													{paragraph}
+												</li>
+											);
+										}
+									)}
 								</ol>
 							</Grid>
 							<Grid item xs={8} align="center">
 								<div className="centered-div">
-									<CompletedRecipeButton currentRecipe={currentRecipe} />
+									<CompletedRecipeButton
+										currentRecipe={currentRecipe}
+									/>
 								</div>
 							</Grid>
 						</Grid>
