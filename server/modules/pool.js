@@ -21,7 +21,8 @@ else {
 	pool = new pg.Pool({
 		host: "localhost",
 		port: 5432,
-		database: "EZEats",
+		database: "EZEats", // Place for testing new information
+		// database: "v2 test EZEats", // Has more working recipes built out
 	});
 }
 
