@@ -76,6 +76,7 @@ router.get("/", rejectUnauthenticated, (req, res) => {
 // GET recipe categories route
 router.get("/recipe-categories", rejectUnauthenticated, (req, res) => {
 	const sqlQuery = `SELECT * FROM category;`;
+
 	pool
 		.query(sqlQuery)
 		.then((result) => {
@@ -91,6 +92,7 @@ router.get("/recipe-categories", rejectUnauthenticated, (req, res) => {
 // GET most cooked recipes route
 router.get("/most-cooked", rejectUnauthenticated, (req, res) => {
 	const userId = req.user.id;
+	const seeDefaultRecipes = req.user.see_default_recipes;
 	/*
     Show id, name, image, and category of the most cooked recipes
     associated with this user
@@ -129,6 +131,7 @@ router.get("/most-cooked", rejectUnauthenticated, (req, res) => {
 // GET shopping list route
 router.get("/shopping-list", rejectUnauthenticated, (req, res) => {
 	const userId = req.user.id;
+	const seeDefaultRecipes = req.user.see_default_recipes;
 	const shoppingListCardsQuery = `
         SELECT
             recipes.id,
@@ -484,6 +487,7 @@ router.get("/:id", rejectUnauthenticated, (req, res) => {
 // POST new recipe route
 router.post("/", rejectUnauthenticated, async (req, res) => {
 	const userId = req.user.id;
+	const seeDefaultRecipes = req.user.see_default_recipes;
 	const newRecipe = req.body;
 	const ingredients = newRecipe.recipeIngredients;
 
@@ -695,6 +699,7 @@ router.post("/ingredients", rejectUnauthenticated, (req, res) => {
 // THIS ROUTE HAS NOT BEEN PROPERLY BUILT OUT YET
 router.put("/:id", rejectUnauthenticated, (req, res) => {
 	const userId = req.user.id;
+	const seeDefaultRecipes = req.user.see_default_recipes;
 	const idToUpdate = req.params.id;
 
 	const sqlText = `
@@ -717,6 +722,7 @@ router.put("/:id", rejectUnauthenticated, (req, res) => {
 // PUT adjust-on-menu route
 router.put("/adjust-on-menu/:id", rejectUnauthenticated, (req, res) => {
 	const userId = req.user.id;
+	const seeDefaultRecipes = req.user.see_default_recipes;
 	const idToUpdate = req.params.id;
 	const adjustment = req.body.adjustment;
 	console.log("req.body inside adjust-on-menu/:id:", req.body);
@@ -783,6 +789,7 @@ router.put("/times-cooked/:id", rejectUnauthenticated, (req, res) => {
 // DELETE recipe route
 router.delete("/:id", rejectUnauthenticated, (req, res) => {
 	const userId = req.user.id;
+	const seeDefaultRecipes = req.user.see_default_recipes;
 	const idToDelete = req.params.id;
 
 	const sqlText = `
