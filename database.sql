@@ -168,36 +168,36 @@ In the same pot, brown the bell peppers and zucchini. Add oil, if needed. Return
 
 -- Starter data for recipes (dummy data)
 INSERT INTO recipes
-  (recipe_name, recipe_text, image_of_recipe, user_id, category_id)
+    (recipe_name, recipe_text, image_of_recipe, user_id, category_id)
 VALUES
-  -- Test Entrees - test1
+    -- Test Entrees - test1
 	('test Entree recipe 3', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://img.taste.com.au/TectJLK4/taste/2016/11/rockmelon-bruschetta-with-goats-cheese-and-prosciutto-70235-1.jpeg', 1, 1),
 	('test Entree recipe 4', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://img.delicious.com.au/qx6JWa73/w759-h506-cfill/del/2015/10/prawns-on-toast-toast-skagen-14996-1.jpg', 1, 1),
 	('test Entree recipe 5', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://www.gffoodservice.com.au/content/uploads/2019/10/entree-hero-1-@2x.jpg', 1, 1),
 	('test Entree recipe 6', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://simplot-media.azureedge.net/-/media/feature/simplotfoods/globals/header/backgrounds/heromarquee-large-entreerecipe-collections.jpg?rev=ec8f5ed5ab3543a48261bc5bb3810ba4&hash=B19E6C2F006194E74B8867C408CDA40F', 1, 1),
 	-- Test Drinks - test1
-  ('test Drink recipe 1', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://www.acouplecooks.com/wp-content/uploads/2021/06/Strawberry-Water-006.jpg', 1, 2),
+    ('test Drink recipe 1', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://www.acouplecooks.com/wp-content/uploads/2021/06/Strawberry-Water-006.jpg', 1, 2),
 	('test Drink recipe 2', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://thebigmansworld.com/wp-content/uploads/2021/07/keto-drink-mix4.jpeg', 1, 2),
 	('test Drink recipe 3', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://hips.hearstapps.com/hmg-prod/images/drink-to-order-at-the-bar-1642641671.png?crop=1.00xw:0.742xh;0,0.211xh&resize=1200:*', 1, 2),
 	('test Drink recipe 4', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://target.scene7.com/is/image/Target/GUEST_e8495311-2680-48ca-aea6-6f8734db2400?wid=488&hei=488&fmt=pjpeg', 1, 2),
 	('test Drink recipe 5', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://images.absolutdrinks.com/drink-images/Raw/Absolut/43d47dd3-6ac5-41f4-a9b5-c9711ecc9eb6.jpg?impolicy=drinkcrop', 1, 2),
 	('test Drink recipe 6', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://media-cldnry.s-nbcnews.com/image/upload/newscms/2016_48/1811466/161128-drinking-alcohol-jpo-108p.jpg', 1, 2),
 	-- Test Desserts - test1
-  ('test Dessert recipe 1', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://insanelygoodrecipes.com/wp-content/uploads/2020/07/Sweet-Colorful-Macarons.jpg', 1, 3),
+    ('test Dessert recipe 1', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://insanelygoodrecipes.com/wp-content/uploads/2020/07/Sweet-Colorful-Macarons.jpg', 1, 3),
 	('test Dessert recipe 2', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://myfoodbook.com.au/sites/default/files/collections_image/custard_trifle_summer_dessert.jpeg', 1, 3),
 	('test Dessert recipe 3', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://storcpdkenticomedia.blob.core.windows.net/media/lolretail/media/lolr-media/recipe-collections/2023/january/retail_collection_summertime-dessert-recipes_smore-ice-cream-sandwiches_760x580.jpg?ext=.jpg', 1, 3),
 	('test Dessert recipe 4', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://images.immediate.co.uk/production/volatile/sites/2/2018/09/OLI-0918_HereNow-CremeCaramel_28005-cb31e47.jpg?quality=90&resize=556,505', 1, 3),
 	('test Dessert recipe 5', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://insanelygoodrecipes.com/wp-content/uploads/2021/01/White-Chocolate-Oreo-Cookie-Balls.png', 1, 3),
 	('test Dessert recipe 6', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://www.hersheyland.com/content/dam/hersheyland/en-us/recipes/recipe-images/366-chocolate-dessert-waffles.jpg', 1, 3),
 	-- Test Sides - test1
-  ('test Side recipe 1', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://www.acouplecooks.com/wp-content/uploads/2019/09/Sweet-Potato-Wedges-004.jpg', 1, 4),
+    ('test Side recipe 1', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://www.acouplecooks.com/wp-content/uploads/2019/09/Sweet-Potato-Wedges-004.jpg', 1, 4),
 	('test Side recipe 2', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://www.aheadofthyme.com/wp-content/uploads/2021/10/40-vegetable-side-dishes.jpg', 1, 4),
 	('test Side recipe 3', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://drivemehungry.com/wp-content/uploads/2019/04/korean-potato-side-dish-gamja-jorim-13.jpg', 1, 4),
 	('test Side recipe 4', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://theshortordercook.com/wp-content/uploads/2022/06/20-Best-Kid-Friendly-Side-Dishes-Recipes-featured.png', 1, 4),
 	('test Side recipe 5', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://blog.myfitnesspal.com/wp-content/uploads/2016/12/Mini-Stuffed-Peppers-Recipe-7.jpg', 1, 4),
 	('test Side recipe 6', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://images.immediate.co.uk/production/volatile/sites/30/2021/03/Hasselback-Potatoes-a818dcb.jpg?quality=90&resize=960,872', 1, 4),
 	-- Test Appetizer - test1
-  ('test Appetizer recipe 1', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://cdn.loveandlemons.com/wp-content/uploads/2019/12/easy-appetizers-1.jpg', 1, 5),
+    ('test Appetizer recipe 1', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://cdn.loveandlemons.com/wp-content/uploads/2019/12/easy-appetizers-1.jpg', 1, 5),
 	('test Appetizer recipe 2', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://www.homemadefoodjunkie.com/wp-content/uploads/2016/05/Caprese-Salad-Bites-party-tray-720x405.jpg', 1, 5),
 	('test Appetizer recipe 3', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://www.thespruceeats.com/thmb/U0hbsO63biJQ2JiDZdexbbmxsNE=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/easy-appetizer-meatballs-3054462-Final-5babc194c9e77c0025161739.jpg', 1, 5),
 	('test Appetizer recipe 4', 'Example recipe text here\nThis should be a 2nd line\nThis should be a 3rd line\nThis should be a 4th line', 'https://www.eatwell101.com/wp-content/uploads/2017/10/Shrimp-shooters-Recipe.jpg', 1, 5),
