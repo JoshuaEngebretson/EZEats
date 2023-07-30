@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import LogOutButton from "../../ReusableComponents/LogOutButton/LogOutButton";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button, Paper } from "@mui/material";
 
 function UserPage() {
+	const dispatch = useDispatch();
 	const user = useSelector((store) => store.user);
 	const [selectedDefaultRecipes, setSelectedDefaultRecipes] =
 		useState([]);
@@ -27,13 +28,16 @@ function UserPage() {
 	const handleSubmitDefaultRecipes = (e) => {
 		e.preventDefault();
 		console.log("selected Recipes:", selectedDefaultRecipes);
+		dispatch({
+			type: "SET_DEFAULT_RECIPES",
+			payload: selectedDefaultRecipes,
+		});
 	};
 
 	return (
 		<div className="container">
 			<h2>Welcome, {user.username}!</h2>
 			<p>Looking for some initial recipes?</p>
-			<br />
 
 			<Paper
 				elevation={5}
@@ -46,74 +50,73 @@ function UserPage() {
 				}}
 			>
 				<h4>Select all the recipes, you would like added.</h4>
-				<br />
 				<form onSubmit={handleSubmitDefaultRecipes}>
-					{/* Default Entree checkbox */}
-					<label htmlFor="Pasta-Bake">
-						Entree - Pasta Bake
-					</label>
-					<input
-						type="checkbox"
-						id="Pasta-Bake"
-						value="1"
-						onChange={handleRecipeCheckboxChange}
-					/>
-					<br />
-
-					{/* Default Side checkbox */}
-					<label htmlFor="German-Potato-Salad">
-						Side - German Potato Salad
-					</label>
-					<input
-						type="checkbox"
-						id="German-Potato-Salad"
-						value="2"
-						onChange={handleRecipeCheckboxChange}
-					/>
-					<br />
-
 					{/* Default Appetizer checkbox */}
-					<label htmlFor="Bruschetta">
-						Appetizer - Bruschetta
-					</label>
 					<input
 						type="checkbox"
 						id="Bruschetta"
+						value="1"
+						onChange={handleRecipeCheckboxChange}
+					/>
+					<label htmlFor="Bruschetta">
+						Appetizer - Bruschetta
+					</label>
+					<br />
+
+					{/* Default Entree checkbox */}
+					<input
+						type="checkbox"
+						id="Pasta-Bake"
+						value="2"
+						onChange={handleRecipeCheckboxChange}
+					/>
+					<label htmlFor="Pasta-Bake">
+						Entree - Pasta Bake
+					</label>
+					<br />
+
+					{/* Default Side checkbox */}
+					<input
+						type="checkbox"
+						id="German-Potato-Salad"
 						value="3"
 						onChange={handleRecipeCheckboxChange}
 					/>
+					<label htmlFor="German-Potato-Salad">
+						Side - German Potato Salad
+					</label>
 					<br />
 
 					{/* Default Drink checkbox */}
-					<label htmlFor="Maple-Chai-Old-Fashioned">
-						Drink - Maple Chai Old Fashioned
-					</label>
 					<input
 						type="checkbox"
 						id="Maple-Chai-Old-Fashioned"
 						value="4"
 						onChange={handleRecipeCheckboxChange}
 					/>
+					<label htmlFor="Maple-Chai-Old-Fashioned">
+						Drink - Maple Chai Old Fashioned
+					</label>
 					<br />
 
 					{/* Default Dessert checkbox */}
-					<label htmlFor="Brownies">Brownies</label>
 					<input
 						type="checkbox"
 						id="Brownies"
 						value="5"
 						onChange={handleRecipeCheckboxChange}
 					/>
+					<label htmlFor="Brownies">
+						Dessert - Brownies
+					</label>
 					<br />
 
-					<Button
-						variant="contained"
-						onClick={handleSubmitDefaultRecipes}
-					>
+					<Button variant="contained" type="submit">
 						Add default recipes
 					</Button>
 				</form>
 			</Paper>
+
 			<br />
 			<br />
 
