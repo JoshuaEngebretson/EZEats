@@ -105,9 +105,16 @@ export default function ViewRecipePage() {
 									{recipeAsParagraph.map(
 										(paragraph) => {
 											return (
-												<li key={paragraph}>
-													{paragraph}
-												</li>
+												<>
+													<li
+														key={
+															paragraph
+														}
+													>
+														{paragraph}
+													</li>
+													<br />
+												</>
 											);
 										}
 									)}

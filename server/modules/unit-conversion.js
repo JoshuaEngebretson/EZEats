@@ -7,29 +7,29 @@ const volumetricConversionsToUsTeaspoon = {
 	usTeaspoonsInUsGallon: 768,
 	usTeaspoonsInUsQuart: 192,
 	usTeaspoonsInUsPint: 96,
-	usTeaspoonsInUsCup: 48.692,
+	usTeaspoonsInUsCup: 48.6922,
 	usTeaspoonsInUsFluidOunce: 6,
 	usTeaspoonsInCubicInch: 3.325,
 	usTeaspoonsInUsTablespoon: 3,
 	usTeaspoonsInUsTeaspoon: 1,
 	// Metric volumes to US teaspoon
-	usTeaspoonsInLiter: 202.9,
-	usTeaspoonsInMilliliter: 0.203,
+	usTeaspoonsInLiter: 202.884,
+	usTeaspoonsInMilliliter: 0.202884,
 	// Imperial volumes to US teaspoon
-	usTeaspoonsInImperialGallon: 922.3,
-	usTeaspoonsInImperialQuart: 230.6,
-	usTeaspoonsInImperialPint: 115.3,
-	usTeaspoonsInImperialCup: 57.646,
-	usTeaspoonsInImperialFluidOunce: 5.765,
-	usTeaspoonsInImperialTablespoon: 3.603,
-	usTeaspoonsInImperialTeaspoon: 1.201,
+	usTeaspoonsInImperialGallon: 922.33,
+	usTeaspoonsInImperialQuart: 230.582,
+	usTeaspoonsInImperialPint: 115.291,
+	usTeaspoonsInImperialCup: 57.6456,
+	usTeaspoonsInImperialFluidOunce: 5.76456,
+	usTeaspoonsInImperialTablespoon: 3.60285,
+	usTeaspoonsInImperialTeaspoon: 1.20095,
 };
 
 // Mass conversions to grams
 const massConversionsTograms = {
 	// US masses
-	gramsInPound: 453.6,
-	gramsInOunce: 28.35,
+	gramsInPound: 453.592,
+	gramsInOunce: 28.3495,
 	// Metric masses
 	gramsInStone: 6350.29,
 	gramsInKilogram: 1000,
