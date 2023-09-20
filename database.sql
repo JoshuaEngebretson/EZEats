@@ -136,7 +136,7 @@ VALUES
     ('canola oil', 1), ('sea salt', 4), ('baguette', 9), ('pasta, Rigatoni', 8),
     ('sun-dried tomatoes', 6), ('maple syrup', 5), ('red pepper flakes', 4),
 	('oregano', 4), ('nutritional yeast', 8), ('red potatoes', 2),
-    ('bacon, thick-cut', 10), ('applie cider vinegar', 1), ('whole-grain mustard', 4),
+    ('bacon, thick-cut', 10), ('apple cider vinegar', 1), ('whole-grain mustard', 4),
     ('mustard, Dijon', 5), ('sugar', 11), ('parsley', 4), ('vanilla extract', 11),
 	('bourbon', 3), ('lemon juice', 7), ('orange bitters', 3), ('sparkling water', 7),
     ('cinnamon, sticks', 4), ('star anise', 4), ('chai tea', 8), ('chai tea syrup', 5),

@@ -7,7 +7,7 @@ const volumetricConversionsToUsTeaspoon = {
 	usTeaspoonsInUsGallon: 768,
 	usTeaspoonsInUsQuart: 192,
 	usTeaspoonsInUsPint: 96,
-	usTeaspoonsInUsCup: 48.6922,
+	usTeaspoonsInUsCup: 48.692,
 	usTeaspoonsInUsFluidOunce: 6,
 	usTeaspoonsInCubicInch: 3.325,
 	usTeaspoonsInUsTablespoon: 3,
@@ -28,7 +28,7 @@ const volumetricConversionsToUsTeaspoon = {
 // Mass conversions to grams
 const massConversionsTograms = {
 	// US masses
-	gramsInPound: 453.592,
+	gramsInPound: 453.6,
 	gramsInOunce: 28.3495,
 	// Metric masses
 	gramsInStone: 6350.29,
