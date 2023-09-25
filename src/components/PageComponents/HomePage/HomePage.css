@@ -1,20 +1,20 @@
 .square-image-small {
-  height: 200px;
-  width: 200px;
-  margin: auto;
-  outline: solid;
-  margin-right: .5%;
-  margin-left: .5%;
+	height: 200px;
+	width: 200px;
+	margin: auto;
+	outline: solid;
+	margin-right: 0.5%;
+	margin-left: 0.5%;
 }
 
 .recipe-card {
-  height:275px;
-  width: 17%;
-  display: flexbox;
-  margin:1%;
-  /* padding:.1%; */
-  border: solid black 1px;
-  border-radius: 5%;
-  text-align: center;
-  justify-content: center;
+	height: 275px;
+	width: 17%;
+	display: flexbox;
+	margin: 1%;
+	/* padding:.1%; */
+	border: solid black 1px;
+	border-radius: 5%;
+	text-align: center;
+	justify-content: center;
 }
