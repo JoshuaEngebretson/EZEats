@@ -14,31 +14,12 @@ const {
 // GET all recipes route
 router.get("/", rejectUnauthenticated, (req, res) => {
 	const userId = req.user.id;
-	const seeDefaultRecipes = req.user.see_default_recipes;
-	console.log("seeDefaultRecipes:", seeDefaultRecipes);
 
 	/*
     Show the id, name, image, and category for all recipes
     associated with this user.
     */
-	const userRecipesWithDefaults = `
-        SELECT 
-            recipes.id AS id,
-            recipes.recipe_name AS name,
-            recipes.image_of_recipe AS image,
-            category.name AS category
-        FROM recipes
-        JOIN "user"
-            ON recipes.user_id="user".id
-        JOIN category
-            ON category.id=recipes.category_id
-        WHERE
-            recipes.user_id = $1 OR recipes.user_id = 1
-        GROUP BY
-            recipes.id, recipes.recipe_name, recipes.image_of_recipe,
-            recipes.recipe_text, category.name;
-    `;
-	const userRecipesOnly = `
+	const selectAllOfThisUsersRecipes = `
         SELECT 
             recipes.id AS id,
             recipes.recipe_name AS name,
@@ -55,11 +36,8 @@ router.get("/", rejectUnauthenticated, (req, res) => {
             recipes.id, recipes.recipe_name, recipes.image_of_recipe,
             recipes.recipe_text, category.name;
     `;
-	const sqlText = seeDefaultRecipes ? userRecipesWithDefaults : userRecipesOnly;
-	console.log("sqlText:", sqlText);
 
-	pool
-		.query(sqlText, [userId])
+	pool.query(selectAllOfThisUsersRecipes, [userId])
 		.then((result) => {
 			const recipes = result.rows;
 			console.log("recipes:", recipes);
@@ -74,25 +52,30 @@ router.get("/", rejectUnauthenticated, (req, res) => {
 }); // End GET all recipes route
 
 // GET recipe categories route
-router.get("/recipe-categories", rejectUnauthenticated, (req, res) => {
-	const sqlQuery = `SELECT * FROM category;`;
+router.get(
+	"/recipe-categories",
+	rejectUnauthenticated,
+	(req, res) => {
+		const sqlQuery = `SELECT * FROM category;`;
 
-	pool
-		.query(sqlQuery)
-		.then((result) => {
-			let recipeCategories = result.rows;
-			res.send(recipeCategories);
-		})
-		.catch((dbErr) => {
-			console.log("Error inside GET /recipe-categories:", dbErr);
-			res.sendStatus(500);
-		});
-}); // End Get recipe categories route
+		pool.query(sqlQuery)
+			.then((result) => {
+				let recipeCategories = result.rows;
+				res.send(recipeCategories);
+			})
+			.catch((dbErr) => {
+				console.log(
+					"Error inside GET /recipe-categories:",
+					dbErr
+				);
+				res.sendStatus(500);
+			});
+	}
+); // End Get recipe categories route
 
 // GET most cooked recipes route
 router.get("/most-cooked", rejectUnauthenticated, (req, res) => {
 	const userId = req.user.id;
-	const seeDefaultRecipes = req.user.see_default_recipes;
 	/*
     Show id, name, image, and category of the most cooked recipes
     associated with this user
@@ -114,8 +97,7 @@ router.get("/most-cooked", rejectUnauthenticated, (req, res) => {
         LIMIT 5;
     `;
 
-	pool
-		.query(sqlQuery, [userId])
+	pool.query(sqlQuery, [userId])
 		.then((result) => {
 			let mostCooked = result.rows;
 			res.send(mostCooked);
@@ -131,7 +113,6 @@ router.get("/most-cooked", rejectUnauthenticated, (req, res) => {
 // GET shopping list route
 router.get("/shopping-list", rejectUnauthenticated, (req, res) => {
 	const userId = req.user.id;
-	const seeDefaultRecipes = req.user.see_default_recipes;
 	const shoppingListCardsQuery = `
         SELECT
             recipes.id,
@@ -149,8 +130,7 @@ router.get("/shopping-list", rejectUnauthenticated, (req, res) => {
             times_cooked DESC, recipe_name, category.name;
     `;
 
-	pool
-		.query(shoppingListCardsQuery, [userId])
+	pool.query(shoppingListCardsQuery, [userId])
 		.then((result) => {
 			const recipeCards = result.rows;
 			const shoppingListIngredientsQuery = `
@@ -195,112 +175,133 @@ router.get("/shopping-list", rejectUnauthenticated, (req, res) => {
                     food_categories.food_category_name, ingredients.ingredient_name;
             `;
 
-			pool.query(shoppingListIngredientsQuery, [userId]).then((result) => {
-				let unformattedIngredients = result.rows;
-				// Combine the unformattedIngredients array and start to format them
-				let combinedIngredients = unformattedIngredients.reduce(
-					(result, item) => {
-						const {
-							ingredient,
-							recipeId,
-							multipliedQuantity,
-							multipliedConvertedQuantity,
-							conversionCategory,
-							originalUnits,
-						} = item.ingredients;
-						let key;
-						if (conversionCategory === "other") {
-							// Change how key is created to specifiy that these are built in a different manner
-							// This removes the chance to combine 6 small potatoes with 6 large potatoes
-							// we would instead have 2 different instances of needing 6 potatoes.
-							// one for large, and one for small
-							key = `${ingredient}_${originalUnits}`;
-						} else {
-							// If the conversionCategory is not other, it would then be either volume OR mass
-							// In which case any other ingredient with the same name and conversionCategory
-							// Can and should be combined to get the overall total quantity needed of that ingredient
-							key = `${ingredient}_${conversionCategory}`;
-						}
-						if (result[key]) {
-							// If this object, already exists, add up the quantities
-							result[key].multipliedConvertedQuantity +=
-								multipliedConvertedQuantity;
-							result[key].multipliedQuantity += multipliedQuantity;
-							// If this object does not already include the current recipeId in it's recipeIds array
-							// Then push the new recipeId to that array
-							if (!result[key].recipeIds.includes(recipeId)) {
-								result[key].recipeIds.push(recipeId);
-							}
-						} else {
-							// Create a new object and add 2 new key/value pairs
-							result[key] = {
-								...item.ingredients,
-								recipeIds: [recipeId],
-								ingredientAndConversionCategory: key,
-							};
-							// This is no longer needed as it is now placed into an array with other
-							// The other ids of the other recipes this ingredient is associated with.
-							delete result[key].recipeId;
-						}
-						return result;
-					},
-					[]
-				);
-				// Keep only the values from combinedIngredients, this allows for easier looping
-				combinedIngredients = Object.values(combinedIngredients);
-				let foodCategories = [];
-				// Go through the combinedIngredients and further format the quantities needed for
-				// the user to know what is on their shopping list.
-				combinedIngredients.map((ingredient) => {
-					const conversionCategory = ingredient.conversionCategory;
-					const foodCategory = ingredient.foodCategory;
-					const multipliedConvertedQuantity =
-						ingredient.multipliedConvertedQuantity;
-					let shoppingListQuantity;
-					if (
-						conversionCategory === "volume" ||
-						conversionCategory === "mass"
-					) {
-						shoppingListQuantity = convertSmallestToLargestUsMeasurement(
-							multipliedConvertedQuantity,
-							conversionCategory,
-							foodCategory
+			pool.query(shoppingListIngredientsQuery, [userId]).then(
+				(result) => {
+					let unformattedIngredients = result.rows;
+					// Combine the unformattedIngredients array and start to format them
+					let combinedIngredients =
+						unformattedIngredients.reduce(
+							(result, item) => {
+								const {
+									ingredient,
+									recipeId,
+									multipliedQuantity,
+									multipliedConvertedQuantity,
+									conversionCategory,
+									originalUnits,
+								} = item.ingredients;
+								let key;
+								if (conversionCategory === "other") {
+									// Change how key is created to specifiy that these are built in a different manner
+									// This removes the chance to combine 6 small potatoes with 6 large potatoes
+									// we would instead have 2 different instances of needing 6 potatoes.
+									// one for large, and one for small
+									key = `${ingredient}_${originalUnits}`;
+								} else {
+									// If the conversionCategory is not other, it would then be either volume OR mass
+									// In which case any other ingredient with the same name and conversionCategory
+									// Can and should be combined to get the overall total quantity needed of that ingredient
+									key = `${ingredient}_${conversionCategory}`;
+								}
+								if (result[key]) {
+									// If this object, already exists, add up the quantities
+									result[
+										key
+									].multipliedConvertedQuantity +=
+										multipliedConvertedQuantity;
+									result[key].multipliedQuantity +=
+										multipliedQuantity;
+									// If this object does not already include the current recipeId in it's recipeIds array
+									// Then push the new recipeId to that array
+									if (
+										!result[
+											key
+										].recipeIds.includes(recipeId)
+									) {
+										result[key].recipeIds.push(
+											recipeId
+										);
+									}
+								} else {
+									// Create a new object and add 2 new key/value pairs
+									result[key] = {
+										...item.ingredients,
+										recipeIds: [recipeId],
+										ingredientAndConversionCategory:
+											key,
+									};
+									// This is no longer needed as it is now placed into an array with other
+									// The other ids of the other recipes this ingredient is associated with.
+									delete result[key].recipeId;
+								}
+								return result;
+							},
+							[]
 						);
-					} else if (conversionCategory === "other") {
-						const multipliedQuantity = ingredient.multipliedQuantity;
-						const originalUnits = ingredient.originalUnits;
-						shoppingListQuantity = convertSmallestToLargestUsMeasurement(
-							multipliedQuantity,
-							conversionCategory,
-							foodCategory,
-							originalUnits
-						);
-					} else {
-						// Add in an error message if a conversionCategory does not exist.
-						// As all the data going into this should be controlled, this should never be reached.
-						// BUT this is included just in case something happens.
-						shoppingListQuantity = `Error, this conversionCategory ${conversionCategory} is not supported.`;
-					}
-					// Add a new key/value pair to the current ingredient
-					ingredient.shoppingListQuantity = shoppingListQuantity;
-					// Remove the following key/value pairs as they are no longer needed for data purposes
-					// These are now all being read in a new format within the object.
-					delete ingredient.multipliedQuantity;
-					delete ingredient.multipliedConvertedQuantity;
-					delete ingredient.originalUnits;
-					if (!foodCategories.includes(foodCategory)) {
-						foodCategories.push(foodCategory);
-					}
-				});
-				// Create an object that includes the recipes on the shoppingList and the
-				// ingredients the user needs to make all those recipes
-				let shoppingList = {
-					recipeCards,
-					combinedIngredients,
-					foodCategories,
-				};
-				res.send(shoppingList);
-			});
+					// Keep only the values from combinedIngredients, this allows for easier looping
+					combinedIngredients = Object.values(
+						combinedIngredients
+					);
+					let foodCategories = [];
+					// Go through the combinedIngredients and further format the quantities needed for
+					// the user to know what is on their shopping list.
+					combinedIngredients.map((ingredient) => {
+						const conversionCategory =
+							ingredient.conversionCategory;
+						const foodCategory = ingredient.foodCategory;
+						const multipliedConvertedQuantity =
+							ingredient.multipliedConvertedQuantity;
+						let shoppingListQuantity;
+						if (
+							conversionCategory === "volume" ||
+							conversionCategory === "mass"
+						) {
+							shoppingListQuantity =
+								convertSmallestToLargestUsMeasurement(
+									multipliedConvertedQuantity,
+									conversionCategory,
+									foodCategory
+								);
+						} else if (conversionCategory === "other") {
+							const multipliedQuantity =
+								ingredient.multipliedQuantity;
+							const originalUnits =
+								ingredient.originalUnits;
+							shoppingListQuantity =
+								convertSmallestToLargestUsMeasurement(
+									multipliedQuantity,
+									conversionCategory,
+									foodCategory,
+									originalUnits
+								);
+						} else {
+							// Add in an error message if a conversionCategory does not exist.
+							// As all the data going into this should be controlled, this should never be reached.
+							// BUT this is included just in case something happens.
+							shoppingListQuantity = `Error, this conversionCategory ${conversionCategory} is not supported.`;
+						}
+						// Add a new key/value pair to the current ingredient
+						ingredient.shoppingListQuantity =
+							shoppingListQuantity;
+						// Remove the following key/value pairs as they are no longer needed for data purposes
+						// These are now all being read in a new format within the object.
+						delete ingredient.multipliedQuantity;
+						delete ingredient.multipliedConvertedQuantity;
+						delete ingredient.originalUnits;
+						if (!foodCategories.includes(foodCategory)) {
+							foodCategories.push(foodCategory);
+						}
+					});
+					// Create an object that includes the recipes on the shoppingList and the
+					// ingredients the user needs to make all those recipes
+					let shoppingList = {
+						recipeCards,
+						combinedIngredients,
+						foodCategories,
+					};
+					res.send(shoppingList);
+				}
+			);
 		})
 		.catch((dbErr) => {
 			// If unable to process request,
@@ -311,22 +312,28 @@ router.get("/shopping-list", rejectUnauthenticated, (req, res) => {
 }); // End GET shopping list route
 
 // GET units of measurement route
-router.get("/units-of-measurement", rejectUnauthenticated, (req, res) => {
-	pool
-		.query(
+router.get(
+	"/units-of-measurement",
+	rejectUnauthenticated,
+	(req, res) => {
+		pool.query(
 			`SELECT * FROM units_of_measurement ORDER BY conversion_category, unit;`
 		)
-		.then((result) => {
-			const unitsofMeasurement = result.rows;
-			res.send(unitsofMeasurement);
-		})
-		.catch((dbErr) => {
-			// If unable to process request,
-			// send "Internal Server Error" message to client
-			res.sendStatus(500);
-			console.log("Error in GET units of measurement route:", dbErr);
-		});
-}); // End GET units of measurement route
+			.then((result) => {
+				const unitsofMeasurement = result.rows;
+				res.send(unitsofMeasurement);
+			})
+			.catch((dbErr) => {
+				// If unable to process request,
+				// send "Internal Server Error" message to client
+				res.sendStatus(500);
+				console.log(
+					"Error in GET units of measurement route:",
+					dbErr
+				);
+			});
+	}
+); // End GET units of measurement route
 
 // GET all ingredients route
 router.get("/all-ingredients", rejectUnauthenticated, (req, res) => {
@@ -357,8 +364,7 @@ router.get("/all-ingredients", rejectUnauthenticated, (req, res) => {
             JOIN food_categories
                 ON food_categories.id = ingredients.food_category_id;
         `;
-		pool
-			.query(allIngredientsQuery)
+		pool.query(allIngredientsQuery)
 			.then((result) => {
 				const ingredients = result.rows[0].ingredients;
 				const allIngredients = {
@@ -371,7 +377,10 @@ router.get("/all-ingredients", rejectUnauthenticated, (req, res) => {
 				// If unable to process request,
 				// send "Internal Server Error" message to client
 				res.sendStatus(500);
-				console.log("Error inside GET all-ingredients route:", dbErr);
+				console.log(
+					"Error inside GET all-ingredients route:",
+					dbErr
+				);
 			});
 	});
 });
@@ -469,8 +478,7 @@ router.get("/:id", rejectUnauthenticated, (req, res) => {
             recipes.times_cooked, category.id;
     `;
 
-	pool
-		.query(sqlText, [userId, recipeID])
+	pool.query(sqlText, [userId, recipeID])
 		.then((result) => {
 			const recipe = result.rows[0];
 			console.log("recipe:", recipe);
@@ -487,7 +495,6 @@ router.get("/:id", rejectUnauthenticated, (req, res) => {
 // POST new recipe route
 router.post("/", rejectUnauthenticated, async (req, res) => {
 	const userId = req.user.id;
-	const seeDefaultRecipes = req.user.see_default_recipes;
 	const newRecipe = req.body;
 	const ingredients = newRecipe.recipeIngredients;
 
@@ -587,11 +594,20 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
 			console.log(
 				`for ingredient with id:${i.ingredient.id} and name:${i.ingredient.name}`
 			);
-			console.log("newRecipeIngredientQuery:", newRecipeIngredientQuery);
-			console.log("newRecipeIngredientValues:", newRecipeIngredientValues);
+			console.log(
+				"newRecipeIngredientQuery:",
+				newRecipeIngredientQuery
+			);
+			console.log(
+				"newRecipeIngredientValues:",
+				newRecipeIngredientValues
+			);
 			// Nth Query ADDS AN INGREDIENT FOR THAT NEW RECIPE
 			//  This is added to the recipe_ingredients table
-			connection.query(newRecipeIngredientQuery, newRecipeIngredientValues);
+			connection.query(
+				newRecipeIngredientQuery,
+				newRecipeIngredientValues
+			);
 		}); // End ingredients.map
 
 		await connection.query("COMMIT");
@@ -606,52 +622,64 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
 	}
 }); // End POST new recipe route
 
-router.post("/recipe-categories", rejectUnauthenticated, (req, res) => {
-	const newCategory = req.body.data;
-	console.log("newCategory at start of post:", newCategory);
-	const sqlQuery = `
+router.post(
+	"/recipe-categories",
+	rejectUnauthenticated,
+	(req, res) => {
+		const newCategory = req.body.data;
+		console.log("newCategory at start of post:", newCategory);
+		const sqlQuery = `
         INSERT INTO category
             (name)
         VALUES
             ($1)
         RETURNING id;
     `;
-	pool
-		.query(sqlQuery, [newCategory])
-		.then((result) => {
-			console.log("new category id:", result.rows[0].id); // uncover where id is located.
-			const newCategoryId = { id: result.rows[0].id };
-			res.send(newCategoryId);
-		})
-		.catch((dbErr) => {
-			// If unable to process request,
-			// send "Internal Server Error" message to client
-			res.sendStatus(500);
-			console.log("Error in POST new category route:", dbErr);
-		});
-});
+		pool.query(sqlQuery, [newCategory])
+			.then((result) => {
+				console.log("new category id:", result.rows[0].id); // uncover where id is located.
+				const newCategoryId = { id: result.rows[0].id };
+				res.send(newCategoryId);
+			})
+			.catch((dbErr) => {
+				// If unable to process request,
+				// send "Internal Server Error" message to client
+				res.sendStatus(500);
+				console.log(
+					"Error in POST new category route:",
+					dbErr
+				);
+			});
+	}
+);
 
-router.post("/units-of-measurement", rejectUnauthenticated, (req, res) => {
-	const newUnit = req.body.data;
-	console.log("newUnit in server:", newUnit);
-	const sqlQuery = `
+router.post(
+	"/units-of-measurement",
+	rejectUnauthenticated,
+	(req, res) => {
+		const newUnit = req.body.data;
+		console.log("newUnit in server:", newUnit);
+		const sqlQuery = `
         INSERT INTO units_of_measurement
             (unit, conversion_category)
         VALUES
             ($1, 'other')
         RETURNING id;
     `;
-	pool
-		.query(sqlQuery, [newUnit])
-		.then((result) => {
-			const newUnitId = { id: result.rows[0].id };
-			res.send(newUnitId);
-		})
-		.catch((dbErr) => {
-			res.sendStatus(500);
-			console.log("Error in POST new units-of-measurement route:", dbErr);
-		});
-});
+		pool.query(sqlQuery, [newUnit])
+			.then((result) => {
+				const newUnitId = { id: result.rows[0].id };
+				res.send(newUnitId);
+			})
+			.catch((dbErr) => {
+				res.sendStatus(500);
+				console.log(
+					"Error in POST new units-of-measurement route:",
+					dbErr
+				);
+			});
+	}
+);
 
 router.post("/food-categories", rejectUnauthenticated, (req, res) => {
 	const newFoodCategory = req.body.data;
@@ -663,15 +691,17 @@ router.post("/food-categories", rejectUnauthenticated, (req, res) => {
             ($1)
         RETURNING id;
     `;
-	pool
-		.query(sqlQuery, [newFoodCategory])
+	pool.query(sqlQuery, [newFoodCategory])
 		.then((result) => {
 			const newFoodCategoryId = { id: result.rows[0].id };
 			res.send(newFoodCategoryId);
 		})
 		.catch((dbErr) => {
 			res.sendStatus(500);
-			console.log("Error in POST new food-categories route:", dbErr);
+			console.log(
+				"Error in POST new food-categories route:",
+				dbErr
+			);
 		});
 });
 
@@ -684,8 +714,10 @@ router.post("/ingredients", rejectUnauthenticated, (req, res) => {
         VALUES
             ($1, $2);
     `;
-	pool
-		.query(sqlQuery, [newIngredient.ingredientName, newIngredient.foodCategory])
+	pool.query(sqlQuery, [
+		newIngredient.ingredientName,
+		newIngredient.foodCategory,
+	])
 		.then((result) => {
 			res.sendStatus(201);
 		})
@@ -699,15 +731,13 @@ router.post("/ingredients", rejectUnauthenticated, (req, res) => {
 // THIS ROUTE HAS NOT BEEN PROPERLY BUILT OUT YET
 router.put("/:id", rejectUnauthenticated, (req, res) => {
 	const userId = req.user.id;
-	const seeDefaultRecipes = req.user.see_default_recipes;
 	const idToUpdate = req.params.id;
 
 	const sqlText = `
 
     `;
 
-	pool
-		.query(sqlText, sqlValues)
+	pool.query(sqlText, sqlValues)
 		.then((result) => {
 			res.sendStatus(201);
 		})
@@ -720,48 +750,53 @@ router.put("/:id", rejectUnauthenticated, (req, res) => {
 }); // End PUT recipe route
 
 // PUT adjust-on-menu route
-router.put("/adjust-on-menu/:id", rejectUnauthenticated, (req, res) => {
-	const userId = req.user.id;
-	const seeDefaultRecipes = req.user.see_default_recipes;
-	const idToUpdate = req.params.id;
-	const adjustment = req.body.adjustment;
-	console.log("req.body inside adjust-on-menu/:id:", req.body);
+router.put(
+	"/adjust-on-menu/:id",
+	rejectUnauthenticated,
+	(req, res) => {
+		const userId = req.user.id;
+		const idToUpdate = req.params.id;
+		const adjustment = req.body.adjustment;
+		console.log("req.body inside adjust-on-menu/:id:", req.body);
 
-	let sqlQuery;
+		let sqlQuery;
 
-	if (adjustment === "increaseNumber") {
-		sqlQuery = `
+		if (adjustment === "increaseNumber") {
+			sqlQuery = `
             UPDATE recipes
             SET on_menu = (on_menu+1)
             WHERE
                 id = $1 AND user_id = $2;
     `;
-	} else if (adjustment === "decreaseNumber") {
-		sqlQuery = `
+		} else if (adjustment === "decreaseNumber") {
+			sqlQuery = `
             UPDATE recipes
             SET on_menu = (on_menu-1)
             WHERE
                 id = $1 AND user_id = $2;
         `;
-	} else if (adjustment === "removeRecipe") {
-		sqlQuery = `
+		} else if (adjustment === "removeRecipe") {
+			sqlQuery = `
             UPDATE recipes
             SET on_menu = 0
             WHERE
                 id = $1 AND user_id = $2
         `;
-	}
+		}
 
-	pool
-		.query(sqlQuery, [idToUpdate, userId])
-		.then((dbRes) => {
-			res.sendStatus(200);
-		})
-		.catch((dbErr) => {
-			console.log("Error inside PUT adjust-on-menu:", dbErr);
-			res.sendStatus(500);
-		});
-});
+		pool.query(sqlQuery, [idToUpdate, userId])
+			.then((dbRes) => {
+				res.sendStatus(200);
+			})
+			.catch((dbErr) => {
+				console.log(
+					"Error inside PUT adjust-on-menu:",
+					dbErr
+				);
+				res.sendStatus(500);
+			});
+	}
+);
 
 // PUT times-cooked route
 router.put("/times-cooked/:id", rejectUnauthenticated, (req, res) => {
@@ -775,13 +810,15 @@ router.put("/times-cooked/:id", rejectUnauthenticated, (req, res) => {
             id = $1 AND user_id = $2
     `;
 
-	pool
-		.query(sqlQuery, [idToUpdate, userId])
+	pool.query(sqlQuery, [idToUpdate, userId])
 		.then((dbRes) => {
 			res.sendStatus(200);
 		})
 		.catch((dbErr) => {
-			console.log("Error inside PUT increase-times-cooked:", dbErr);
+			console.log(
+				"Error inside PUT increase-times-cooked:",
+				dbErr
+			);
 			res.sendStatus(500);
 		});
 });
@@ -789,7 +826,6 @@ router.put("/times-cooked/:id", rejectUnauthenticated, (req, res) => {
 // DELETE recipe route
 router.delete("/:id", rejectUnauthenticated, (req, res) => {
 	const userId = req.user.id;
-	const seeDefaultRecipes = req.user.see_default_recipes;
 	const idToDelete = req.params.id;
 
 	const sqlText = `
@@ -799,8 +835,7 @@ router.delete("/:id", rejectUnauthenticated, (req, res) => {
     `;
 	const sqlValues = [idToDelete, userId];
 
-	pool
-		.query(sqlText, sqlValues)
+	pool.query(sqlText, sqlValues)
 		.then((result) => {
 			res.sendStatus(200);
 		})
@@ -808,7 +843,10 @@ router.delete("/:id", rejectUnauthenticated, (req, res) => {
 			// If unable to process request,
 			// send "Internal Server Error" message to client
 			res.sendStatus(500);
-			console.log(`Error in DELETE /${idToDelete} route:`, dbErr);
+			console.log(
+				`Error in DELETE /${idToDelete} route:`,
+				dbErr
+			);
 		});
 }); // End DELETE recipe route
 
