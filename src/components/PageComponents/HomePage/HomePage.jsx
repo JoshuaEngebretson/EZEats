@@ -9,6 +9,7 @@ import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
 
 import { styled } from "@mui/material/styles";
+import NewUserHomePageModal from "./NewUserHomeModal/NewUserHomePageModal";
 
 export default function HomePage() {
 	const dispatch = useDispatch();
@@ -26,6 +27,7 @@ export default function HomePage() {
 		(store) => store.recipes.mostCooked
 	);
 	const recipes = useSelector((store) => store.recipes.allRecipes);
+	const user = useSelector((store) => store.user);
 
 	const [expanded, setExpanded] = React.useState("");
 
@@ -80,50 +82,83 @@ export default function HomePage() {
 		setExpanded(newExpanded ? panel : false);
 	};
 
+	const nextWalkThroughStep = () => {
+		dispatch({ type: "NEXT_WALK_THROUGH_STEP" });
+	};
+	const resetNewUserWalkThrough = () => {
+		dispatch({ type: "RESET_NEW_USER_WALK_THROUGH" });
+	};
+
 	return (
 		<div className="page-margin">
-			<h2>Most Prepared</h2>
-			{/* Display the 5 "Most Prepared" recipes at the top of the page */}
-			<div className="grid">
-				{mostCooked.map((recipe) => {
+			<button onClick={nextWalkThroughStep}>NEXT STEP</button>
+			<br />
+			<button onClick={resetNewUserWalkThrough}>
+				RESET WALK THROUGH
+			</button>
+			{/* Most Prepared section */}
+			<div>
+				<h2>Most Prepared</h2>
+				{/* Display the 5 "Most Prepared" recipes at the top of the page */}
+				<div className="grid">
+					{mostCooked.map((recipe) => {
+						return (
+							<RecipeImageCard
+								key={recipe.id}
+								recipe={recipe}
+							/>
+						);
+					})}
+				</div>
+			</div>
+
+			{/* Expandable Categories */}
+			<div>
+				<h2>Categories</h2>
+				{/* Display the categories as expandable sections */}
+				{categories.map((category) => {
+					const id = category.id;
 					return (
-						<RecipeImageCard
-							key={recipe.id}
-							recipe={recipe}
-						/>
+						<Accordion
+							expanded={expanded === id}
+							onChange={handleAccordionChange(id)}
+						>
+							<AccordionSummary
+								aria-controls={id}
+								id={id}
+							>
+								<Typography>
+									{category.name}
+								</Typography>
+							</AccordionSummary>
+							<AccordionDetails className="grid">
+								{recipes.map((recipe) => {
+									if (
+										recipe.category ===
+										category.name
+									) {
+										return (
+											<RecipeImageCard
+												key={recipe.id}
+												recipe={recipe}
+											/>
+										);
+									}
+								})}
+							</AccordionDetails>
+						</Accordion>
 					);
 				})}
 			</div>
 
-			<h2>Categories</h2>
-			{/* Display the categories as expandable sections */}
-			{categories.map((category) => {
-				const id = category.id;
-				return (
-					<Accordion
-						expanded={expanded === id}
-						onChange={handleAccordionChange(id)}
-					>
-						<AccordionSummary aria-controls={id} id={id}>
-							<Typography>{category.name}</Typography>
-						</AccordionSummary>
-						<AccordionDetails className="grid">
-							{recipes.map((recipe) => {
-								if (
-									recipe.category === category.name
-								) {
-									return (
-										<RecipeImageCard
-											key={recipe.id}
-											recipe={recipe}
-										/>
-									);
-								}
-							})}
-						</AccordionDetails>
-					</Accordion>
-				);
-			})}
+			{/* New User Modal Section */}
+			<div>
+				{recipes.length < 6 || user.show_walk_through ? (
+					<NewUserHomePageModal />
+				) : (
+					<></>
+				)}
+			</div>
 		</div>
 	);
 }
