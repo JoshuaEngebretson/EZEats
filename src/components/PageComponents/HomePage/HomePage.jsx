@@ -9,7 +9,7 @@ import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
 
 import { styled } from "@mui/material/styles";
-import NewUserHomePageModal from "./NewUserHomeModal/NewUserHomePageModal";
+import NewUserWalkThrough from "./NewUserWalkThrough/NewUserWalkThrough";
 
 export default function HomePage() {
 	const dispatch = useDispatch();
@@ -154,7 +154,7 @@ export default function HomePage() {
 			{/* New User Modal Section */}
 			<div>
 				{recipes.length < 6 || user.show_walk_through ? (
-					<NewUserHomePageModal />
+					<NewUserWalkThrough />
 				) : (
 					<></>
 				)}
