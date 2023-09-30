@@ -4,7 +4,10 @@ import "./Footer.css";
 function Footer() {
 	return (
 		<footer>
-			<a href="https://www.flaticon.com/free-icons/food" title="food icons">
+			<a
+				href="https://www.flaticon.com/free-icons/food"
+				title="food icons"
+			>
 				Food icons created by Smashicons - Flaticon
 			</a>
 			<br />

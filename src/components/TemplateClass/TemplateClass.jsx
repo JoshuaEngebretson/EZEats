@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { Component } from "react";
+import { connect } from "react-redux";
 
 // Basic class component structure for React with default state
 // value setup. When making a new component be sure to replace
@@ -10,23 +10,23 @@ import { connect } from 'react-redux';
 // Class Components have different syntax, including `this`
 
 class TemplateClass extends Component {
-  state = {
-    heading: 'Class Component',
-  };
+	state = {
+		heading: "Class Component",
+	};
 
-  render() {
-    return (
-      <div>
-        <h2>{this.state.heading}</h2>
-      </div>
-    );
-  }
+	render() {
+		return (
+			<div>
+				<h2>{this.state.heading}</h2>
+			</div>
+		);
+	}
 }
 
 const mapStoreToProps = (reduxStore) => {
-  return {
-    store: reduxStore,
-  };
+	return {
+		store: reduxStore,
+	};
 };
 
 export default connect(mapStoreToProps)(TemplateClass);

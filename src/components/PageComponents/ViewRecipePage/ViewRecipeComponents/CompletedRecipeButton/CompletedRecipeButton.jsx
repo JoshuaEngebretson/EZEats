@@ -5,14 +5,19 @@ import styled from "@emotion/styled";
 
 export default function CompletedRecipeButton() {
 	const dispatch = useDispatch();
-	const currentRecipe = useSelector((store) => store.recipes.currentRecipe);
+	const currentRecipe = useSelector(
+		(store) => store.recipes.currentRecipe
+	);
 	const [canClick, setCanClick] = useState(true);
 
 	const increaseTimesCooked = () => {
 		// Setting a limit on how often the Completed Recipe button can be clicked.
 		if (canClick) {
 			// If canClick is true, allow the dispatch
-			dispatch({ type: "INCREASE_TIMES_COOKED", payload: currentRecipe.id });
+			dispatch({
+				type: "INCREASE_TIMES_COOKED",
+				payload: currentRecipe.id,
+			});
 			// Then set canClick equal to false
 			setCanClick(false);
 			// Then start a countdown for 10 seconds before canClick is set back to true

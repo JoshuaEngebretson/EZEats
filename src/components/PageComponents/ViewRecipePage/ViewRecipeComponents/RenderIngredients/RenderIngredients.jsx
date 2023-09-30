@@ -1,7 +1,10 @@
 import ListIngredient from "./ListIngredient/ListIngredient";
 import { Grid } from "@mui/material";
 
-export default function RenderIngredients({ currentRecipe, recipeParts }) {
+export default function RenderIngredients({
+	currentRecipe,
+	recipeParts,
+}) {
 	const mainIngredientList = currentRecipe.ingredients.filter(
 		(i) => !i.forWhichPart
 	);
@@ -16,7 +19,10 @@ export default function RenderIngredients({ currentRecipe, recipeParts }) {
 				<Grid item xs={12} sm={shouldDisplayColumns ? 6 : 12}>
 					<ul>
 						{mainIngredientList.map((i) => (
-							<ListIngredient key={i.ingredient.id} i={i} />
+							<ListIngredient
+								key={i.ingredient.id}
+								i={i}
+							/>
 						))}
 					</ul>
 				</Grid>
@@ -31,9 +37,14 @@ export default function RenderIngredients({ currentRecipe, recipeParts }) {
 							<ul>
 								{/* List out the ingredients that match the current part */}
 								{currentRecipe.ingredients
-									.filter((i) => i.forWhichPart === part)
+									.filter(
+										(i) => i.forWhichPart === part
+									)
 									.map((i) => (
-										<ListIngredient key={i.ingredient.id} i={i} />
+										<ListIngredient
+											key={i.ingredient.id}
+											i={i}
+										/>
 									))}
 							</ul>
 						</Grid>
