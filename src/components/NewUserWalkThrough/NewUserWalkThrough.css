@@ -10,19 +10,44 @@ body.active-modal {
 	padding: 10px 30px;
 	display: inline-block;
 	margin: 5% auto 0;
-	font-size: 18px;
+	font-size: medium;
+}
+
+.btn-modal-walkthrough-small {
+	padding: 5px 15px;
+	font-size: small;
+	margin: 2% auto 0;
 }
 
 .next {
-	background-color: lightgreen;
+	background-color: lightblue;
+}
+.next:hover {
+	background-color: rgb(130, 173, 187);
+	color: white;
 }
 
-.back {
+.prev {
 	background-color: plum;
+}
+.prev:hover {
+	background-color: rgb(197, 136, 197);
+	color: white;
 }
 
 .deny {
 	background-color: lightcoral;
+}
+.deny:hover {
+	background-color: rgb(206, 105, 105);
+	color: white;
+}
+
+.confirm {
+	background-color: lightgreen;
+}
+.confirm:hover {
+	background-color: rgb(111, 236, 111);
 }
 
 .modal,
