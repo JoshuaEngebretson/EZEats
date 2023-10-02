@@ -49,10 +49,10 @@ router.put("/times-cooked/:id", rejectUnauthenticated, (req, res) => {
 	const idToUpdate = req.params.id;
 
 	const sqlQuery = `
-    UPDATE recipes
-    SET times_cooked = (times_cooked+1)
-    WHERE id = $1 AND user_id = $2
-  `;
+        UPDATE recipes
+        SET times_cooked = (times_cooked+1)
+        WHERE id = $1 AND user_id = $2
+    `;
 
 	pool.query(sqlQuery, [idToUpdate, userId])
 		.then((dbRes) => {
