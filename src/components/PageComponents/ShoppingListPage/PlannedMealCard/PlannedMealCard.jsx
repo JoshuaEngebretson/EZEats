@@ -16,7 +16,10 @@ export default function PlannedMealCard({ recipe }) {
 
 	const decreaseOnMenu = () => {
 		if (recipe.on_menu > 1) {
-			dispatch({ type: "DECREASE_ON_MENU", payload: recipe.id });
+			dispatch({
+				type: "DECREASE_ON_MENU",
+				payload: recipe.id,
+			});
 		}
 	};
 
@@ -35,7 +38,10 @@ export default function PlannedMealCard({ recipe }) {
 			cancelButtonText: `Don't remove - ${recipe.name}`,
 		}).then((result) => {
 			if (result.isConfirmed) {
-				dispatch({ type: "REMOVE_RECIPE_FROM_MENU", payload: recipe.id });
+				dispatch({
+					type: "REMOVE_RECIPE_FROM_MENU",
+					payload: recipe.id,
+				});
 				Swal.fire({
 					icon: "success",
 					text: `${recipe.name} has been removed from your shopping list.`,
@@ -80,18 +86,31 @@ export default function PlannedMealCard({ recipe }) {
 			</CardContent>
 			<CardActionArea onClick={viewRecipe}>
 				<CardMedia
-					sx={{ width: "90%", height: 175, margin: "auto", pt: 1 }}
+					sx={{
+						width: "90%",
+						height: 175,
+						margin: "auto",
+						pt: 1,
+					}}
 					component="img"
 					image={recipe.image}
 					alt={`An image of ${recipe.name}`}
 				/>
 			</CardActionArea>
-			<CardContent sx={{ textAlign: "center", padding: "auto" }}>
-				<button onClick={decreaseOnMenu} className="subtract inline">
+			<CardContent
+				sx={{ textAlign: "center", padding: "auto" }}
+			>
+				<button
+					onClick={decreaseOnMenu}
+					className="subtract inline"
+				>
 					-
 				</button>
 				<p className="inline">{recipe.on_menu}</p>
-				<button onClick={increaseOnMenu} className="add inline">
+				<button
+					onClick={increaseOnMenu}
+					className="add inline"
+				>
 					+
 				</button>
 				<Typography variant="h6" component="div">

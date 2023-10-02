@@ -6,6 +6,32 @@ import { useSelector } from "react-redux";
 
 function Nav() {
 	const user = useSelector((store) => store.user);
+	const newUserWalkThroughStep = useSelector(
+		(store) => store.newUserWalkThroughStep
+	);
+
+	const showNewUserClasses = "navLink newUserOutline";
+	const navLinkClass = "navLink";
+
+	const homeClasses =
+		newUserWalkThroughStep === 1
+			? showNewUserClasses
+			: navLinkClass;
+
+	const addRecipeClasses =
+		newUserWalkThroughStep === 2
+			? showNewUserClasses
+			: navLinkClass;
+
+	const shoppingListClasses =
+		newUserWalkThroughStep === 3
+			? showNewUserClasses
+			: navLinkClass;
+
+	const userClasses =
+		newUserWalkThroughStep === 4
+			? showNewUserClasses
+			: navLinkClass;
 
 	return (
 		<div className="nav">
@@ -24,19 +50,25 @@ function Nav() {
 				{/* If a user is logged in, show these links */}
 				{user.id && (
 					<>
-						<Link className="navLink" to="/home">
+						<Link className={homeClasses} to="/home">
 							Home
 						</Link>
 
-						<Link className="navLink" to="/add-recipe">
+						<Link
+							className={addRecipeClasses}
+							to="/add-recipe"
+						>
 							Add Recipe
 						</Link>
 
-						<Link className="navLink" to="/shopping-list">
+						<Link
+							className={shoppingListClasses}
+							to="/shopping-list"
+						>
 							Shopping List
 						</Link>
 
-						<Link className="navLink" to="/user">
+						<Link className={userClasses} to="/user">
 							User
 						</Link>
 

@@ -1,0 +1,104 @@
+﻿/*  CSS created by The Web School 
+ *  link to video where css was found
+ *    https://www.youtube.com/watch?v=9DwGahSqcEc
+ */
+body.active-modal {
+	overflow-y: hidden;
+}
+
+.btn-modal-walkthrough {
+	padding: 10px 30px;
+	display: inline-block;
+	margin: 5% auto 0;
+	font-size: medium;
+}
+
+.btn-modal-walkthrough-small {
+	padding: 5px 15px;
+	font-size: small;
+	margin: 2% auto 0;
+}
+
+.next {
+	background-color: lightblue;
+}
+.next:hover {
+	background-color: rgb(130, 173, 187);
+	color: white;
+}
+
+.prev {
+	background-color: plum;
+}
+.prev:hover {
+	background-color: rgb(197, 136, 197);
+	color: white;
+}
+
+.deny {
+	background-color: lightcoral;
+}
+.deny:hover {
+	background-color: rgb(206, 105, 105);
+	color: white;
+}
+
+.confirm {
+	background-color: lightgreen;
+}
+.confirm:hover {
+	background-color: rgb(101, 182, 101);
+	color: white;
+}
+
+.modal,
+.walkthrough-overlay {
+	width: 100vw;
+	height: 100vh;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	position: fixed;
+}
+
+.walkthrough-overlay {
+	background: rgba(49, 49, 49, 0.5);
+}
+.modal-walkthrough-content {
+	position: absolute;
+	top: 40%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	line-height: 1.4;
+	background: #f1f1f1;
+	padding: 14px 28px;
+	border-radius: 3px;
+	max-width: 600px;
+	min-width: 300px;
+	display: flex;
+	flex-wrap: wrap;
+	align-content: center;
+	justify-content: center;
+}
+
+.close-modal {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	padding: 5px 7px;
+}
+
+.walkthrough-footer {
+	border-top: solid 1px black;
+	font-size: small;
+	width: 100%;
+	margin-top: 2%;
+	display: flex;
+	justify-content: center;
+}
+
+.walkthrough-btns {
+	display: flex;
+	width: 100%;
+}

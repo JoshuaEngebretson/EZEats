@@ -6,7 +6,9 @@ export default function EditButton({ currentRecipe }) {
 
 	return (
 		<ViewRecipeStyledButton
-			onClick={() => history.push(`/edit-recipe/${currentRecipe.id}`)}
+			onClick={() =>
+				history.push(`/edit-recipe/${currentRecipe.id}`)
+			}
 			variant="contained"
 		>
 			Edit

@@ -13,7 +13,9 @@ import "swiper/css/navigation";
 
 export default function ShoppingListPage() {
 	const dispatch = useDispatch();
-	const shoppingList = useSelector((store) => store.recipes.shoppingList);
+	const shoppingList = useSelector(
+		(store) => store.recipes.shoppingList
+	);
 
 	useEffect(() => {
 		dispatch({ type: "FETCH_SHOPPING_LIST" });
@@ -44,7 +46,14 @@ export default function ShoppingListPage() {
 						display: "row",
 					}}
 				>
-					<h2 style={{ textAlign: "center", paddingTop: 20 }}>Planned Meals</h2>
+					<h2
+						style={{
+							textAlign: "center",
+							paddingTop: 20,
+						}}
+					>
+						Planned Meals
+					</h2>
 					<Swiper
 						slidesPerView={slidesCount}
 						grabCursor={cardNavigationToggle()}
@@ -54,12 +63,17 @@ export default function ShoppingListPage() {
 						// Enable loop if there are twice as many cards as slidesPerView
 						loop={recipeCards.length >= slidesCount * 2}
 						// Only center slides if there are less cards than slidesCount
-						centeredSlides={recipeCards.length < slidesCount}
+						centeredSlides={
+							recipeCards.length < slidesCount
+						}
 					>
 						{recipeCards.map((recipe) => {
 							return (
 								<SwiperSlide>
-									<PlannedMealCard key={recipe.id} recipe={recipe} />
+									<PlannedMealCard
+										key={recipe.id}
+										recipe={recipe}
+									/>
 								</SwiperSlide>
 							);
 						})}
@@ -68,13 +82,20 @@ export default function ShoppingListPage() {
 				<br />
 				<Paper elevation={2}>
 					<div className="shopping-list-container">
-						<h2 style={{ textAlign: "center", paddingTop: 20 }}>
+						<h2
+							style={{
+								textAlign: "center",
+								paddingTop: 20,
+							}}
+						>
 							Shopping List
 						</h2>
 						<div className="shopping-list">
 							<DisplayShoppingListIngredients
 								foodCategories={foodCategories}
-								combinedIngredients={combinedIngredients}
+								combinedIngredients={
+									combinedIngredients
+								}
 							/>
 						</div>
 					</div>

@@ -35,9 +35,14 @@
 	border: none;
 	cursor: pointer;
 	outline: 0;
+	border: 2px solid transparent;
 }
 
 .navLink:hover {
 	background-color: #3b6daa;
 	color: rgb(255, 255, 255);
+}
+
+.newUserOutline {
+	border: 2px solid red;
 }
