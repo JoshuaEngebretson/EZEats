@@ -47,7 +47,8 @@ body.active-modal {
 	background-color: lightgreen;
 }
 .confirm:hover {
-	background-color: rgb(111, 236, 111);
+	background-color: rgb(101, 182, 101);
+	color: white;
 }
 
 .modal,

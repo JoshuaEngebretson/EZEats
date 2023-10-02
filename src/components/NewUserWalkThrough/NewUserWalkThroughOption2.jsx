@@ -60,6 +60,7 @@ export default function NewUserWalkThroughOption2() {
 	};
 
 	const removeWalkThrough = () => {
+		resetNewUserWalkThrough();
 		toggleModal();
 		dispatch({ type: "REMOVE_NEW_USER_WALK_THROUGH" });
 	};
@@ -104,13 +105,13 @@ export default function NewUserWalkThroughOption2() {
 							className="deny btn-modal-walkthrough"
 							onClick={removeWalkThrough}
 						>
-							No
+							Skip Walk-Through
 						</button>
 						<button
 							className="confirm btn-modal-walkthrough"
 							onClick={startWalkthrough}
 						>
-							Yes
+							Continue Walk-Through
 						</button>
 					</>
 				);
@@ -184,9 +185,12 @@ export default function NewUserWalkThroughOption2() {
 									Please note that this walkthrough
 									will continue to appear when
 									returning to the "Home" page
-									unless:
+									until:
 									<ul>
-										<li>You click on "No"</li>
+										<li>
+											You click on "Skip
+											Walk-Through"
+										</li>
 										<p>OR</p>
 										<li>
 											You complete the

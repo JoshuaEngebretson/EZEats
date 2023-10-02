@@ -9,6 +9,9 @@ export default function Step1WalkThrough() {
 	const showModalWalkThrough = useSelector(
 		(store) => store.user.show_walk_through
 	);
+	const userRecipes = useSelector(
+		(store) => store.recipes.allRecipes
+	);
 
 	const [showNewUserWalkThrough, setShowNewUserWalkThrough] =
 		useState(showModalWalkThrough);
@@ -38,34 +41,6 @@ export default function Step1WalkThrough() {
 			type: "SET_DEFAULT_RECIPES",
 			payload: selectedDefaultRecipes,
 		});
-	};
-
-	const toggleModal = () => {
-		// Flip to true if currently false
-		// OR
-		// Flip to false if currently true
-		setShowNewUserWalkThrough(!showNewUserWalkThrough);
-		resetNewUserWalkThrough();
-	};
-
-	const nextWalkThroughStep = () => {
-		dispatch({ type: "NEXT_WALK_THROUGH_STEP" });
-	};
-	const prevWalkThroughStep = () => {
-		dispatch({ type: "PREV_WALK_THROUGH_STEP" });
-	};
-	const resetNewUserWalkThrough = () => {
-		dispatch({ type: "RESET_NEW_USER_WALK_THROUGH" });
-	};
-
-	const startWalkthrough = () => {
-		nextWalkThroughStep();
-		// return <Step1WalkThrough />;
-	};
-
-	const removeWalkThrough = () => {
-		resetNewUserWalkThrough();
-		dispatch({ type: "REMOVE_NEW_USER_WALK_THROUGH" });
 	};
 
 	return (
