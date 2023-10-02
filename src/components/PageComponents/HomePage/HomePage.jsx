@@ -9,7 +9,8 @@ import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
 
 import { styled } from "@mui/material/styles";
-import NewUserWalkThrough from "./NewUserWalkThrough/NewUserWalkThrough";
+import NewUserWalkThrough from "../../NewUserWalkThrough/NewUserWalkThrough";
+import NewUserWalkThroughOption2 from "../../NewUserWalkThrough/NewUserWalkThroughOption2";
 
 export default function HomePage() {
 	const dispatch = useDispatch();
@@ -27,7 +28,6 @@ export default function HomePage() {
 		(store) => store.recipes.mostCooked
 	);
 	const recipes = useSelector((store) => store.recipes.allRecipes);
-	const user = useSelector((store) => store.user);
 
 	const [expanded, setExpanded] = React.useState("");
 
@@ -82,20 +82,8 @@ export default function HomePage() {
 		setExpanded(newExpanded ? panel : false);
 	};
 
-	const nextWalkThroughStep = () => {
-		dispatch({ type: "NEXT_WALK_THROUGH_STEP" });
-	};
-	const resetNewUserWalkThrough = () => {
-		dispatch({ type: "RESET_NEW_USER_WALK_THROUGH" });
-	};
-
 	return (
 		<div className="page-margin">
-			<button onClick={nextWalkThroughStep}>NEXT STEP</button>
-			<br />
-			<button onClick={resetNewUserWalkThrough}>
-				RESET WALK THROUGH
-			</button>
 			{/* Most Prepared section */}
 			<div>
 				<h2>Most Prepared</h2>
@@ -152,12 +140,9 @@ export default function HomePage() {
 			</div>
 
 			{/* New User Modal Section */}
+			{/* This will only display if the user has show_walk_through set as true*/}
 			<div>
-				{recipes.length < 6 || user.show_walk_through ? (
-					<NewUserWalkThrough />
-				) : (
-					<></>
-				)}
+				<NewUserWalkThroughOption2 />
 			</div>
 		</div>
 	);
