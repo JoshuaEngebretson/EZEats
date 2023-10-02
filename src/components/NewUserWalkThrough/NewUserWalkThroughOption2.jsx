@@ -57,8 +57,6 @@ export default function NewUserWalkThroughOption2() {
 
 	const startWalkthrough = () => {
 		nextWalkThroughStep();
-		// toggleModal();
-		// toggleModal();
 	};
 
 	const removeWalkThrough = () => {
@@ -86,6 +84,12 @@ export default function NewUserWalkThroughOption2() {
 				);
 			case 1:
 				return <Step1WalkThrough />;
+			// case 2:
+			//     return <Step2WalkThrough />;
+			// case 3:
+			//     return <Step3WalkThrough />;
+			// case 4:
+			//     return <Step4WalkThrough />;
 			default:
 				return null;
 		}
@@ -160,11 +164,14 @@ export default function NewUserWalkThroughOption2() {
 						className="walkthrough-overlay"
 					></div>
 					<div className="modal-walkthrough-content">
-						{renderWalkthroughStep()}{" "}
 						{/* Render the appropriate step */}
+						{renderWalkthroughStep()}{" "}
+						{/* Render the appropriate btns */}
 						<div className="walkthrough-btns">
 							{renderWalkThroughButtons()}
 						</div>
+						{/* Always render the walkthrough footer 
+                        and the X button for closing out */}
 						<button
 							className="close-modal"
 							onClick={toggleModal}
@@ -172,10 +179,26 @@ export default function NewUserWalkThroughOption2() {
 							❌
 						</button>
 						<div className="walkthrough-footer">
-							<p>
-								You can always restart this
-								walkthrough from the "User" page.
-							</p>
+							<ul>
+								<li>
+									Please note that this walkthrough
+									will continue to appear when
+									returning to the "Home" page
+									unless:
+									<ul>
+										<li>You click on "No"</li>
+										<p>OR</p>
+										<li>
+											You complete the
+											walkthrough
+										</li>
+									</ul>
+								</li>
+								<li>
+									You can always restart this
+									walkthrough from the "User" page.
+								</li>
+							</ul>
 						</div>
 					</div>
 				</div>
