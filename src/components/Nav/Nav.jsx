@@ -36,9 +36,9 @@ function Nav() {
 							Shopping List
 						</Link>
 
-						<Link className="navLink" to="/user">
+						{/* <Link className="navLink" to="/user">
 							User
-						</Link>
+						</Link> */}
 
 						<LogOutButton className="navLink" />
 					</>
