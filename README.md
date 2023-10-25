@@ -4,15 +4,15 @@
 
 ## Table of Contents
 
-- [Description](#description)
-- [Built With](#built-with)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Acknowledgements](#acknowledgements)
-- [Contacts](#contacts)
-  <!-- - [Usage](#usage) -->
-  <!-- - [Screenshots](#screenshots) -->
+-   [Description](#description)
+-   [Built With](#built-with)
+-   [Getting Started](#getting-started)
+    -   [Prerequisites](#prerequisites)
+    -   [Installation](#installation)
+-   [Acknowledgements](#acknowledgements)
+-   [Contacts](#contacts)
+    <!-- - [Usage](#usage) -->
+    <!-- - [Screenshots](#screenshots) -->
 
 ## Description
 
@@ -26,11 +26,14 @@ Once you've selected your desired meals, EZEats takes charge of creating a compr
 
 <img src="" /> -->
 
+<!--
+Commented out as this is not currently fully set up for new users
 ## See It In Action
 
-- [EZEats](https://ezeats-recipe-app-7b00b13f5c33.herokuapp.com/#/home)
-  - This is hosted on Heroku
-  -
+-   [EZEats](https://ezeats-recipe-app-7b00b13f5c33.herokuapp.com/#/home)
+    -   This is hosted on Heroku
+
+-->
 
 ## Built With
 
@@ -49,35 +52,35 @@ Once you've selected your desired meals, EZEats takes charge of creating a compr
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/en/)
-  - This is for hosting the server and communicating with the database.
-- [PostgreSQL](https://www.postgresql.org/)
-  - This is used for hosting the database.
-- [Postico](https://eggerapps.at/postico/v1.php)
-  - This is used to set up your initial test database.
+-   [Node.js](https://nodejs.org/en/)
+    -   This is for hosting the server and communicating with the database.
+-   [PostgreSQL](https://www.postgresql.org/)
+    -   This is used for hosting the database.
+-   [Postico](https://eggerapps.at/postico/v1.php)
+    -   This is used to set up your initial test database.
 
 ### Installation
 
 1. Node Module
 
-   1. Once Node is installed with the link located in the Prerequisites, you will need to perform the following command within your terminal `npm install`
-      - This will install the node_modules folder which includes the dependencies for the app.
+    1. Once Node is installed with the link located in the Prerequisites, you will need to perform the following command within your terminal `npm install`
+        - This will install the node_modules folder which includes the dependencies for the app.
 
 2. Set up your database
 
-   1. Using Postico, create a database titled `EZEats`.
-   2. Use the database.sql file to enter your initial starting data into your database.
+    1. Using Postico, create a database titled `EZEats`.
+    2. Use the database.sql file to enter your initial starting data into your database.
 
 3. You will need to set up a .env file within the root of the project.
 
-   1. Inside you will need to enter `SERVER_SESSION_SECRET=(your secret here)`
-      - I recommend a random string of characters
+    1. Inside you will need to enter `SERVER_SESSION_SECRET=(your secret here)`
+        - I recommend a random string of characters
 
 4. You will need two terminals to operate the app properly.
-   1. The first you will run the command `npm run server`
-      - This will host the server on [localhost:5000](http://localhost:5000/)
-   2. The second you will run the command `npm run client`
-      - This should open up your browser on [localhost:3000](http://localhost:3000/)
+    1. The first you will run the command `npm run server`
+        - This will host the server on [localhost:5000](http://localhost:5000/)
+    2. The second you will run the command `npm run client`
+        - This should open up your browser on [localhost:3000](http://localhost:3000/)
 
 <!-- ## Usage
 
@@ -85,8 +88,8 @@ How do I use your project -->
 
 ## Acknowledgements
 
-- Thanks to [Prime Digital Academy](www.primeacademy.io) who taught me what I needed to know to make this application a reality.
-- Thanks to my wonderful partner, your support really helped me be able to get this app working.
+-   Thanks to [Prime Digital Academy](www.primeacademy.io) who taught me what I needed to know to make this application a reality.
+-   Thanks to my wonderful partner, your support really helped me be able to get this app working.
 
 ## Contacts
 
