@@ -41,7 +41,7 @@ export default function AddRecipePage() {
 		recipeIngredients: recipeIngredientsArray,
 		categoryId: categoryInput,
 	};
-	console.log("inputs within AddRecipePage:", inputs);
+	//   console.log('inputs within AddRecipePage:', inputs);
 	const handleImageChange = (value) => {
 		setImageInput(value);
 	};
